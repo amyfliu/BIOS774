@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # Building an AI Agent for Dimension Reduction and Exploratory Data Analysis
 
 ## Overview
