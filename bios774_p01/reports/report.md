@@ -1,12 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
-editor_options: 
-  markdown: 
-    wrap: sentence
----
-
 # Building an AI Agent for Dimension Reduction and Exploratory Data Analysis
 
 ## 1. System Architecture Overview
