@@ -1,0 +1,14 @@
+{
+  "data": "data/pbmc3k/prepared.npz",
+  "method": "pca",
+  "n_components": 50,
+  "preprocessing": "log1p",
+  "params": {
+    "random_state": 0
+  },
+  "embedding_shape": [
+    2638,
+    50
+  ],
+  "subsample": null
+}

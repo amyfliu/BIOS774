@@ -1,0 +1,16 @@
+{
+  "trustworthiness": 0.7838093926536269,
+  "trustworthiness_n_neighbors": 15,
+  "trustworthiness_n_points": 2638,
+  "silhouette_score_on_labels": 0.03360548965312192,
+  "silhouette_input_space": 0.02480565300998397,
+  "silhouette_gap_embedding_minus_input": 0.008799836643137951,
+  "silhouette_n_points": 2638,
+  "silhouette_input_space_dims": 16579,
+  "embedding_shape": [
+    2638,
+    2
+  ],
+  "n_samples": 2638,
+  "evaluated_against_subsample": false
+}

@@ -1,0 +1,17 @@
+{
+  "trustworthiness": 0.8311734779987945,
+  "trustworthiness_n_neighbors": 15,
+  "trustworthiness_n_points": 5000,
+  "silhouette_score_on_labels": -0.06593506783246994,
+  "silhouette_input_space": -0.0436081004233772,
+  "silhouette_gap_embedding_minus_input": -0.022326967409092742,
+  "silhouette_n_points": 5000,
+  "silhouette_input_space_dims": 2352,
+  "embedding_shape": [
+    5000,
+    2
+  ],
+  "n_samples": 5000,
+  "evaluated_against_subsample": true,
+  "subsample_indices_file": "outputs/pathmnist/tsne_none_p30_sub5000/sample_indices.npy"
+}

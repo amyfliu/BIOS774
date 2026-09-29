@@ -1,0 +1,17 @@
+{
+  "dataset": "pathmnist",
+  "n_samples": 89996,
+  "n_features": 2352,
+  "missing_fraction": 0.0,
+  "sparsity_fraction": 0.00014701144691842691,
+  "n_constant_columns": 0,
+  "feature_scale_ratio_max_over_min_std": 1.4746554143811137,
+  "n_duplicate_rows": null,
+  "has_labels": true,
+  "n_label_classes": 9,
+  "rank_estimate_from_svd": null,
+  "value_range": {
+    "min": 0.0,
+    "max": 255.0
+  }
+}

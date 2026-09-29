@@ -1,0 +1,20 @@
+{
+  "data": "data/pathmnist/prepared.npz",
+  "method": "tsne",
+  "n_components": 2,
+  "preprocessing": "none",
+  "params": {
+    "perplexity": 30,
+    "random_state": 0,
+    "init": "pca"
+  },
+  "embedding_shape": [
+    5000,
+    2
+  ],
+  "subsample": {
+    "n": 5000,
+    "seed": 0,
+    "indices_file": "sample_indices.npy"
+  }
+}

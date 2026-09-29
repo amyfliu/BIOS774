@@ -1,0 +1,17 @@
+{
+  "dataset": "pbmc3k",
+  "n_samples": 2638,
+  "n_features": 16579,
+  "missing_fraction": 0.0,
+  "sparsity_fraction": 0.948725085458229,
+  "n_constant_columns": 0,
+  "feature_scale_ratio_max_over_min_std": 2321.3081731672046,
+  "n_duplicate_rows": null,
+  "has_labels": true,
+  "n_label_classes": 8,
+  "rank_estimate_from_svd": null,
+  "value_range": {
+    "min": 0.0,
+    "max": 419.0
+  }
+}

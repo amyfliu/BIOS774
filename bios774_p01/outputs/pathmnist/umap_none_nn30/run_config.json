@@ -1,0 +1,16 @@
+{
+  "data": "data/pathmnist/prepared.npz",
+  "method": "umap",
+  "n_components": 2,
+  "preprocessing": "none",
+  "params": {
+    "n_neighbors": 30,
+    "min_dist": 0.1,
+    "random_state": 0
+  },
+  "embedding_shape": [
+    89996,
+    2
+  ],
+  "subsample": null
+}

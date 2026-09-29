@@ -1,0 +1,15 @@
+# Datasets — too large for GitHub (pathmnist's prepared.npz alone is 811MB,
+# over GitHub's 100MB per-file hard limit). Regenerate via:
+#   cd data/<name> && python prepare.py
+data/*/prepared.npz
+data/*/data/
+
+# macOS
+.DS_Store
+
+# Stray RStudio/R artifacts (unrelated to this Python project)
+.Rhistory
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,12 @@
+{
+  "data": "data/pathmnist/prepared.npz",
+  "method": "pca",
+  "n_components": 2,
+  "preprocessing": "none",
+  "params": {},
+  "embedding_shape": [
+    89996,
+    2
+  ],
+  "subsample": null
+}

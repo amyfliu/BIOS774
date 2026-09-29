@@ -1,0 +1,16 @@
+{
+  "data": "data/pbmc3k/prepared.npz",
+  "method": "tsne",
+  "n_components": 2,
+  "preprocessing": "log1p",
+  "params": {
+    "perplexity": 30,
+    "random_state": 0,
+    "init": "pca"
+  },
+  "embedding_shape": [
+    2638,
+    2
+  ],
+  "subsample": null
+}
