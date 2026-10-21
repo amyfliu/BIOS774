@@ -1,0 +1,11 @@
+# Python >= 3.9. On Apple-silicon Macs the standard torch wheel includes the
+# Apple GPU (MPS) backend. Code was smoke-tested with torch 2.14 (CPU) and the
+# lower bounds below; run ./smoke_test.sh after installing.
+torch>=2.2
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+matplotlib>=3.8
+# data download / preparation only
+scanpy>=1.10
+medmnist>=3.0
