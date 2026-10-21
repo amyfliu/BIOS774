@@ -7,3 +7,6 @@ __pycache__/
 
 # Stray RStudio/R artifacts
 .Rhistory
+
+# Course materials (not for redistribution)
+bios774_p02/instructions_and_lectures/
