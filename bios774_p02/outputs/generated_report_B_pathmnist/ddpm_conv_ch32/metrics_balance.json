@@ -1,0 +1,229 @@
+{
+  "run": "outputs/generated_report_B_pathmnist/ddpm_conv_ch32",
+  "samples": "samples_balance.npz",
+  "dataset": "pathmnist",
+  "tasks": [
+    "fidelity",
+    "memorization",
+    "utility"
+  ],
+  "feature_space": {
+    "type": "eval_cnn_penultimate_128d",
+    "n_train": 19998,
+    "real_test_accuracy": 0.5974
+  },
+  "real_reference_classes": [
+    "adipose",
+    "mucus",
+    "normal colon mucosa"
+  ],
+  "fidelity": {
+    "frechet": 43.378108889823835,
+    "precision": 0.33166666666666667,
+    "recall": 0.7566666666666667,
+    "mmd_rbf": 0.07481956481933594,
+    "c2st_accuracy": 0.9572507444702255,
+    "reference_real_train_vs_real_test": {
+      "frechet": 17.1285546413831,
+      "precision": 0.7276666666666667,
+      "recall": 0.8476666666666667,
+      "mmd_rbf": 0.06778126955032349,
+      "c2st_accuracy": 0.8999991752060955
+    },
+    "n_real": 3000,
+    "n_synthetic": 3000,
+    "frechet_unreliable_small_n": false,
+    "label_consistency": {
+      "accuracy_on_synthetic": 0.5491666666666667,
+      "reference_accuracy_on_real_test": 0.5974,
+      "per_class": {
+        "adipose": 0.715,
+        "mucus": 0.4472,
+        "normal colon mucosa": 0.4853
+      }
+    },
+    "per_class": {
+      "adipose": {
+        "precision": 0.2133,
+        "recall": 0.645,
+        "n_real_ref": 1338,
+        "reference": "test"
+      },
+      "mucus": {
+        "precision": 0.5067,
+        "recall": 0.6048,
+        "n_real_ref": 1035,
+        "reference": "test"
+      },
+      "normal colon mucosa": {
+        "precision": 0.2193,
+        "recall": 0.6586,
+        "n_real_ref": 741,
+        "reference": "test"
+      }
+    }
+  },
+  "memorization": {
+    "space": "pixels_scaled_0_1",
+    "frac_nearest_real_is_train": 0.4683333333333333,
+    "frac_nearest_real_is_train_expected_if_no_memorization": 0.5,
+    "n_train_in_pool": 3000,
+    "n_test_in_pool": 3000,
+    "median_nn_dist_synthetic_to_train": 6.373635292053223,
+    "median_nn_dist_real_test_to_train": 4.743109941482544,
+    "ratio_synthetic_over_real": 1.3437671423785358,
+    "frac_synthetic_closer_than_real_p1": 0.029,
+    "frac_synthetic_closer_than_real_p5": 0.072,
+    "n_exact_copies": 0
+  },
+  "utility": {
+    "mode": "augment",
+    "classifier": "small CNN",
+    "real_only": {
+      "accuracy": 0.6458217270194986,
+      "balanced_accuracy": 0.6433130658777086,
+      "macro_f1": 0.6188348517722325,
+      "per_class_recall": {
+        "adipose": 0.5979,
+        "background": 1.0,
+        "debris": 0.7876,
+        "lymphocytes": 0.8281,
+        "mucus": 0.2357,
+        "smooth muscle": 0.7145,
+        "normal colon mucosa": 0.6572,
+        "cancer-associated stroma": 0.1853,
+        "colorectal adenocarcinoma epithelium": 0.7835
+      },
+      "per_class_f1": {
+        "adipose": 0.7263,
+        "background": 0.8805,
+        "debris": 0.6,
+        "lymphocytes": 0.7985,
+        "mucus": 0.3342,
+        "smooth muscle": 0.6498,
+        "normal colon mucosa": 0.6787,
+        "cancer-associated stroma": 0.113,
+        "colorectal adenocarcinoma epithelium": 0.7886
+      },
+      "focus_classes_mean_f1": 0.5797581874007741,
+      "focus_classes_mean_recall": 0.4969586965482338
+    },
+    "real_class_weighted": {
+      "accuracy": 0.5440111420612813,
+      "balanced_accuracy": 0.5313554731944655,
+      "macro_f1": 0.4723642143156693,
+      "per_class_recall": {
+        "adipose": 0.077,
+        "background": 1.0,
+        "debris": 0.6431,
+        "lymphocytes": 0.9937,
+        "mucus": 0.9768,
+        "smooth muscle": 0.2297,
+        "normal colon mucosa": 0.1754,
+        "cancer-associated stroma": 0.019,
+        "colorectal adenocarcinoma epithelium": 0.6675
+      },
+      "per_class_f1": {
+        "adipose": 0.143,
+        "background": 0.9448,
+        "debris": 0.6176,
+        "lymphocytes": 0.5852,
+        "mucus": 0.5007,
+        "smooth muscle": 0.3523,
+        "normal colon mucosa": 0.2935,
+        "cancer-associated stroma": 0.0349,
+        "colorectal adenocarcinoma epithelium": 0.7794
+      },
+      "focus_classes_mean_f1": 0.31238431567211555,
+      "focus_classes_mean_recall": 0.4097435862353616
+    },
+    "real_random_oversample": {
+      "accuracy": 0.6228412256267409,
+      "balanced_accuracy": 0.6333541191976718,
+      "macro_f1": 0.5839460201031259,
+      "per_class_recall": {
+        "adipose": 0.1562,
+        "background": 1.0,
+        "debris": 0.8437,
+        "lymphocytes": 0.9069,
+        "mucus": 0.5623,
+        "smooth muscle": 0.8902,
+        "normal colon mucosa": 0.3468,
+        "cancer-associated stroma": 0.0451,
+        "colorectal adenocarcinoma epithelium": 0.9489
+      },
+      "per_class_f1": {
+        "adipose": 0.2191,
+        "background": 0.938,
+        "debris": 0.7036,
+        "lymphocytes": 0.897,
+        "mucus": 0.6962,
+        "smooth muscle": 0.4253,
+        "normal colon mucosa": 0.4795,
+        "cancer-associated stroma": 0.0852,
+        "colorectal adenocarcinoma epithelium": 0.8117
+      },
+      "focus_classes_mean_f1": 0.46490914295943275,
+      "focus_classes_mean_recall": 0.35511691301883297
+    },
+    "real_plus_synthetic": {
+      "accuracy": 0.22242339832869082,
+      "balanced_accuracy": 0.2563045580556999,
+      "macro_f1": 0.2109449903365878,
+      "per_class_recall": {
+        "adipose": 0.0,
+        "background": 1.0,
+        "debris": 0.6313,
+        "lymphocytes": 0.0016,
+        "mucus": 0.0889,
+        "smooth muscle": 0.4155,
+        "normal colon mucosa": 0.0243,
+        "cancer-associated stroma": 0.0,
+        "colorectal adenocarcinoma epithelium": 0.1452
+      },
+      "per_class_f1": {
+        "adipose": 0.0,
+        "background": 0.9918,
+        "debris": 0.1051,
+        "lymphocytes": 0.0031,
+        "mucus": 0.1589,
+        "smooth muscle": 0.4819,
+        "normal colon mucosa": 0.0474,
+        "cancer-associated stroma": 0.0,
+        "colorectal adenocarcinoma epithelium": 0.1103
+      },
+      "focus_classes_mean_f1": 0.06877515866026791,
+      "focus_classes_mean_recall": 0.037726795621532465
+    },
+    "n_real_train": 89996,
+    "n_synthetic_added": {
+      "adipose": 4000,
+      "mucus": 4000,
+      "normal colon mucosa": 4000
+    },
+    "focus_classes": [
+      "adipose",
+      "mucus",
+      "normal colon mucosa"
+    ],
+    "macro_f1_diff_95ci": {
+      "synthetic_minus_real_only": [
+        -0.4189,
+        -0.3969
+      ],
+      "synthetic_minus_class_weighted": [
+        -0.2729,
+        -0.2486
+      ],
+      "synthetic_minus_oversample": [
+        -0.3844,
+        -0.3615
+      ]
+    },
+    "n_test_per_focus_class": {
+      "adipose": 1338,
+      "mucus": 1035,
+      "normal colon mucosa": 741
+    }
+  }
+}

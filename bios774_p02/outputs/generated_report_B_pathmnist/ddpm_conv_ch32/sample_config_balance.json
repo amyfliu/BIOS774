@@ -1,0 +1,21 @@
+{
+  "n_samples": 12000,
+  "labelled": true,
+  "sampler_kwargs": {
+    "temperature": 1.0,
+    "add_noise": false,
+    "steps": 50,
+    "guidance": 2.0,
+    "eta": 0.0
+  },
+  "latent_source": "prior",
+  "n_distinct_reference_samples": null,
+  "seconds": 354.1,
+  "non_finite_samples_replaced": 0,
+  "device": "mps",
+  "class_counts": {
+    "adipose": 4000,
+    "mucus": 4000,
+    "normal colon mucosa": 4000
+  }
+}

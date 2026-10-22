@@ -79,4 +79,12 @@ claude -p "$PROMPT" ${MODEL_ARGS[@]+"${MODEL_ARGS[@]}"} \
   --allowedTools "Bash,Read,Write,Edit,Glob,Grep" \
   | "$PY" tools/show_progress.py "${OUT}/agent_transcript.jsonl"
 
+# Safety net: make sure the report's layout is tidied and the PDF exists even if
+# the agent skipped its export step (running it twice is harmless).
+if [ -f "reports/${REPORT}.md" ]; then
+  "$PY" tools/export_report.py "reports/${REPORT}.md" || true
+else
+  echo "WARNING: the agent did not write reports/${REPORT}.md"
+fi
+
 echo "Report: reports/${REPORT}.md   Decisions: ${OUT}/decisions.jsonl"
