@@ -39,6 +39,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import Dataset, Prep, Timer, get_device, set_seed, to_model_shape, to_tensor, write_json  # noqa: E402
 from models import build_model  # noqa: E402
 
+PLAIN_LABEL = {"loss_per_dim": "total loss (per feature)", "kl": "KL term (latent use)",
+               "recon_mse": "reconstruction error", "critic_loss": "critic loss",
+               "wasserstein_est": "Wasserstein estimate", "gp": "gradient penalty",
+               "gen_loss": "generator loss", "nll_per_dim": "neg. log-likelihood (per dim)",
+               "bits_per_dim": "bits per dimension", "loss": "denoising loss"}
+FAMILY_NAME = {"vae": "VAE", "wgan": "WGAN-GP", "flow": "normalizing flow", "ddpm": "diffusion model (DDPM)"}
+
 SMOKE_PARAMS = {"vae": {"latent_dim": 4, "hidden": [32], "ch": 8},
                 "wgan": {"latent_dim": 8, "hidden": [32], "ch": 8, "n_critic": 2},
                 "flow": {"n_layers": 2, "hidden": 16},
@@ -158,12 +165,13 @@ def main():
     write_json(out / "train_log.json", {"stop_reason": stop_reason, "train_seconds": round(timer.elapsed, 1),
                                         "epochs": log, "final_diagnostics": diag})
     keys = [k for k in log[0] if k not in ("epoch", "seconds", "beta")] if log else []
-    fig, axes = plt.subplots(1, max(1, len(keys)), figsize=(3.2 * max(1, len(keys)), 2.8))
+    fig, axes = plt.subplots(1, max(1, len(keys)), figsize=(3.4 * max(1, len(keys)), 3.0))
     for ax, k in zip(np.atleast_1d(axes), keys):
         ax.plot([r["epoch"] for r in log], [r.get(k, np.nan) for r in log])
-        ax.set_title(k, fontsize=9)
+        ax.set_title(PLAIN_LABEL.get(k, k), fontsize=9)
         ax.set_xlabel("epoch")
-    fig.suptitle(f"{a.model} ({a.backbone}) — {ds.name}", fontsize=10)
+    fig.suptitle(f"Training curves: {FAMILY_NAME.get(a.model, a.model)} ({a.backbone} network) on {ds.name}",
+                 fontsize=10)
     fig.tight_layout()
     fig.savefig(out / "loss.png", dpi=110)
     print(f"[train] done: {stop_reason}; {round(timer.elapsed, 1)}s; diagnostics={json.dumps(diag)[:300]}")

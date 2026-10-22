@@ -35,6 +35,14 @@ export PYTORCH_ENABLE_MPS_FALLBACK=1
 
 [ -f "data/${DATASET}/prepared.npz" ] || { echo "data/${DATASET}/prepared.npz missing — run: cd data/${DATASET} && $PY prepare.py"; exit 1; }
 command -v claude >/dev/null || { echo "Claude Code CLI ('claude') not found on PATH"; exit 1; }
+# A repeated run never mixes with an earlier one: move the earlier attempt aside.
+if [ -e "$OUT" ] || [ -e "reports/${REPORT}.md" ]; then
+  PREV="outputs/_previous/${RUN_ID}_$(date '+%Y%m%d_%H%M%S')"
+  mkdir -p "$PREV"
+  [ -e "$OUT" ] && mv "$OUT" "$PREV/outputs"
+  for ext in md pdf; do [ -e "reports/${REPORT}.${ext}" ] && mv "reports/${REPORT}.${ext}" "$PREV/"; done
+  echo "Previous attempt moved to $PREV"
+fi
 mkdir -p "$OUT" "reports/$(dirname "$REPORT")"
 
 DEVICE="$("$PY" -c 'import sys; sys.path.insert(0, "tools"); from common import get_device; print(get_device())')"

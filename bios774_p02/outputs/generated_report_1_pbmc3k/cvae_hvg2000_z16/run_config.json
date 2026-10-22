@@ -1,0 +1,56 @@
+{
+  "dataset": "pbmc3k",
+  "modality": "tabular",
+  "model": "vae",
+  "backbone": "mlp",
+  "prep": {
+    "spec": "libnorm,log1p,hvg:2000,standardize",
+    "n_features_kept": 2000
+  },
+  "conditional": true,
+  "include_classes": [],
+  "exclude_classes": [],
+  "n_train": 1978,
+  "model_input_shape": [
+    2000
+  ],
+  "epochs_requested": 150,
+  "epochs_run": 150,
+  "batch_size": 64,
+  "lr": 0.001,
+  "params": {
+    "latent_dim": 16,
+    "hidden": [
+      512,
+      256
+    ],
+    "ch": 32,
+    "beta": 1.0,
+    "kl_warmup_epochs": 10
+  },
+  "n_parameters": 2334144,
+  "max_minutes": 4.0,
+  "seed": 0,
+  "device": "mps",
+  "smoke": false,
+  "train_class_counts": {
+    "B cells": 256,
+    "CD14+ Monocytes": 360,
+    "CD4 T cells": 858,
+    "CD8 T cells": 237,
+    "Dendritic cells": 28,
+    "FCGR3A+ Monocytes": 113,
+    "Megakaryocytes": 11,
+    "NK cells": 115
+  },
+  "classes": [
+    "B cells",
+    "CD14+ Monocytes",
+    "CD4 T cells",
+    "CD8 T cells",
+    "Dendritic cells",
+    "FCGR3A+ Monocytes",
+    "Megakaryocytes",
+    "NK cells"
+  ]
+}

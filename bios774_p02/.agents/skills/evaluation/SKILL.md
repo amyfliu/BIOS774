@@ -75,11 +75,13 @@ restricted to the generated classes (`real_reference_classes`).
   baselines is not useful as-is.
 - `mean_logp_per_dim_by_class`: which classes the model finds typical.
 
-# When to iterate (max twice, log each)
+# When to iterate (max three times, log each)
 - label consistency low for the target classes → change sampling (VAE
   latent source, DDPM guidance);
-- recall very low with high precision → more diversity (temperature,
-  add-noise, lower guidance, lower β);
+- recall very low with high precision → more diversity: VAE
+  `--temperature` > 1 (e.g. 1.5–2 with posterior sampling) and/or
+  `--add-noise`; DDPM lower guidance; retrain with lower β. Check that
+  label consistency stays high when diversity goes up;
 - training health check failed → fix per the family skill;
 - anomaly AUROC ≤ complexity baseline → report the corrected score or try
   the VAE ELBO.

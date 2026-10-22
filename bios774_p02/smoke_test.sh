@@ -64,6 +64,8 @@ step "score flow conv" "$PY" tools/score.py --run $OUT/pathmnist/flow --split te
 step "evaluate anomaly" "$PY" tools/evaluate.py --run $OUT/pathmnist/flow --tasks anomaly --anomaly-classes background,debris
 step "evaluate images (trains + caches eval CNN once)" "$PY" tools/evaluate.py --run $OUT/pathmnist/ddpm --tasks fidelity,memorization,utility --utility tstr --clf-epochs 1
 step "log_decision" "$PY" tools/log_decision.py --out $OUT --step other --decision "smoke test" --evidence "n/a"
+printf '# t\n**Verdict:** ok\nIntro\n- a\n- b\n\n| x | n |\n|---|---|\n| + y | 1.0 |\n\n![c](pathmnist/ddpm/sample_grid.png)\n' > $OUT/smoke_report.md
+step "export_report (tidy only)" "$PY" tools/export_report.py $OUT/smoke_report.md --no-pdf
 
 echo "== speed probe (1 epoch, realistic sizes) — use these numbers to size budgets"
 "$PY" tools/train.py --data data/pathmnist --out $OUT/probe_ddpm --model ddpm --backbone conv --prep scale_pm1 \

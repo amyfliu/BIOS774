@@ -100,7 +100,7 @@ def main():
         axes[0, 0].barh(list(c)[::-1], list(c.values())[::-1], color="#4C78A8")
         axes[0, 0].set_xlabel("samples")
         axes[0, 0].tick_params(labelsize=7)
-        axes[0, 0].set_title("class counts")
+        axes[0, 0].set_title("Samples per class (all splits)")
     if ds.modality == "image":
         H, W, C = ds.image_shape
         rows = []
@@ -111,7 +111,7 @@ def main():
         axes[0, 1].set_yticks([H * k + H / 2 for k in range(ds.n_classes)])
         axes[0, 1].set_yticklabels([ds.class_name(k)[:18] for k in range(ds.n_classes)], fontsize=6)
         axes[0, 1].set_xticks([])
-        axes[0, 1].set_title("real examples per class")
+        axes[0, 1].set_title("Real examples, one row per class")
     fig.tight_layout()
     fig.savefig(out / "profile.png", dpi=110)
     print(f"[inspect] wrote {out / 'profile.json'}")

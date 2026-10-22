@@ -55,6 +55,8 @@ run_agent.sh ─► Claude reads AGENTS.md ─► per step, reads the matching s
 │   ├── score.py              # per-sample log-likelihood of real data (flow, VAE)
 │   ├── evaluate.py           # fidelity / memorization / utility / anomaly metrics
 │   ├── log_decision.py       # append to decisions.jsonl
+│   ├── run_summary.py        # decision log + exact command history -> Markdown for the report
+│   ├── export_report.py      # tidy report layout (figure sizes, table alignment) + export PDF
 │   ├── show_progress.py      # pretty-prints the live agent transcript
 │   ├── common.py             # data loading, preprocessing, device selection
 │   └── models/               # vae.py gan.py flow.py ddpm.py nets.py (+ registry)

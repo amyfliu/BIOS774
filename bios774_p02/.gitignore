@@ -7,6 +7,7 @@ data/_dev/
 outputs/**/model.pt
 outputs/_cache/
 outputs/_smoke/
+outputs/_previous/
 
 # Python / OS
 __pycache__/

@@ -1,0 +1,209 @@
+{
+  "run": "outputs/generated_report_1_pbmc3k/cvae_hvg2000_z16",
+  "samples": "samples_prior.npz",
+  "dataset": "pbmc3k",
+  "tasks": [
+    "fidelity",
+    "memorization",
+    "utility"
+  ],
+  "feature_space": {
+    "type": "model_space_pca50",
+    "prep": "libnorm,log1p,hvg:2000,standardize"
+  },
+  "real_reference_classes": [
+    "Dendritic cells",
+    "Megakaryocytes"
+  ],
+  "fidelity": {
+    "frechet": 426.21009416791395,
+    "precision": 0.9975,
+    "recall": 0.3076923076923077,
+    "mmd_rbf": 0.3062328928020038,
+    "c2st_accuracy": 0.7037037037037037,
+    "reference_real_train_vs_real_test": {
+      "frechet": 159.00612440535727,
+      "precision": 0.8205128205128205,
+      "recall": 1.0,
+      "mmd_rbf": 0.009277698962317227,
+      "c2st_accuracy": 0.5416666666666666
+    },
+    "n_real": 13,
+    "n_synthetic": 400,
+    "frechet_unreliable_small_n": true,
+    "label_consistency": {
+      "accuracy_on_synthetic": 0.0725,
+      "reference_accuracy_on_real_test": 0.953030303030303,
+      "per_class": {
+        "Dendritic cells": 0.14,
+        "Megakaryocytes": 0.005
+      }
+    },
+    "per_class": {
+      "Dendritic cells": {
+        "precision": 0.5,
+        "recall": 0.1622,
+        "n_real_ref": 37,
+        "reference": "train+test (few test cells)"
+      },
+      "Megakaryocytes": {
+        "precision": 1.0,
+        "recall": 0.0,
+        "n_real_ref": 15,
+        "reference": "train+test (few test cells)"
+      }
+    }
+  },
+  "memorization": {
+    "space": "model_space (libnorm,log1p,hvg:2000,standardize)",
+    "frac_nearest_real_is_train": 0.755,
+    "frac_nearest_real_is_train_expected_if_no_memorization": 0.5,
+    "n_train_in_pool": 13,
+    "n_test_in_pool": 13,
+    "median_nn_dist_synthetic_to_train": 41.09840393066406,
+    "median_nn_dist_real_test_to_train": 49.30451202392578,
+    "ratio_synthetic_over_real": 0.833562735814532,
+    "frac_synthetic_closer_than_real_p1": 0.985,
+    "frac_synthetic_closer_than_real_p5": 0.985,
+    "n_exact_copies": 0
+  },
+  "utility": {
+    "mode": "augment",
+    "classifier": "logistic regression",
+    "real_only": {
+      "accuracy": 0.953030303030303,
+      "balanced_accuracy": 0.8739963448704617,
+      "macro_f1": 0.9079062257893662,
+      "per_class_recall": {
+        "B cells": 0.9884,
+        "CD14+ Monocytes": 0.9917,
+        "CD4 T cells": 0.9825,
+        "CD8 T cells": 0.8228,
+        "Dendritic cells": 0.8889,
+        "FCGR3A+ Monocytes": 0.9459,
+        "Megakaryocytes": 0.5,
+        "NK cells": 0.8718
+      },
+      "per_class_f1": {
+        "B cells": 0.9827,
+        "CD14+ Monocytes": 0.9835,
+        "CD4 T cells": 0.9673,
+        "CD8 T cells": 0.8442,
+        "Dendritic cells": 0.9412,
+        "FCGR3A+ Monocytes": 0.9589,
+        "Megakaryocytes": 0.6667,
+        "NK cells": 0.9189
+      },
+      "focus_classes_mean_f1": 0.803921568627451,
+      "focus_classes_mean_recall": 0.6944444444444444
+    },
+    "real_class_weighted": {
+      "accuracy": 0.9454545454545454,
+      "balanced_accuracy": 0.890494602666188,
+      "macro_f1": 0.8996312395193032,
+      "per_class_recall": {
+        "B cells": 0.9884,
+        "CD14+ Monocytes": 0.9917,
+        "CD4 T cells": 0.951,
+        "CD8 T cells": 0.8481,
+        "Dendritic cells": 1.0,
+        "FCGR3A+ Monocytes": 0.973,
+        "Megakaryocytes": 0.5,
+        "NK cells": 0.8718
+      },
+      "per_class_f1": {
+        "B cells": 0.9884,
+        "CD14+ Monocytes": 0.9876,
+        "CD4 T cells": 0.9577,
+        "CD8 T cells": 0.8171,
+        "Dendritic cells": 0.9,
+        "FCGR3A+ Monocytes": 0.973,
+        "Megakaryocytes": 0.6667,
+        "NK cells": 0.9067
+      },
+      "focus_classes_mean_f1": 0.7833333333333333,
+      "focus_classes_mean_recall": 0.75
+    },
+    "real_random_oversample": {
+      "accuracy": 0.9484848484848485,
+      "balanced_accuracy": 0.8674534095300581,
+      "macro_f1": 0.8918142952220757,
+      "per_class_recall": {
+        "B cells": 0.9884,
+        "CD14+ Monocytes": 0.9917,
+        "CD4 T cells": 0.9825,
+        "CD8 T cells": 0.7975,
+        "Dendritic cells": 0.8889,
+        "FCGR3A+ Monocytes": 0.9189,
+        "Megakaryocytes": 0.5,
+        "NK cells": 0.8718
+      },
+      "per_class_f1": {
+        "B cells": 0.9884,
+        "CD14+ Monocytes": 0.9794,
+        "CD4 T cells": 0.9656,
+        "CD8 T cells": 0.8289,
+        "Dendritic cells": 0.8421,
+        "FCGR3A+ Monocytes": 0.9444,
+        "Megakaryocytes": 0.6667,
+        "NK cells": 0.9189
+      },
+      "focus_classes_mean_f1": 0.7543859649122806,
+      "focus_classes_mean_recall": 0.6944444444444444
+    },
+    "real_plus_synthetic": {
+      "accuracy": 0.95,
+      "balanced_accuracy": 0.9144456665697834,
+      "macro_f1": 0.8930071992788772,
+      "per_class_recall": {
+        "B cells": 0.9884,
+        "CD14+ Monocytes": 0.9917,
+        "CD4 T cells": 0.972,
+        "CD8 T cells": 0.8228,
+        "Dendritic cells": 1.0,
+        "FCGR3A+ Monocytes": 0.9189,
+        "Megakaryocytes": 0.75,
+        "NK cells": 0.8718
+      },
+      "per_class_f1": {
+        "B cells": 0.9827,
+        "CD14+ Monocytes": 0.9876,
+        "CD4 T cells": 0.9653,
+        "CD8 T cells": 0.8442,
+        "Dendritic cells": 0.9,
+        "FCGR3A+ Monocytes": 0.9577,
+        "Megakaryocytes": 0.6,
+        "NK cells": 0.9067
+      },
+      "focus_classes_mean_f1": 0.75,
+      "focus_classes_mean_recall": 0.875
+    },
+    "n_real_train": 1978,
+    "n_synthetic_added": {
+      "Dendritic cells": 200,
+      "Megakaryocytes": 200
+    },
+    "focus_classes": [
+      "Dendritic cells",
+      "Megakaryocytes"
+    ],
+    "macro_f1_diff_95ci": {
+      "synthetic_minus_real_only": [
+        -0.0765,
+        0.0682
+      ],
+      "synthetic_minus_class_weighted": [
+        -0.0764,
+        0.0798
+      ],
+      "synthetic_minus_oversample": [
+        -0.0689,
+        0.0931
+      ]
+    },
+    "n_test_per_focus_class": {
+      "Dendritic cells": 9,
+      "Megakaryocytes": 4
+    }
+  }
+}

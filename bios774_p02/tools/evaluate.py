@@ -364,19 +364,29 @@ def main():
         mu2 = P.mean(0)
         V2 = np.linalg.svd(P - mu2, full_matrices=False)[2][:2]
         Ra, Sb = (A - mu2) @ V2.T, (B - mu2) @ V2.T
-        fig, ax = plt.subplots(1, 2, figsize=(10, 4.2), sharex=True, sharey=True)
+        fig, ax = plt.subplots(1, 2, figsize=(10, 4.4), sharex=True, sharey=True)
         cmap = plt.get_cmap("tab10")
-        for axi, Z, yy, title in [(ax[0], Ra, yA, "real (test)"), (ax[1], Sb, yB, "synthetic")]:
-            for kk in np.unique(np.r_[yA, yB]):
-                m = yy == kk
-                if labelled or title.startswith("real"):
-                    axi.scatter(Z[m, 0], Z[m, 1], s=4, alpha=0.5, color=cmap(kk % 10), label=names[kk][:20])
-                else:
-                    axi.scatter(Z[:, 0], Z[:, 1], s=4, alpha=0.5, color="gray")
-                    break
-            axi.set_title(title)
-        ax[0].legend(fontsize=6, markerscale=3, loc="best")
-        fig.suptitle(f"{cfg['model']} — shared PCA of evaluation features", fontsize=10)
+        size = lambda n: 28 if n < 100 else (12 if n < 1000 else 5)            # noqa: E731
+        classes_shown = np.unique(np.r_[yA, yB]) if labelled else np.unique(yA)
+        for kk in classes_shown:
+            m = yA == kk
+            ax[0].scatter(Ra[m, 0], Ra[m, 1], s=size(len(Ra)), alpha=0.7, color=cmap(kk % 10),
+                          label=names[kk][:28])
+        for kk in (classes_shown if labelled else [None]):
+            m = (yB == kk) if kk is not None else np.ones(len(Sb), bool)
+            ax[1].scatter(Sb[m, 0], Sb[m, 1], s=size(len(Sb)), alpha=0.5,
+                          color=cmap(kk % 10) if kk is not None else "gray")
+        # real points outlined on the synthetic panel, so overlap can be judged directly
+        ax[1].scatter(Ra[:, 0], Ra[:, 1], s=size(len(Ra)) + 10, facecolors="none", edgecolors="black",
+                      linewidths=0.8, label="real held-out (outline)")
+        ax[0].set_title(f"Real held-out samples (n={len(Ra)})", fontsize=11)
+        ax[1].set_title(f"Synthetic samples (n={len(Sb)}), real outlined", fontsize=11)
+        for axi in ax:
+            axi.set_xlabel("projection axis 1")
+        ax[0].set_ylabel("projection axis 2")
+        ax[0].legend(fontsize=8, markerscale=1.5, loc="best", framealpha=0.8)
+        ax[1].legend(fontsize=8, loc="best", framealpha=0.8)
+        fig.suptitle("Real vs synthetic samples in the same 2-D projection (colour = class)", fontsize=12)
         fig.tight_layout()
         fig.savefig(run / f"embedding{sfx}.png", dpi=110)
         plt.close(fig)
@@ -415,12 +425,16 @@ def main():
             "frac_synthetic_closer_than_real_p5": float((d_syn < p5).mean()),
             "n_exact_copies": int((d_syn < 1e-6).sum()),
         }
-        fig, ax = plt.subplots(figsize=(5, 3))
+        fig, ax = plt.subplots(figsize=(6, 3.4))
         bins = np.linspace(0, np.percentile(np.r_[d_syn, d_ref], 99), 50)
-        ax.hist(d_ref, bins, alpha=0.6, density=True, label="real test → train")
-        ax.hist(d_syn, bins, alpha=0.6, density=True, label="synthetic → train")
-        ax.set_xlabel("distance to nearest training sample")
-        ax.legend(fontsize=8)
+        ax.hist(d_ref, bins, alpha=0.6, density=True, label="real held-out samples")
+        ax.hist(d_syn, bins, alpha=0.6, density=True, label="synthetic samples")
+        ax.set_xlabel("distance to the nearest training sample")
+        ax.set_ylabel("density")
+        ax.set_title("Are synthetic samples copies of training data?\n"
+                     "(orange far left of blue = closer to training data than new real samples are)",
+                     fontsize=10)
+        ax.legend(fontsize=9)
         fig.tight_layout()
         fig.savefig(run / f"memorization{sfx}.png", dpi=110)
         plt.close(fig)
@@ -522,13 +536,15 @@ def main():
                 "auroc_of_complexity_alone": float(roc_auc_score(is_anom, -comp)),
                 "auroc_of_complexity_alone_reversed": float(roc_auc_score(is_anom, comp))}
         res["anomaly"] = out
-        fig, ax = plt.subplots(figsize=(6, 3.2))
+        fig, ax = plt.subplots(figsize=(7.5, 3.8))
         for kk in np.unique(y_s):
             ax.hist(lp[y_s == kk], 40, histtype="step", density=True,
                     label=names[kk][:20] + (" (anomaly)" if kk in anom else ""),
                     linestyle="--" if kk in anom else "-")
-        ax.set_xlabel("log p(x) per dimension (higher = more typical)")
-        ax.legend(fontsize=6)
+        ax.set_xlabel("model's typicality score: log-likelihood per dimension (higher = more typical)")
+        ax.set_ylabel("density")
+        ax.set_title("Typicality scores by class (dashed = classes that should be flagged)", fontsize=10)
+        ax.legend(fontsize=7)
         fig.tight_layout()
         fig.savefig(run / "anomaly_scores.png", dpi=110)
         plt.close(fig)
