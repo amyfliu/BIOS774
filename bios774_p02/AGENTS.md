@@ -30,7 +30,9 @@ log it as a decision, and continue.
   model, fewer samples, different prep) and log it as an `iteration`
   decision. Never add dataset-specific code.
 - **Fit on train only.** Preprocessing and models see `split == "train"`
-  only (the tools enforce this). `test` is the untouched real reference.
+  only (the tools enforce this). `val` (when present) and `test` are
+  untouched real data: `val` is the same-source reference for realism and
+  copying checks, `test` is used for downstream classifier tests.
 - **One tool call per command, no shell loops** (`for t in ...; do ...`):
   the Reproduce appendix is extracted from your commands and must be
   runnable verbatim. Shell variables such as `O=outputs/...` are fine.
@@ -127,7 +129,7 @@ Outline (adapt section contents to the dataset and objective):
 ```
 # <report_name>: <dataset> — <objective in a few plain words>
 **Verdict:** <one sentence>
-## 1. Summary            — bold labels: Question / Approach / Result / Recommendation (≤ 2 lines each)
+## 1. Summary            — a bulleted list of 4 items: "- **Question:** …", "- **Approach:** …", "- **Result:** …", "- **Recommendation:** …" (≤ 2 lines each)
 ## 2. Data at a glance   — 3–4 bullets + profile figure
 ## 3. Decision path      — paste <output folder>/decision_path.md, then 1–2 sentences on the turning point
 ## 4. What was generated — what / how many / in what form + the most informative figure

@@ -45,7 +45,9 @@ that justify it, run the cheap supporting evidence, and write the report.
 If you decide to generate anyway in a borderline case, say why.
 
 # Step 3 — write down the success criterion BEFORE training
-Log it as the `objective` decision. Make it concrete and falsifiable, e.g.
+Log it as the `objective` decision. Make it concrete and falsifiable, and
+check it is *achievable* with the available test data — if not, expect a
+"can't tell" verdict (recommendation skill) and say so up front. E.g.
 
 - balancing: "recommend synthetic augmentation only if macro-F1 of
   real+synthetic beats the BEST non-generative baseline and the paired

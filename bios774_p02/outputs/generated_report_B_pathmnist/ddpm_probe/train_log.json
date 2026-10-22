@@ -1,23 +1,18 @@
 {
   "stop_reason": "completed",
-  "train_seconds": 0.9,
+  "train_seconds": 15.3,
   "epochs": [
     {
       "epoch": 1,
-      "seconds": 0.4,
-      "loss": 1.1261057257652283
-    },
-    {
-      "epoch": 2,
-      "seconds": 0.5,
-      "loss": 1.1116423606872559
+      "seconds": 14.3,
+      "loss": 0.29037085180290234
     }
   ],
   "final_diagnostics": {
-    "eps_mse_t5pct": 1.1003319025039673,
-    "eps_mse_t25pct": 1.1017858982086182,
-    "eps_mse_t50pct": 1.1044700145721436,
-    "eps_mse_t75pct": 1.106492042541504,
-    "eps_mse_t95pct": 1.1023304462432861
+    "eps_mse_t5pct": 0.4540606439113617,
+    "eps_mse_t25pct": 0.13632716238498688,
+    "eps_mse_t50pct": 0.08360657840967178,
+    "eps_mse_t75pct": 0.06991307437419891,
+    "eps_mse_t95pct": 0.06709310412406921
   }
 }

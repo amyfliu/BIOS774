@@ -17,11 +17,18 @@ again when writing the evaluation section.
 Run fidelity on every sample set you plan to recommend.
 
 # Golden rule: never read a metric alone
-Every fidelity metric comes with `reference_real_train_vs_real_test`: the
-same metric computed between two REAL samples. That is the best achievable
-value at this sample size. Report both and judge the gap.
-With class-specific samples, the real reference is automatically
-restricted to the generated classes (`real_reference_classes`).
+Every fidelity metric comes with `reference_real_train_vs_real_<split>`:
+the same metric computed between two REAL samples. That is the best
+achievable value at this sample size. Report both and judge the gap.
+- The held-out reference is the `val` split when the dataset has one
+  (`real_reference_split` in metrics.json), because it comes from the same
+  source as the training data. The `test` split may come from a different
+  source (e.g. another hospital); then real-train vs real-test differ and the
+  classifier tests on `test` also measure "does it transfer to new data".
+  Say which reference was used, and mention a source shift if `DATA.md`
+  describes one.
+- With class-specific samples, the real reference is automatically
+  restricted to the generated classes (`real_reference_classes`).
 
 # Fidelity (feature space: `feature_space` in metrics.json)
 - **precision** = fraction of synthetic samples that land in the real
@@ -35,11 +42,11 @@ restricted to the generated classes (`real_reference_classes`).
   to the reference. Ignore it when `frechet_unreliable_small_n` is true.
 - **mmd_rbf**: ≈ 0 when distributions match; compare to the reference.
 - **c2st_accuracy** (classifier two-sample test): 0.5 = indistinguishable;
-  ~0.5–0.6 hard to tell apart; > ~0.9 easily distinguishable. The
-  reference is ≈ 0.5 by construction; anything far above is a real gap.
+  ~0.5–0.6 hard to tell apart; > ~0.9 easily distinguishable. With a
+  same-source reference it is ≈ 0.5; anything far above that is a real gap.
 - **label_consistency** (conditional samples): a classifier trained on real
   data predicts the intended label of synthetic samples. Compare
-  `accuracy_on_synthetic` with `reference_accuracy_on_real_test` and check
+  `accuracy_on_synthetic` with `reference_accuracy_on_real_<split>` and check
   `per_class` — a low value for one class means the model did not learn
   that class (common for very rare classes; see VAE skill).
 - **embedding.png**: real vs synthetic in a shared PCA — look for missing
@@ -48,7 +55,7 @@ restricted to the generated classes (`real_reference_classes`).
 # Memorization
 - `frac_nearest_real_is_train` vs `..._expected_if_no_memorization`
   (≈ 0.5): for each synthetic sample, is its nearest real neighbour a
-  training sample or a held-out test sample (equal-sized pools)? Near the
+  training sample or a held-out sample (equal-sized pools)? Near the
   expected value → no sign of copying. ≥ ~0.7 → samples hug training data.
   Interpret against the sampling mode: posterior/interpolated VAE samples
   are anchored to training samples by design.
@@ -57,6 +64,15 @@ restricted to the generated classes (`real_reference_classes`).
   smoother (decoder means) — use it together with the membership fraction.
 
 # Utility
+Image classifiers are trained several times with different seeds (default
+3; `n_seeds`); scores are averages and `macro_f1_sd_across_seeds` shows how
+much a single run wobbles. A difference smaller than about two seed SDs is
+not meaningful, whatever the bootstrap CI says (the CI only covers test-set
+noise). For images, the augment comparison uses a 20,000-image stratified
+real subset by default (`n_real_train`) to keep 4 arms × seeds affordable —
+mention it. Classifier time ≈ (training images × epochs × seeds × arms);
+check the `real_*_accuracy` of the judging classifier (`feature_space`) to
+make sure it is a competent judge before trusting the comparisons.
 - **tstr**: `train_on_synthetic` vs `train_on_real_same_size` on the real
   test set; `tstr_over_trtr_accuracy` ≥ ~0.8 is good for small models;
   `macro_f1_diff_95ci` shows if the gap is significant.

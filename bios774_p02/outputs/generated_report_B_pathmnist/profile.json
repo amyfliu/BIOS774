@@ -1,7 +1,7 @@
 {
   "dataset": "pathmnist",
   "modality": "image",
-  "n_samples": 97176,
+  "n_samples": 107180,
   "n_features": 2352,
   "image_shape_HWC": [
     28,
@@ -9,10 +9,11 @@
     3
   ],
   "dtype": "uint8",
-  "memory_MB_float32": 914.2,
+  "memory_MB_float32": 1008.3,
   "splits": {
     "test": 7180,
-    "train": 89996
+    "train": 89996,
+    "val": 10004
   },
   "missing_values": 0,
   "value_range": [
@@ -20,39 +21,39 @@
     255.0
   ],
   "integer_valued": true,
-  "fraction_zeros": 0.0003,
+  "fraction_zeros": 0.0001,
   "n_features_all_zero_in_sample": 0,
-  "variance_share_top1pct_features": 0.0154,
+  "variance_share_top1pct_features": 0.0153,
   "feature_mean_range": [
-    135.149,
-    189.6876
+    134.9404,
+    189.5534
   ],
-  "feature_sd_ratio_p99_p1": 1.48,
-  "samples_per_feature": 41.316,
+  "feature_sd_ratio_p99_p1": 1.47,
+  "samples_per_feature": 45.57,
   "channel_means": [
-    188.92,
-    136.31,
-    180.32
+    188.78,
+    135.95,
+    179.92
   ],
   "channel_sds": [
-    31.91,
-    45.84,
+    32.0,
+    45.63,
     32.28
   ],
-  "mean_abs_neighbour_pixel_diff": 12.47,
-  "neighbour_pixel_correlation": 0.9032,
+  "mean_abs_neighbour_pixel_diff": 12.34,
+  "neighbour_pixel_correlation": 0.9041,
   "labels": {
     "n_classes": 9,
     "class_counts": {
-      "adipose": 10704,
-      "background": 10356,
-      "debris": 10699,
-      "lymphocytes": 11035,
-      "mucus": 9041,
-      "smooth muscle": 12774,
-      "normal colon mucosa": 8627,
-      "cancer-associated stroma": 9822,
-      "colorectal adenocarcinoma epithelium": 14118
+      "adipose": 11745,
+      "background": 11413,
+      "debris": 11851,
+      "lymphocytes": 12191,
+      "mucus": 9931,
+      "smooth muscle": 14128,
+      "normal colon mucosa": 9504,
+      "cancer-associated stroma": 10867,
+      "colorectal adenocarcinoma epithelium": 15550
     },
     "class_counts_train": {
       "adipose": 9366,

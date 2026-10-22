@@ -143,9 +143,9 @@ def main():
         H, W, C = ds.image_shape
         classes = list(np.unique(ys)) if labelled else [None]
         k = 10
-        fig, axes = plt.subplots(len(classes), 2, figsize=(2 * k * 0.55, len(classes) * 0.75 + 0.4),
+        fig, axes = plt.subplots(len(classes), 2, figsize=(2 * k * 0.6 + 1.6, len(classes) * 0.85 + 0.5),
                                  squeeze=False)
-        real_idx = ds.indices("test")
+        real_idx = ds.indices("val" if "val" in set(np.unique(ds.split)) else "test")
         for r, c in enumerate(classes):
             syn = save["X_uint8"][ys == c][:k] if c is not None else save["X_uint8"][:k]
             ri = real_idx[ds.y[real_idx] == c][:k] if c is not None else real_idx[:k]
@@ -155,9 +155,9 @@ def main():
                 axes[r, col].imshow(np.concatenate(tiles, 1).squeeze())
                 axes[r, col].set_xticks([]); axes[r, col].set_yticks([])
                 if r == 0:
-                    axes[r, col].set_title(["synthetic", "real (test)"][col], fontsize=9)
+                    axes[r, col].set_title(["synthetic", "real (held-out)"][col], fontsize=12)
             if c is not None:
-                axes[r, 0].set_ylabel(ds.class_name(c)[:18], rotation=0, ha="right", va="center", fontsize=7)
+                axes[r, 0].set_ylabel(ds.class_name(c)[:24], rotation=0, ha="right", va="center", fontsize=10)
         fig.tight_layout()
         fig.savefig(run / f"sample_grid{sfx}.png", dpi=120)
     print(f"[sample] {len(ys)} samples in {secs}s -> {run / f'samples{sfx}.npz'} (non-finite: {n_bad})")

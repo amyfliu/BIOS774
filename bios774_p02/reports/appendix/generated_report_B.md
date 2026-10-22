@@ -1,122 +1,133 @@
 # generated_report_B: PathMNIST — synthetic images to balance tissue classes
 
-**Verdict:** Do not use synthetic images here: the tissue classes are already nearly balanced, and adding generated images made the classifier much worse (macro-F1 0.21 vs 0.62 with real data only).
+**Verdict:** Use with restrictions — the synthetic images gave a small, statistically clear gain for a tissue classifier, but they are visibly imperfect, the original imbalance was mild, and the gain cannot be credited to "balancing" specifically.
 
 ## 1. Summary
 
-- **Question:** Can synthetic images for under-represented tissue types improve a downstream tissue classifier?
-- **Approach:** Trained a class-conditional diffusion model (12 min), generated 4,000 images each for the three smallest classes (12,000 total), and compared a classifier trained on real+synthetic against real data only, class weighting and random oversampling.
-- **Result:** Real data only scored best (macro-F1 0.619); oversampling 0.584; class weighting 0.472; real+synthetic 0.211. Every difference favouring the baselines has a confidence interval excluding 0.
-- **Recommendation:** Train on the real data as is. Use class weighting or oversampling only if a specific class is later shown to be neglected.
+**Question:** Can synthetic images top up under-represented tissue types and help a downstream tissue classifier?
+**Approach:** One class-conditional diffusion model (12 minutes of training), 5,770 synthetic images for the eight smaller classes, compared with plain real data, class re-weighting and random oversampling.
+**Result:** Macro-F1 on the independent test set was 0.827 with synthetic data vs 0.808 for the best baseline (interval for the difference: +0.015 to +0.023). But a classifier separates synthetic from real 91% of the time, and only 53% of synthetic images were recognised as the intended tissue.
+**Recommendation:** Use as a supplement only (marked synthetic, real validation/test data), not as a substitute for real images; class weights/oversampling add nothing here.
 
 ## 2. Data at a glance
 
-- 97,176 colon-pathology patches, 28×28 RGB, 9 tissue classes; 89,996 for training, 7,180 held-out real test images.
-- Imbalance is mild: the largest class (colorectal adenocarcinoma epithelium, 12,885 training images) is only 1.64× the smallest (normal colon mucosa, 7,886). Class balance score is 0.995 of 1.
-- Even the "rare" classes have thousands of real examples, so there is little to fix by generation.
+- 107,180 colon-pathology patches, 28×28 RGB, nine tissue classes; 89,996 for training, 10,004 validation (same source), 7,180 test (different patients and staining).
+- The imbalance is mild: the largest training class (adenocarcinoma epithelium, 12,885) is only 1.64× the smallest (normal colon mucosa, 7,886), below the ~3× level where balancing usually matters.
+- Neighbouring pixels are strongly correlated (0.90), so image-aware (convolutional) networks are appropriate.
 
-![Class counts and real examples per class](../../outputs/generated_report_B_pathmnist/profile.png){width=90%}
+![Data profile](../../outputs/generated_report_B_pathmnist/profile.png){width=90%}
 
 ## 3. Decision path
 
 | # | Step | Decision | Why |
 |:---|:------|:------------------|:-------------------------|
-| 1 | Goal | Class balancing; test whether it is needed | Classes are already nearly even, so synthetic images may add nothing |
-| 2 | Data prep | Scale pixels to [-1, 1] | Standard input range for image diffusion with a convolutional network |
-| 3 | Model | Conditional diffusion model, conv network | Enough images per class; diffusion gives sharpest samples |
-| 4 | Settings | Small diffusion net, 12 minutes training | Fits the 15-minute budget; leaves time for sampling and testing |
-| 5 | Training check | Training healthy but short | Loss fell steadily; time limit stopped it after 12 passes |
-| 6 | Generate | Add 4,000 images to each of 3 smallest classes | Lifts the rarest classes toward the largest; keeps sampling time modest |
-| 7 | Evaluate | Compare against simple baselines on a classifier | Synthetic data must beat class weights and oversampling to be worth using |
-| 8 | Recommend | Do not use synthetic images | They hurt the classifier; classes are already nearly balanced |
+| 1 | Goal | Balancing task; imbalance is mild, likely decline | Largest class is only 1.6 times the smallest; simple fixes probably suffice |
+| 2 | Data prep | Scale pixels to [-1, 1], keep image shape | Standard input range for image diffusion models; keeps spatial structure |
+| 3 | Model | Conditional diffusion model with conv network | Plenty of image data and we must choose which tissue to generate |
+| 4 | Settings | Small diffusion model, 12 minutes training | Probe speed is ~11 steps/s; this fits roughly 8-10k updates in budget |
+| 5 | Training check | Training looked healthy | Loss fell smoothly and noise prediction improved at every noise level |
+| 6 | Generate | Top up 8 classes to the largest class | Balancing means raising smaller classes to the size of the biggest |
+| 7 | Evaluate | Check realism, copying and classifier benefit | Balancing is judged by classifier gain over simple baselines, plus realism |
+| 8 | Recommend | Use with restrictions; baselines first | Small classifier gain, but images are visibly imperfect and imbalance is mild |
 
-The turning point was the first look at the data: with imbalance of only 1.64 the case for generation was weak from the start, so the model was trained as a fair test, and the evaluation then settled it.
+The turning point was the first decision: because the imbalance is so mild, the question became whether synthetic data beats simple fixes at all, so the baselines were included in the test from the start.
 
 ## 4. What was generated
 
-12,000 synthetic 28×28 colour images: 4,000 each of normal colon mucosa, mucus and adipose (fat), the three smallest classes. The figure shows 10 synthetic and 10 real examples per class. Synthetic adipose lacks the clear fat-cell outlines; synthetic mucus and mucosa are dark, blotchy textures lacking the gland and fibre structure of real tissue.
+5,770 synthetic 28×28 images from a class-conditional diffusion model, only for the eight classes smaller than adenocarcinoma epithelium (between 156 and 1,111 per class, scaled to the 20,000-image real subset used in the classifier test). Real held-out images are shown for comparison. Synthetic images are recognisable but often darker or more saturated than real ones, and the normal-mucosa samples lack the gland structure of real mucosa.
 
-![Synthetic (left) vs real test images (right)](../../outputs/generated_report_B_pathmnist/ddpm_conv_ch32/sample_grid_balance.png){width=90%}
+![Synthetic (left) vs real held-out (right) images by class](../../outputs/generated_report_B_pathmnist/ddpm_conv_ch32/sample_grid_balance.png){width=90%}
 
 ## 5. Results
 
-Realism of the synthetic images (three generated classes only; real-vs-real values in brackets are the best achievable):
+**Downstream classifier (real test set from another collection; average of 3 runs).**
+
+| Training data | Accuracy | Macro-F1 |
+|:---|---:|---:|
+| Real only | 0.859 | 0.808 |
+| Real, class-weighted | 0.854 | 0.799 |
+| Real, random oversampling | 0.854 | 0.798 |
+| Real + synthetic | 0.877 | 0.827 |
+
+Gain over the best baseline: +0.019 macro-F1 (interval +0.015 to +0.023), well beyond the run-to-run spread of the baseline (0.003). Eight classes were topped up; average F1 on them rose from 0.793 to 0.816.
+
+**Realism and copying (synthetic vs real validation images, same classes).**
 
 | Measure | Synthetic | Real vs real |
 |:---|---:|---:|
-| Realism: share of synthetic images that look like real ones (precision) | 0.33 | 0.73 |
-| Coverage: share of real images resembled by synthetic ones (recall) | 0.76 | 0.85 |
-| A classifier can tell synthetic from real (two-sample test; 0.5 = cannot) | 0.957 | 0.900 |
-| Recognised as intended tissue by a real-trained classifier | 0.55 | 0.60 |
+| Distinguishable from real (classifier accuracy; 0.5 = no) | 0.913 | 0.502 |
+| Realism (precision) | 0.60 | 0.96 |
+| Coverage (recall) | 0.80 | 0.96 |
+| Recognised as intended class | 0.53 | 0.96 |
 
-The images are easily told apart from real ones and often not recognised as the intended type (mucus 0.45, mucosa 0.49). There is no sign of copying: the share of synthetic images whose nearest real image is a training image is 0.47 (0.50 expected), with no exact copies.
-
-Effect on a downstream classifier (trained on real training images, scored on the real test set; 9 classes):
-
-| Training set | Macro-F1 |
-|:---|---:|
-| Real only | 0.619 |
-| Real + class weights | 0.472 |
-| Real + random oversampling | 0.584 |
-| Real + synthetic (12,000) | 0.211 |
-
-Real+synthetic minus real-only: 95% CI [−0.419, −0.397]; minus class weighting [−0.273, −0.249]; minus oversampling [−0.384, −0.362]. Each of the three target classes has 741–1,338 test images, so per-class results are not anecdotal. With synthetic data, recall for adipose fell from 0.60 to 0.00, and several non-target classes (lymphocytes, stroma) collapsed too, because the poorly-realistic images pulled decision boundaries.
+Recognition was worst for normal colon mucosa (0.23) and cancer-associated stroma (0.42). There was no sign of copying: the nearest real neighbour of a synthetic image was a training image 50.1% of the time (50% expected), with no exact copies.
 
 ## 6. Recommendation
 
-**Do not use** these synthetic images. Use the real training set unchanged (real-only was the best option). Deciding numbers: macro-F1 0.211 with synthetic vs 0.619 real-only (CI of difference excludes 0), and class imbalance of just 1.64. Caveats: the diffusion model was small and stopped by the time limit after about 8,400 updates, so better synthetic images are possible; but closing a 0.40 macro-F1 gap, to merely match a baseline, is unlikely to be worth it when no imbalance problem exists. Class weighting also lowered macro-F1 in this setting, so it is not a free fix either. What would change the verdict: a much more severe imbalance (e.g. a class under ~500 images), or a much longer-trained, validated generator that beats the real-only baseline.
+**Use with restrictions.** The pre-set criterion (beat the best non-generative baseline with an interval excluding zero) was met, so the synthetic images (`ddpm_conv_ch32/samples_balance.npz`) can supplement classifier training. Restrictions:
+
+- Mark them as synthetic; keep validation and test data real.
+- They live in 28×28 pixel space, with images produced at guidance 1.5.
+- Label noise: about half of the synthetic images are not recognised as their intended class, so classes such as normal mucosa gain little real information.
+- The gain may come from extra data or regularisation rather than balance (see Limitations), and the original imbalance was mild, so class weights or oversampling are not needed.
+- No formal privacy guarantee; the copying check is evidence, not proof.
+
+What would change this: a size-matched control (e.g. extra synthetic images of all classes), lower guidance or longer training giving more realistic images, or a more strongly imbalanced real dataset.
 
 ## 7. Limitations
 
-- One generator, one short training run, one sampling setting (guidance 2.0), no iteration (the budget was nearly spent).
-- Only three classes were topped up (to about 12,000 each, roughly the largest class), not all nine.
-- The evaluation classifier is small and reaches only 0.62 macro-F1 even on real data, with weak performance on stroma (F1 0.11) and mucus; single training run, so differences between baselines are less certain than the bootstrap intervals suggest (they capture test-set noise only).
-- No formal privacy guarantee; the copying check is evidence, not proof.
+- No control isolates balancing from simply adding more (synthetic) data; the real training subset used was 20,000 images.
+- The classifier is small and trained for 6 epochs on 3 seeds; the interval covers test-set noise only.
+- The realism judge is a small CNN trained on the same data, not a standard pretrained network.
+- Training was limited to 12 minutes (about 15.6k steps, 40,000-image subsample); no tuning of guidance or sampling was done, and no second model family was compared.
+- The test set comes from a different source, so absolute scores also reflect a source shift.
 
 ## Appendix A. Full decision log
 
-1. **Goal** *(objective skill)* — Primary task: class balancing. Success: recommend synthetic only if macro-F1 of real+synthetic beats best of real_only/class-weighted/oversample with paired bootstrap CI excluding 0; else recommend the simple baseline. Run one cheap conditional DDPM to give generation a fair test.
-   - *Evidence:* profile.json: imbalance_ratio_max_over_min=1.64 (<3), normalized_entropy=0.9949, smallest class normal colon mucosa n_train=7886
-   - *Alternatives rejected:* decline outright without any evidence: rejected, cheap test can show baselines
-2. **Data prep** *(preprocessing skill)* — --prep scale_pm1, no subsampling of rare classes
-   - *Evidence:* profile.json: uint8 0-255, neighbour_pixel_correlation=0.9032
-   - *Alternatives rejected:* scale01: used for flows only
-3. **Model** *(model-selection skill)* — conditional DDPM, conv backbone, ch=32
-   - *Evidence:* n_train=89996, smallest class 7886 (>5k)
-   - *Alternatives rejected:* cVAE: blurry; WGAN: fragile
-4. **Settings** *(diffusion skill)* — ddpm conv ch=32, T=1000 cosine, p_uncond 0.1, ema 0.999, bs128, lr2e-4, max-minutes 12, full train split (smoke test passed)
-   - *Evidence:* smoke run ok (ddpm_probe/train_log.json)
-   - *Alternatives rejected:* ch=64: ~4x slower, too few steps
-5. **Training check** *(diffusion skill)* — ddpm_conv_ch32: stopped by 12 min limit at epoch 12 (~8.4k steps, below the 10k target); eps_mse falls from 0.24 (t5%) to 0.001 (t95%) as expected
-   - *Evidence:* train_log.json final_diagnostics; loss.png
-   - *Alternatives rejected:* retrain longer: budget exhausted (12 of 15 min used)
-6. **Generate** *(diffusion skill)* — class-counts: normal colon mucosa 4000, mucus 4000, adipose 4000; DDIM 50 steps, guidance 2.0, tag balance
-   - *Evidence:* probe: 100 samples in 3.3s (sample_config_probe.json); train counts 7886/8006/9366
-   - *Alternatives rejected:* full balance to 12885 (~26k images): too slow
-7. **Evaluate** *(evaluation skill)* — fidelity, memorization, utility augment on samples_balance. Synthetic images are visibly unrealistic (grid), recognised as intended class only 55% (real 60%), C2ST 0.957 vs 0.900 ref, precision 0.33 vs 0.73. Adding them collapses macro-F1 to 0.211 vs real_only 0.619, class-weighted 0.472, oversample 0.584; all CIs of difference below 0. No copying (frac_nearest_train 0.468, 0 exact copies).
-   - *Evidence:* metrics_balance.json
-   - *Alternatives rejected:* skip fidelity: rejected, skill says always run
-8. **Recommend** *(recommendation skill)* — Do not use (use real data as is; real_only was best baseline). No iteration run: 12 of 15 budget minutes used, and imbalance 1.64 means little to fix; a longer-trained model would have to overcome a -0.40 macro-F1 gap.
-   - *Evidence:* metrics_balance.json macro_f1_diff_95ci synthetic_minus_real_only [-0.4189,-0.3969]; profile.json imbalance 1.64
-   - *Alternatives rejected:* retrain/iterate: unaffordable and unlikely to change verdict
+1. **Goal** *(objective skill)* — Task = class balancing. Success: recommend synthetic only if real+synthetic macro-F1 beats best of real_only/class-weighted/oversample with paired bootstrap CI excluding 0 and diff > 2 seed SDs; else recommend baseline. Real reference: val for fidelity, test for classifier. Conditioning on y needed. Run one small conditional DDPM to test this empirically since the augment evaluation supplies the baselines.
+   - *Evidence:* profile.json: imbalance_ratio_max_over_min=1.64 (<3), smallest class normal colon mucosa n_train=7886, normalized_entropy=0.9949
+   - *Alternatives rejected:* Decline outright without evidence: rejected, baselines come with augment evaluation at modest cost
+2. **Data prep** *(preprocessing skill)* — --prep scale_pm1, conv backbone, no flattening
+   - *Evidence:* profile.json: value_range 0-255, neighbour_pixel_correlation=0.904, no missing values
+   - *Alternatives rejected:* mlp/flatten: discards spatial structure
+3. **Model** *(model-selection skill)* — conditional DDPM, conv UNet, ch=32; no second family
+   - *Evidence:* n_train=89996 >> 5k; image data; need class control (model-selection rule 3)
+   - *Alternatives rejected:* cVAE: blurry samples; WGAN-GP: fragile, no specific reason
+4. **Settings** *(diffusion skill)* — ch=32, T=1000 cosine, p_uncond=0.1, ema 0.999, lr 2e-4, batch 64, max-train 40000 (stratified), max-minutes 12 (probe used 1; total 13 of 15)
+   - *Evidence:* probe train_log: 156 steps in 14.3s on mps; smoke test passed
+   - *Alternatives rejected:* ch=64: ~4x slower, too few steps; full 90k train: no benefit within the step budget
+5. **Training check** *(diffusion skill)* — Health check passed; stopped by 12-min limit (25 epochs, ~15.6k steps at batch 64)
+   - *Evidence:* train_log.json: eps_mse t5=0.229, t25=0.062, t50=0.020, t75=0.0056, t95=0.0007; loss.png plateau ~0.056 without divergence
+   - *Alternatives rejected:* none needed
+6. **Generate** *(diffusion skill)* — class-counts (20k-subset scale) 782/750/561/552/1084/156/1111/774 for classes 0-7, none for class 8; DDIM 50 steps, guidance 1.5, tag balance; 5770 samples
+   - *Evidence:* sample_config_balance.json: 164.2s, non-finite 0; targets scaled from profile.json class_counts_train to the 20,000-image real subset used by the augment test
+   - *Alternatives rejected:* guidance 1.0: less class-typical; more samples: no budget
+7. **Evaluate** *(evaluation skill)* — Ran fidelity, memorization and augment utility on the balance samples. Criterion met nominally: real+synthetic macro-F1 0.8271 vs best baseline (real_only) 0.8080; diff CI [0.0145,0.0232]; seed SD 0.0007-0.018. But fidelity weak: C2ST 0.913 (ref 0.5015), precision 0.603 / recall 0.802 (ref 0.964/0.962), label consistency 0.5265 (ref 0.9636), mucosa 0.2313. No copying: nearest-train fraction 0.501 (expected 0.5), 0 exact copies. Caveat: no size-matched control, so the gain cannot be attributed to balancing; the real subset was already near balanced (1.64x).
+   - *Evidence:* ddpm_conv_ch32/metrics_balance.json
+   - *Alternatives rejected:* No further iteration: budget nearly spent (13/15 min); lower guidance resample would not remove the missing size-matched control
+8. **Recommend** *(recommendation skill)* — Use with restrictions: samples_balance.npz may supplement training of the tissue classifier (flag as synthetic; keep val/test real); validate on real held-out data from a different source; do not use as a stand-in for real images. Class weights/oversampling are not needed for this mild imbalance and were not better than plain real data.
+   - *Evidence:* metrics_balance.json: macro-F1 0.8271 vs 0.8080/0.7988/0.7983 (real_only/class-weighted/oversample); profile.json imbalance 1.64
+   - *Alternatives rejected:* Do not use: gain excludes 0 and no copying; Use: fidelity too weak
 
 ## Appendix B. Training details
 
-Conditional diffusion model with a small convolutional U-Net (448,163 parameters), pixels scaled to [−1, 1], 1,000 noise steps with cosine schedule, label dropout 0.1, exponential moving average 0.999, batch 128, learning rate 2e-4, full training set (89,996 images). Stopped by the 12-minute limit after 12 of 100 planned epochs (about 8,400 updates). Loss fell from 0.139 to 0.058 and flattened. Noise-prediction error fell from 0.24 (early steps) to 0.001 (late steps), as expected for a trained model. Sampling: 50 deterministic steps, guidance 2.0, 12,000 images in 354 s.
+- Conditional diffusion model (small convolutional UNet, 448k parameters in the probe configuration, width 32), 1,000 noise steps with cosine schedule, label dropout 0.1 for guidance, EMA 0.999, learning rate 2e-4, batch 64, 40,000-image stratified training subset.
+- Stopped by the 12-minute limit after 25 epochs (721 s); a 1-minute probe used 1 further minute (13 of 15 minutes in total).
+- Health check: loss plateaued near 0.056 without divergence; noise-prediction error fell from 0.229 (low noise) to 0.0007 (high noise).
+- Sampling: 50 DDIM steps, guidance 1.5, 164 s for 5,770 images.
 
-![Training loss](../../outputs/generated_report_B_pathmnist/ddpm_conv_ch32/loss.png){width=45%}
+![Training loss](../../outputs/generated_report_B_pathmnist/ddpm_conv_ch32/loss.png){width=75%}
 
 ## Appendix C. Glossary
 
-- **Macro-F1:** average over classes of a balanced precision/recall score; treats every class equally.
-- **Class weighting:** counting errors on smaller classes more heavily during training.
-- **Random oversampling:** repeating real images of smaller classes.
-- **Diffusion model (DDPM):** generator that learns to remove noise step by step; images are made by denoising random noise.
-- **Guidance:** a setting that makes generated images more typical of the requested class, at some cost to variety.
-- **Precision / recall (fidelity):** realism / coverage of synthetic images relative to real ones.
-- **Two-sample test (C2ST):** accuracy of a classifier separating real from synthetic; 0.5 means indistinguishable.
-- **Label consistency:** how often a real-trained classifier agrees with the intended class of a synthetic image.
-- **Confidence interval (bootstrap):** range of plausible values for a difference given test-set noise.
+- **Macro-F1:** F1 score averaged equally over classes; sensitive to weak classes.
+- **Class weighting / oversampling:** non-generative ways of giving small classes more influence in training.
+- **Diffusion model (DDPM):** generates images by gradually removing noise; here conditioned on tissue class.
+- **Guidance:** a setting that makes generated images more typical of the requested class, at the cost of variety.
+- **Precision / recall (of synthetic data):** share of synthetic images that look real / share of real variety covered.
+- **Classifier two-sample test:** how well a classifier tells synthetic from real; 0.5 means it cannot.
+- **Label consistency:** share of synthetic images a real-trained classifier assigns to the intended class.
+- **Paired bootstrap interval:** uncertainty range for a difference in scores, from resampling the test set.
 
 ## Appendix D. Reproduce
 
@@ -124,8 +135,8 @@ Tool calls in the order the agent ran them (smoke tests and --help omitted):
 
 ```bash
 python3 tools/inspect_data.py --data data/pathmnist --out outputs/generated_report_B_pathmnist
-python3 tools/train.py --data data/pathmnist --out outputs/generated_report_B_pathmnist/ddpm_conv_ch32 --model ddpm --backbone conv --prep scale_pm1 --conditional --epochs 100 --batch-size 128 --lr 2e-4 --params '{"ch":32,"T":1000,"schedule":"cosine","p_uncond":0.1,"ema_decay":0.999}' --max-minutes 12
-python3 tools/sample.py --run outputs/generated_report_B_pathmnist/ddpm_conv_ch32 --class-counts '{"normal colon mucosa": 100}' --steps 50 --guidance 2.0 --tag probe
-python3 tools/sample.py --run outputs/generated_report_B_pathmnist/ddpm_conv_ch32 --class-counts '{"normal colon mucosa": 4000, "mucus": 4000, "adipose": 4000}' --steps 50 --guidance 2.0 --tag balance
+python3 tools/train.py --data data/pathmnist --out outputs/generated_report_B_pathmnist/ddpm_probe --model ddpm --backbone conv --prep scale_pm1 --conditional --max-train 20000 --epochs 1 --batch-size 128 --lr 2e-4 --params '{"ch":32,"T":1000,"schedule":"cosine","p_uncond":0.1,"ema_decay":0.999}' --max-minutes 1
+python3 tools/train.py --data data/pathmnist --out outputs/generated_report_B_pathmnist/ddpm_conv_ch32 --model ddpm --backbone conv --prep scale_pm1 --conditional --max-train 40000 --epochs 200 --batch-size 64 --lr 2e-4 --params '{"ch":32,"T":1000,"schedule":"cosine","p_uncond":0.1,"ema_decay":0.999}' --max-minutes 12
+python3 tools/sample.py --run outputs/generated_report_B_pathmnist/ddpm_conv_ch32 --class-counts '{"0":782,"1":750,"2":561,"3":552,"4":1084,"5":156,"6":1111,"7":774,"8":0}' --steps 50 --guidance 1.5 --tag balance
 python3 tools/evaluate.py --run outputs/generated_report_B_pathmnist/ddpm_conv_ch32 --tasks fidelity,memorization,utility --utility augment --samples-tag balance
 ```

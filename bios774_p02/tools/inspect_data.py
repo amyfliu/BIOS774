@@ -94,12 +94,12 @@ def main():
 
     # figure
     ncol = 2 if ds.modality == "image" else 1
-    fig, axes = plt.subplots(1, ncol, figsize=(6 * ncol, 3.4), squeeze=False)
+    fig, axes = plt.subplots(1, ncol, figsize=(6.5 * ncol, 4.0), squeeze=False)
     if ds.y is not None:
         c = prof["labels"]["class_counts"]
         axes[0, 0].barh(list(c)[::-1], list(c.values())[::-1], color="#4C78A8")
         axes[0, 0].set_xlabel("samples")
-        axes[0, 0].tick_params(labelsize=7)
+        axes[0, 0].tick_params(labelsize=10)
         axes[0, 0].set_title("Samples per class (all splits)")
     if ds.modality == "image":
         H, W, C = ds.image_shape
@@ -109,7 +109,7 @@ def main():
             rows.append(np.concatenate([X[i].reshape(H, W, C) for i in ik], 1))
         axes[0, 1].imshow(np.concatenate(rows, 0).astype(np.uint8).squeeze())
         axes[0, 1].set_yticks([H * k + H / 2 for k in range(ds.n_classes)])
-        axes[0, 1].set_yticklabels([ds.class_name(k)[:18] for k in range(ds.n_classes)], fontsize=6)
+        axes[0, 1].set_yticklabels([ds.class_name(k)[:22] for k in range(ds.n_classes)], fontsize=9)
         axes[0, 1].set_xticks([])
         axes[0, 1].set_title("Real examples, one row per class")
     fig.tight_layout()

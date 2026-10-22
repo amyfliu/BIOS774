@@ -78,17 +78,36 @@ class GlobalAvgPool(nn.Module):
 
 
 class SmallCNN(nn.Module):
+    """Small CNN used to JUDGE images (features, label checks, classifier tests).
+    Per-channel normalization statistics are stored as buffers, so a cached network
+    carries them along."""
+
     def __init__(self, C, n_classes):
         super().__init__()
-        self.f = nn.Sequential(
+        self.register_buffer("mu", torch.zeros(1, C, 1, 1))
+        self.register_buffer("sd", torch.ones(1, C, 1, 1))
+        self.f_raw = nn.Sequential(
             nn.Conv2d(C, 32, 3, 1, 1), nn.BatchNorm2d(32), nn.ReLU(),
             nn.Conv2d(32, 64, 3, 1, 1), nn.BatchNorm2d(64), nn.ReLU(), nn.MaxPool2d(2),
             nn.Conv2d(64, 128, 3, 1, 1), nn.BatchNorm2d(128), nn.ReLU(), nn.MaxPool2d(2),
             GlobalAvgPool(), nn.Identity(), nn.Linear(128, 128), nn.ReLU())
         self.head = nn.Linear(128, n_classes)
 
+    def f(self, x):
+        return self.f_raw((x - self.mu) / self.sd)
+
     def forward(self, x):
         return self.head(self.f(x))
+
+
+def _augment(x):
+    """Label-preserving for tissue patches: random flips + a random 90-degree rotation."""
+    flip_h = torch.rand(x.shape[0], 1, 1, 1, device=x.device) < 0.5
+    flip_v = torch.rand(x.shape[0], 1, 1, 1, device=x.device) < 0.5
+    x = torch.where(flip_h, x.flip(3), x)
+    x = torch.where(flip_v, x.flip(2), x)
+    k = int(torch.randint(0, 4, (1,)))
+    return torch.rot90(x, k, dims=(2, 3)).contiguous() if k else x
 
 
 def _img_tensor(U, shape, dev):
@@ -98,25 +117,30 @@ def _img_tensor(U, shape, dev):
     return torch.from_numpy(a).to(dev).contiguous()
 
 
-def train_cnn(U, y, shape, n_classes, dev, epochs=5, weights=None, seed=0):
+def train_cnn(U, y, shape, n_classes, dev, epochs=6, weights=None, seed=0, batch=256, lr=3e-3):
+    """Standard recipe: channel normalization, flips/rotations, AdamW + one-cycle LR."""
     set_seed(seed)
     net = SmallCNN(shape[2], n_classes).to(dev)
-    opt = torch.optim.Adam(net.parameters(), lr=2e-3)
     X = _img_tensor(U, shape, dev)
+    with torch.no_grad():
+        net.mu.copy_(X.mean(dim=(0, 2, 3), keepdim=True))
+        net.sd.copy_(X.std(dim=(0, 2, 3), keepdim=True) + 1e-6)
     yt = torch.from_numpy(y.astype(np.int64)).to(dev)
     w = torch.tensor(weights, dtype=torch.float32, device=dev) if weights is not None else None
-    lossf = nn.CrossEntropyLoss(weight=w)
+    lossf = nn.CrossEntropyLoss(weight=w, label_smoothing=0.05)
+    steps_per_epoch = max(1, len(X) // batch)
+    opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=5e-4)
+    sched = torch.optim.lr_scheduler.OneCycleLR(opt, max_lr=lr, total_steps=epochs * steps_per_epoch)
     for _ in range(epochs):
         net.train()
         perm = torch.randperm(len(X), device=dev)
-        for b in range(0, len(X), 128):
-            bi = perm[b:b + 128]
-            if len(bi) < 2:
-                continue
-            loss = lossf(net(X[bi]), yt[bi])
-            opt.zero_grad()
+        for b in range(steps_per_epoch):
+            bi = perm[b * batch:(b + 1) * batch]
+            loss = lossf(net(_augment(X[bi])), yt[bi])
+            opt.zero_grad(set_to_none=True)
             loss.backward()
             opt.step()
+            sched.step()
     return net.eval()
 
 
@@ -129,22 +153,33 @@ def cnn_apply(net, U, shape, dev, what="pred"):
     return np.concatenate(out)
 
 
+EVAL_CNN_VERSION = "v2"
+
+
 def eval_cnn(ds, dev):
-    """Train once on real train (<=20k images) and cache; used for features + label checks."""
+    """Judging CNN: trained once on real train images (<=30k) and cached. Retrained
+    automatically when the data or the recipe changes (fingerprint check)."""
     cache = ROOT / "outputs" / "_cache" / ds.name
     cache.mkdir(parents=True, exist_ok=True)
-    f = cache / "eval_cnn.pt"
+    f, fj = cache / "eval_cnn.pt", cache / "eval_cnn.json"
+    fp = {"version": EVAL_CNN_VERSION, "n": int(len(ds.X)),
+          "splits": {s_: int((ds.split == s_).sum()) for s_ in np.unique(ds.split)},
+          "classes": int(ds.n_classes)}
     net = SmallCNN(ds.image_shape[2], ds.n_classes).to(dev)
-    if f.exists():
+    if f.exists() and fj.exists() and read_json(fj).get("fingerprint") == fp:
         net.load_state_dict(torch.load(f, map_location=dev))
-        return net.eval(), read_json(cache / "eval_cnn.json")
-    tr = ds.indices("train", max_n=20000)
-    te = ds.indices("test")
-    net = train_cnn(ds.X[tr].astype(np.uint8), ds.y[tr], ds.image_shape, ds.n_classes, dev, epochs=4)
-    acc = float((cnn_apply(net, ds.X[te].astype(np.uint8), ds.image_shape, dev) == ds.y[te]).mean())
+        return net.eval(), read_json(fj)
+    tr = ds.indices("train", max_n=30000)
+    net = train_cnn(ds.X[tr].astype(np.uint8), ds.y[tr], ds.image_shape, ds.n_classes, dev, epochs=10)
+    info = {"fingerprint": fp, "n_train": int(len(tr)), "epochs": 10}
+    for split in np.unique(ds.split):
+        if split == "train":
+            continue
+        idx = ds.indices(split)
+        acc = float((cnn_apply(net, ds.X[idx].astype(np.uint8), ds.image_shape, dev) == ds.y[idx]).mean())
+        info[f"real_{split}_accuracy"] = round(acc, 4)
     torch.save(net.state_dict(), f)
-    info = {"n_train": int(len(tr)), "real_test_accuracy": round(acc, 4)}
-    write_json(cache / "eval_cnn.json", info)
+    write_json(fj, info)
     return net, info
 
 
@@ -237,14 +272,34 @@ def scores(y, p, K, names, focus=None):
     return out
 
 
+def scores_multi(y, plist, K, names, focus=None):
+    """Average the scores of several classifier runs (different seeds); keep the spread."""
+    runs = [scores(y, p, K, names, focus) for p in plist]
+    out = {}
+    for k in runs[0]:
+        if isinstance(runs[0][k], dict):
+            out[k] = {c: round(float(np.mean([r[k][c] for r in runs])), 4) for c in runs[0][k]}
+        else:
+            out[k] = float(np.mean([r[k] for r in runs]))
+    out["macro_f1_sd_across_seeds"] = float(np.std([r["macro_f1"] for r in runs]))
+    out["macro_f1_per_seed"] = [round(r["macro_f1"], 4) for r in runs]
+    return out
+
+
 def paired_bootstrap(y, p_a, p_b, K, n_boot=1000, seed=0):
-    """95% CI for macro-F1(b) - macro-F1(a) by resampling test rows."""
+    """95% CI for macro-F1(b) - macro-F1(a) by resampling test rows. p_a / p_b may be
+    lists of predictions from several seeds: the difference of seed-averaged macro-F1
+    is bootstrapped (captures test-set noise; seed noise is reported separately)."""
+    pa = p_a if isinstance(p_a, list) else [p_a]
+    pb = p_b if isinstance(p_b, list) else [p_b]
     rng = np.random.default_rng(seed)
+    n_boot = n_boot if len(pa) * len(pb) <= 2 else max(300, n_boot // 3)
     d = []
     for _ in range(n_boot):
         i = rng.integers(0, len(y), len(y))
-        d.append(f1_score(y[i], p_b[i], labels=range(K), average="macro", zero_division=0)
-                 - f1_score(y[i], p_a[i], labels=range(K), average="macro", zero_division=0))
+        fb = np.mean([f1_score(y[i], q[i], labels=range(K), average="macro", zero_division=0) for q in pb])
+        fa = np.mean([f1_score(y[i], q[i], labels=range(K), average="macro", zero_division=0) for q in pa])
+        d.append(fb - fa)
     return [round(float(np.percentile(d, 2.5)), 4), round(float(np.percentile(d, 97.5)), 4)]
 
 
@@ -256,9 +311,12 @@ def main():
     p.add_argument("--samples-tag", default="")
     p.add_argument("--utility", choices=["tstr", "augment"], default=None)
     p.add_argument("--real-max", type=int, default=None,
-                   help="augment: use only this many real training rows (simulates scarce data)")
+                   help="augment: use only this many real training rows (stratified). Default for images: "
+                        "20000, to keep 4 arms x seeds affordable; tabular: all")
     p.add_argument("--anomaly-classes", default=None)
-    p.add_argument("--clf-epochs", type=int, default=5)
+    p.add_argument("--clf-epochs", type=int, default=6, help="image classifier epochs (utility)")
+    p.add_argument("--seeds", type=int, default=None,
+                   help="classifier repeats with different seeds (default: 3 for images, 1 for tabular)")
     p.add_argument("--data", default=None)
     p.add_argument("--device", default="auto")
     p.add_argument("--seed", type=int, default=0)
@@ -280,6 +338,11 @@ def main():
     exc = ds.resolve_classes(",".join(cfg.get("exclude_classes", [])))
     tr_idx = ds.indices("train", include=inc, exclude=exc)
     te_idx = ds.indices("test", include=inc, exclude=exc)
+    # Reference for realism / copy checks: a held-out split from the SAME source as train
+    # ("val" when the dataset has one); the test split may come from a different source.
+    ref_split = "val" if "val" in set(np.unique(ds.split)) else "test"
+    rf_idx = ds.indices(ref_split, include=inc, exclude=exc)
+    res["real_reference_split"] = ref_split
 
     need_samples = any(t in tasks for t in ("fidelity", "memorization", "utility"))
 
@@ -310,48 +373,49 @@ def main():
         F_tr, y_trs = feat(raw_real(tr_sub)), ds.y[tr_sub]
         F_te = feat(raw_real(te_idx))
         y_te = ds.y[te_idx]
+        F_rf, y_rf = (F_te, y_te) if ref_split == "test" else (feat(raw_real(rf_idx)), ds.y[rf_idx])
         # Class-matched real reference: if only some classes were generated (e.g. class
         # balancing), compare against real data of those classes only.
         syn_classes = np.unique(ys) if labelled else np.arange(max(K, 1))
-        m_te = np.isin(y_te, syn_classes) if labelled else np.ones(len(y_te), bool)
+        m_rf = np.isin(y_rf, syn_classes) if labelled else np.ones(len(y_rf), bool)
         m_tr = np.isin(y_trs, syn_classes) if labelled else np.ones(len(y_trs), bool)
         res["real_reference_classes"] = [names[k] for k in syn_classes] if labelled else "all"
 
     # ---------------------------------------------------------------- fidelity
     if "fidelity" in tasks:
-        A, yA = sub(F_te[m_te], MAX_EVAL, 1, y_te[m_te])
+        A, yA = sub(F_rf[m_rf], MAX_EVAL, 1, y_rf[m_rf])
         B, yB = sub(F_syn, MAX_EVAL, 2, ys)
         R = sub(F_tr[m_tr], MAX_EVAL, 3)
         pr, rc = prec_recall(A, B)
         pr0, rc0 = prec_recall(A, R)
         fid = {"frechet": frechet(A, B), "precision": pr, "recall": rc, "mmd_rbf": mmd_rbf(A, B),
                "c2st_accuracy": c2st(A, B),
-               "reference_real_train_vs_real_test": {"frechet": frechet(A, R), "precision": pr0, "recall": rc0,
+               f"reference_real_train_vs_real_{ref_split}": {"frechet": frechet(A, R), "precision": pr0, "recall": rc0,
                                                      "mmd_rbf": mmd_rbf(A, R), "c2st_accuracy": c2st(A, R)},
                "n_real": len(A), "n_synthetic": len(B),
                "frechet_unreliable_small_n": bool(min(len(A), len(B)) < 2 * A.shape[1])}
         if labelled:
             if ds.modality == "image":
                 pred_syn = cnn_apply(net, syn_raw.astype(np.uint8), ds.image_shape, dev)
-                ref_acc = info["real_test_accuracy"]
+                ref_acc = info.get(f"real_{ref_split}_accuracy")
             else:
                 sc = StandardScaler().fit(F_tr)
                 clf = LogisticRegression(max_iter=3000, C=0.5).fit(sc.transform(F_tr), ds.y[tr_idx])
                 pred_syn = clf.predict(sc.transform(F_syn))
-                ref_acc = float((clf.predict(sc.transform(F_te)) == y_te).mean())
+                ref_acc = float((clf.predict(sc.transform(F_rf)) == y_rf).mean())
             fid["label_consistency"] = {
                 "accuracy_on_synthetic": float((pred_syn == ys).mean()),
-                "reference_accuracy_on_real_test": ref_acc,
+                f"reference_accuracy_on_real_{ref_split}": ref_acc,
                 "per_class": {names[k]: round(float((pred_syn[ys == k] == k).mean()), 4)
                               for k in np.unique(ys)}}
             per = {}
-            F_all_real = np.vstack([F_tr, F_te]) if ds.modality != "image" else None
-            y_all_real = np.r_[ds.y[tr_idx], y_te] if ds.modality != "image" else None
+            F_all_real = np.vstack([F_tr, F_rf]) if ds.modality != "image" else None
+            y_all_real = np.r_[ds.y[tr_idx], y_rf] if ds.modality != "image" else None
             for kk in np.unique(ys):
-                real_k = F_te[y_te == kk]
-                ref = "test"
+                real_k = F_rf[y_rf == kk]
+                ref = ref_split
                 if len(real_k) < 20 and F_all_real is not None:
-                    real_k, ref = F_all_real[y_all_real == kk], "train+test (few test cells)"
+                    real_k, ref = F_all_real[y_all_real == kk], f"train+{ref_split} (few held-out samples)"
                 syn_k = F_syn[ys == kk]
                 if len(real_k) >= 3 and len(syn_k) >= 3:
                     pk, rk = prec_recall(sub(real_k, 1500), sub(syn_k, 1500))
@@ -394,7 +458,7 @@ def main():
     # ---------------------------------------------------------------- memorization
     if "memorization" in tasks:
         tr_pool = tr_idx[np.isin(ds.y[tr_idx], syn_classes)] if labelled else tr_idx
-        te_pool = te_idx[np.isin(ds.y[te_idx], syn_classes)] if labelled else te_idx
+        te_pool = rf_idx[np.isin(ds.y[rf_idx], syn_classes)] if labelled else rf_idx
         te_pool = sub(te_pool, MAX_EVAL, 5)
         if ds.modality == "image":
             space = "pixels_scaled_0_1"
@@ -417,9 +481,10 @@ def main():
             "space": space,
             "frac_nearest_real_is_train": float((nn_i < len(tr_eq)).mean()),
             "frac_nearest_real_is_train_expected_if_no_memorization": round(len(tr_eq) / len(pooled), 3),
-            "n_train_in_pool": int(len(tr_eq)), "n_test_in_pool": int(len(te_pool)),
+            "n_train_in_pool": int(len(tr_eq)), "n_heldout_in_pool": int(len(te_pool)),
+            "heldout_split": ref_split,
             "median_nn_dist_synthetic_to_train": float(np.median(d_syn)),
-            "median_nn_dist_real_test_to_train": float(np.median(d_ref)),
+            "median_nn_dist_real_heldout_to_train": float(np.median(d_ref)),
             "ratio_synthetic_over_real": float(np.median(d_syn) / max(np.median(d_ref), 1e-12)),
             "frac_synthetic_closer_than_real_p1": float((d_syn < p1).mean()),
             "frac_synthetic_closer_than_real_p5": float((d_syn < p5).mean()),
@@ -444,6 +509,8 @@ def main():
         if not labelled:
             sys.exit("utility needs labelled (class-conditional) samples")
         ctx = {"modality": ds.modality, "shape": ds.image_shape, "K": K, "dev": dev, "clf_epochs": a.clf_epochs}
+        n_seeds = a.seeds or (3 if ds.modality == "image" else 1)       # logistic regression is deterministic
+        seeds = [a.seed + i for i in range(n_seeds)]
         if ds.modality == "image":
             Xte_c = ds.X[te_idx].astype(np.uint8)
             real_pool, syn_c = tr_idx, syn_raw.astype(np.uint8)
@@ -451,22 +518,27 @@ def main():
         else:
             Xte_c, syn_c = F_te, F_syn
             get_real = lambda idx: feat(raw_real(idx))  # noqa: E731
-        util = {"mode": a.utility, "classifier": "small CNN" if ds.modality == "image" else "logistic regression"}
+        util = {"mode": a.utility, "classifier": "small CNN" if ds.modality == "image" else "logistic regression",
+                "n_seeds": n_seeds, "test_split": "test"}
+        if ds.modality == "image":
+            util["classifier_epochs"] = a.clf_epochs
         if a.utility == "tstr":
             # real reference with the SAME per-class counts as the synthetic set
             rng = np.random.default_rng(a.seed)
             ref = np.concatenate([rng.choice(real_pool[ds.y[real_pool] == k], min((ys == k).sum(),
                                   (ds.y[real_pool] == k).sum()), replace=False) for k in np.unique(ys)])
-            p_syn = fit_predict(ctx, syn_c, ys, Xte_c)
-            p_real = fit_predict(ctx, get_real(ref), ds.y[ref], Xte_c)
-            util["train_on_synthetic"] = scores(y_te, p_syn, K, names)
-            util["train_on_real_same_size"] = scores(y_te, p_real, K, names)
+            p_syn = [fit_predict(ctx, syn_c, ys, Xte_c, seed=sd) for sd in seeds]
+            Xref = get_real(ref)
+            p_real = [fit_predict(ctx, Xref, ds.y[ref], Xte_c, seed=sd) for sd in seeds]
+            util["train_on_synthetic"] = scores_multi(y_te, p_syn, K, names)
+            util["train_on_real_same_size"] = scores_multi(y_te, p_real, K, names)
             util["n_train_each"] = int(len(ys))
             util["tstr_over_trtr_accuracy"] = util["train_on_synthetic"]["accuracy"] / max(
                 util["train_on_real_same_size"]["accuracy"], 1e-8)
             util["macro_f1_diff_95ci_(syn_minus_real)"] = paired_bootstrap(y_te, p_real, p_syn, K)
         else:
-            base = stratified_subsample(tr_idx, ds.y, a.real_max, a.seed) if a.real_max else tr_idx
+            real_max = a.real_max or (20000 if ds.modality == "image" else None)
+            base = stratified_subsample(tr_idx, ds.y, real_max, a.seed) if real_max and real_max < len(tr_idx) else tr_idx
             yb = ds.y[base]
             focus = [int(k) for k in np.unique(ys)]
             Xb = get_real(base)
@@ -482,8 +554,8 @@ def main():
             }
             preds = {}
             for name, (Xa, ya, wa) in arms.items():
-                preds[name] = fit_predict(ctx, Xa, ya, Xte_c, weights=wa, seed=a.seed)
-                util[name] = scores(y_te, preds[name], K, names, focus)
+                preds[name] = [fit_predict(ctx, Xa, ya, Xte_c, weights=wa, seed=sd) for sd in seeds]
+                util[name] = scores_multi(y_te, preds[name], K, names, focus)
             util["n_real_train"] = int(len(base))
             util["n_synthetic_added"] = {names[k]: int((ys == k).sum()) for k in focus}
             util["focus_classes"] = [names[k] for k in focus]

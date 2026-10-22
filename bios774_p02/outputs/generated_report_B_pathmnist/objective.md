@@ -4,4 +4,4 @@
 - report: reports/appendix/generated_report_B.md
 - training budget: 15 minutes
 - device: mps
-- started: 2026-10-22 11:47:49
+- started: 2026-10-22 18:25:48

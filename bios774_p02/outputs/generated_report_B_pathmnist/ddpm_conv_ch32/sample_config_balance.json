@@ -1,21 +1,26 @@
 {
-  "n_samples": 12000,
+  "n_samples": 5770,
   "labelled": true,
   "sampler_kwargs": {
     "temperature": 1.0,
     "add_noise": false,
     "steps": 50,
-    "guidance": 2.0,
+    "guidance": 1.5,
     "eta": 0.0
   },
   "latent_source": "prior",
   "n_distinct_reference_samples": null,
-  "seconds": 354.1,
+  "seconds": 164.2,
   "non_finite_samples_replaced": 0,
   "device": "mps",
   "class_counts": {
-    "adipose": 4000,
-    "mucus": 4000,
-    "normal colon mucosa": 4000
+    "adipose": 782,
+    "background": 750,
+    "debris": 561,
+    "lymphocytes": 552,
+    "mucus": 1084,
+    "smooth muscle": 156,
+    "normal colon mucosa": 1111,
+    "cancer-associated stroma": 774
   }
 }

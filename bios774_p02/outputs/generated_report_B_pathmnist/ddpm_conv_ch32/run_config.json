@@ -9,15 +9,15 @@
   "conditional": true,
   "include_classes": [],
   "exclude_classes": [],
-  "n_train": 89996,
+  "n_train": 39999,
   "model_input_shape": [
     3,
     28,
     28
   ],
-  "epochs_requested": 100,
-  "epochs_run": 12,
-  "batch_size": 128,
+  "epochs_requested": 200,
+  "epochs_run": 25,
+  "batch_size": 64,
   "lr": 0.0002,
   "params": {
     "T": 1000,
@@ -34,15 +34,15 @@
   "device": "mps",
   "smoke": false,
   "train_class_counts": {
-    "adipose": 9366,
-    "background": 9509,
-    "debris": 10360,
-    "lymphocytes": 10401,
-    "mucus": 8006,
-    "smooth muscle": 12182,
-    "normal colon mucosa": 7886,
-    "cancer-associated stroma": 9401,
-    "colorectal adenocarcinoma epithelium": 12885
+    "adipose": 4163,
+    "background": 4226,
+    "debris": 4605,
+    "lymphocytes": 4623,
+    "mucus": 3558,
+    "smooth muscle": 5414,
+    "normal colon mucosa": 3505,
+    "cancer-associated stroma": 4178,
+    "colorectal adenocarcinoma epithelium": 5727
   },
   "classes": [
     "adipose",

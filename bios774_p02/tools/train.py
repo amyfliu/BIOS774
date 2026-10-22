@@ -165,12 +165,13 @@ def main():
     write_json(out / "train_log.json", {"stop_reason": stop_reason, "train_seconds": round(timer.elapsed, 1),
                                         "epochs": log, "final_diagnostics": diag})
     keys = [k for k in log[0] if k not in ("epoch", "seconds", "beta")] if log else []
-    fig, axes = plt.subplots(1, max(1, len(keys)), figsize=(3.4 * max(1, len(keys)), 3.0))
+    n_pan = max(1, len(keys))
+    fig, axes = plt.subplots(1, n_pan, figsize=(max(6.0, 3.4 * n_pan), 3.2))
     for ax, k in zip(np.atleast_1d(axes), keys):
         ax.plot([r["epoch"] for r in log], [r.get(k, np.nan) for r in log])
         ax.set_title(PLAIN_LABEL.get(k, k), fontsize=9)
         ax.set_xlabel("epoch")
-    fig.suptitle(f"Training curves: {FAMILY_NAME.get(a.model, a.model)} ({a.backbone} network) on {ds.name}",
+    fig.suptitle(f"Training curves: {FAMILY_NAME.get(a.model, a.model)}\n({a.backbone} network, {ds.name})",
                  fontsize=10)
     fig.tight_layout()
     fig.savefig(out / "loss.png", dpi=110)

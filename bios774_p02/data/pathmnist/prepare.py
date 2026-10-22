@@ -2,8 +2,11 @@
 prepare.py — download and standardize PathMNIST (MedMNIST v2) for project 2.
 
 Adapted from bios774_p01/data/pathmnist/prepare.py. Differences for project 2:
-  * keeps the official MedMNIST `train` and `test` splits (as a `split`
-    column) so models are fit on train and evaluated on untouched real test;
+  * keeps the official MedMNIST `train`, `val` and `test` splits (as a `split`
+    column). train/val come from the same source collection (NCT-CRC-HE-100K);
+    test comes from a DIFFERENT collection (CRC-VAL-HE-7K). So `val` is the
+    like-for-like real reference for realism/copying checks, and `test` is the
+    "new data from elsewhere" check for downstream classifiers;
   * stores pixels as uint8 plus `image_shape` (H, W, C), so tools can rebuild
     images for convolutional models and sample grids;
   * labels may be used as a conditioning variable when the objective
@@ -19,7 +22,7 @@ from medmnist import PathMNIST
 
 
 def main():
-    parts = {s: PathMNIST(split=s, download=True) for s in ("train", "test")}
+    parts = {s: PathMNIST(split=s, download=True) for s in ("train", "val", "test")}
     imgs = np.concatenate([parts[s].imgs for s in parts])            # (N, 28, 28, 3) uint8
     labels = np.concatenate([parts[s].labels.squeeze() for s in parts]).astype(np.int64)
     split = np.concatenate([np.full(len(parts[s].imgs), s, dtype="<U5") for s in parts])
@@ -41,6 +44,7 @@ def main():
 
     lines = "\n".join(
         f"  - {v} = {n}: {int(((labels == v) & (split == 'train')).sum())} train / "
+        f"{int(((labels == v) & (split == 'val')).sum())} val / "
         f"{int(((labels == v) & (split == 'test')).sum())} test"
         for v, n in zip(label_values, label_names)
     )
@@ -56,9 +60,14 @@ Modality: **image**.
 - `image_shape`: {tuple(int(v) for v in image_shape)} = (H, W, C).
 - `y`: tissue class (int). `label_values` / `label_names` map codes to names.
   May be used as a conditioning variable when the objective needs it.
-- `split`: official MedMNIST split — `train` ({int((split == 'train').sum())}) and
-  `test` ({int((split == 'test').sum())}). Fit on `train` ONLY; `test` is the
-  untouched real reference for evaluation.
+- `split`: official MedMNIST split — `train` ({int((split == 'train').sum())}),
+  `val` ({int((split == 'val').sum())}) and `test` ({int((split == 'test').sum())}).
+  Fit on `train` ONLY.
+  * `train` and `val` come from the same source collection (NCT-CRC-HE-100K):
+    `val` is the like-for-like held-out reference (realism, copying checks).
+  * `test` comes from a different collection (CRC-VAL-HE-7K, other patients /
+    staining): a deliberate "new data from elsewhere" check, used for
+    downstream classifier tests. Expect real train vs real test to differ.
 
 ## Classes
 {lines}

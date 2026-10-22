@@ -9,7 +9,14 @@ After evaluation, before writing the report. Log the result as the
 
 # Structure every recommendation as
 1. **Verdict** — one of: *Use* · *Use with restrictions* · *Do not use
-   (use <alternative> instead)*.
+   (use <alternative> instead)* · *Can't tell (not enough evidence)*.
+   - "Do not use" = the test could have shown a benefit and didn't (or showed
+     harm).
+   - "Can't tell" = the test could NOT have shown a plausible benefit, e.g.
+     only a handful of real test samples in the classes that matter, so any
+     realistic gain is smaller than the noise. Then say what evidence would
+     settle it, and which option to use in the meantime (usually the simplest
+     baseline).
 2. **For what, exactly** — the specific downstream task, and the files to
    use (e.g. `outputs/<run>/<label>/samples_<tag>.npz`, which classes,
    how many).
@@ -28,6 +35,9 @@ After evaluation, before writing the report. Log the result as the
 - If not: recommend the best simple baseline (class weights or
   oversampling) and explain that the synthetic data showed no measurable
   benefit. That is a useful result, not a failure.
+- If the focus classes have so few real test samples that one sample
+  changes their F1 a lot (e.g. < ~10), prefer *Can't tell* over *Do not use*
+  unless the synthetic data clearly hurt.
 - If the samples were generated around real training samples (VAE
   posterior/interpolation), describe them as "smoothed variations of the
   N real cells", not as new biology.
