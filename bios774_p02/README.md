@@ -15,9 +15,9 @@ with the evidence behind it.
 
 | Report | Dataset | Objective | Model the agent chose | Verdict |
 |---|---|---|---|---|
-| [`generated_report_1`](reports/generated_report_1.pdf) | PBMC3K | rebalance rare cell types | conditional VAE | Do not use (use class weights) |
-| [`generated_report_2`](reports/generated_report_2.pdf) | PathMNIST | shareable synthetic labeled images | conditional DDPM | Use with restrictions (prototyping only) |
-| [`appendix/generated_report_B`](reports/appendix/generated_report_B.pdf) | PathMNIST | balance tissue classes | smaller conditional DDPM | Use with restrictions (supplement only) |
+| [`generated_report_1`](reports/generated_report_1.md) | PBMC3K | rebalance rare cell types | conditional VAE | Do not use (use class weights) |
+| [`generated_report_2`](reports/generated_report_2.md) | PathMNIST | shareable synthetic labeled images | conditional DDPM | Use with restrictions (prototyping only) |
+| [`appendix/generated_report_B`](reports/appendix/generated_report_B.md) | PathMNIST | balance tissue classes | smaller conditional DDPM | Use with restrictions (supplement only) |
 
 Final write-up: [`reports/report.pdf`](reports/report.pdf) (≤ 4 pages).
 
