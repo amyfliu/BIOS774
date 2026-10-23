@@ -51,6 +51,10 @@ def extract_tool_calls(blob, env):
             continue
         if not any(k in part for k in KEEP) or "--help" in part or "--smoke" in part:
             continue
+        if re.match(r"(do\s+)?(until|while|pgrep|pkill|ps|wait|sleep|tail|cat|ls|kill)\b", part):
+            continue                                  # waiting / monitoring, not a tool call
+        if not re.search(r"(^|[\s/])python3?\s+(-\S+\s+)*\S*tools/(" + "|".join(k[:-3] for k in KEEP) + r")\.py\b", part):
+            continue                                  # mentions a tool but does not run it
         part = re.split(r"\s\|\s|\s2>&1|\s>\s?/dev/null", part)[0].strip()
         if part.startswith("do "):
             part = part[3:].strip()

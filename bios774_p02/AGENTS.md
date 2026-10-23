@@ -36,6 +36,10 @@ log it as a decision, and continue.
 - **One tool call per command, no shell loops** (`for t in ...; do ...`):
   the Reproduce appendix is extracted from your commands and must be
   runnable verbatim. Shell variables such as `O=outputs/...` are fine.
+- **Waiting for background training:** wait for the file
+  `<out>/TRAINING_DONE` (e.g. `until [ -f $O/TRAINING_DONE ]; do sleep 30; done`,
+  Bash timeout ≤ 10 min, repeat if needed). Never wait with `pgrep -f`: it
+  matches its own command and never ends.
 - **Respect the compute budget.** The sum of `--max-minutes` over all your
   training runs must stay within the budget you were given (sampling and
   evaluation are extra but should stay modest). Before each new

@@ -17,7 +17,8 @@ Smoke    : --smoke = tiny data, 2 epochs, tiny network; checks the code path onl
 
 Writes to --out:
   model.pt, prep.pkl, run_config.json (every setting + data summary),
-  train_log.json (per-epoch losses, final diagnostics, stop reason), loss.png
+  train_log.json (per-epoch losses, final diagnostics, stop reason), loss.png,
+  TRAINING_DONE (written last; wait for this file when training runs in the background)
 """
 import os
 
@@ -79,6 +80,7 @@ def main():
     set_seed(a.seed)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    (out / "TRAINING_DONE").unlink(missing_ok=True)       # stale marker from an earlier run
     dev = get_device(a.device)
     ds = Dataset(a.data)
 
@@ -175,6 +177,7 @@ def main():
                  fontsize=10)
     fig.tight_layout()
     fig.savefig(out / "loss.png", dpi=110)
+    (out / "TRAINING_DONE").write_text(f"{stop_reason}; {round(timer.elapsed, 1)}s\n")   # written last
     print(f"[train] done: {stop_reason}; {round(timer.elapsed, 1)}s; diagnostics={json.dumps(diag)[:300]}")
 
 

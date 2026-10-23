@@ -438,13 +438,20 @@ def main():
                           label=names[kk][:28])
         for kk in (classes_shown if labelled else [None]):
             m = (yB == kk) if kk is not None else np.ones(len(Sb), bool)
-            ax[1].scatter(Sb[m, 0], Sb[m, 1], s=size(len(Sb)), alpha=0.5,
+            ax[1].scatter(Sb[m, 0], Sb[m, 1], s=size(len(Sb)), alpha=0.5, zorder=2,
                           color=cmap(kk % 10) if kk is not None else "gray")
-        # real points outlined on the synthetic panel, so overlap can be judged directly
-        ax[1].scatter(Ra[:, 0], Ra[:, 1], s=size(len(Ra)) + 10, facecolors="none", edgecolors="black",
-                      linewidths=0.8, label="real held-out (outline)")
+        # real points shown on the synthetic panel too, so overlap can be judged directly:
+        # few points -> black outlines on top; many points -> light-grey dots behind
+        if len(Ra) <= 300:
+            ax[1].scatter(Ra[:, 0], Ra[:, 1], s=size(len(Ra)) + 10, facecolors="none", edgecolors="black",
+                          linewidths=0.8, label="real held-out (outline)", zorder=3)
+            how = "real outlined"
+        else:
+            ax[1].scatter(Ra[:, 0], Ra[:, 1], s=size(len(Ra)), color="#c8c8c8", alpha=0.6,
+                          label="real held-out (grey, behind)", zorder=0)
+            how = "real in grey behind"
         ax[0].set_title(f"Real held-out samples (n={len(Ra)})", fontsize=11)
-        ax[1].set_title(f"Synthetic samples (n={len(Sb)}), real outlined", fontsize=11)
+        ax[1].set_title(f"Synthetic samples (n={len(Sb)}), {how}", fontsize=11)
         for axi in ax:
             axi.set_xlabel("projection axis 1")
         ax[0].set_ylabel("projection axis 2")
