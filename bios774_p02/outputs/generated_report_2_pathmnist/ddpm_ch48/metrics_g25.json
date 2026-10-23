@@ -1,0 +1,220 @@
+{
+  "run": "outputs/generated_report_2_pathmnist/ddpm_ch48",
+  "samples": "samples_g25.npz",
+  "dataset": "pathmnist",
+  "tasks": [
+    "fidelity",
+    "memorization",
+    "utility"
+  ],
+  "feature_space": {
+    "type": "eval_cnn_penultimate_128d",
+    "fingerprint": {
+      "version": "v2",
+      "n": 107180,
+      "splits": {
+        "test": 7180,
+        "train": 89996,
+        "val": 10004
+      },
+      "classes": 9
+    },
+    "n_train": 30000,
+    "epochs": 10,
+    "real_test_accuracy": 0.8597,
+    "real_val_accuracy": 0.9636
+  },
+  "real_reference_split": "val",
+  "real_reference_classes": [
+    "adipose",
+    "background",
+    "debris",
+    "lymphocytes",
+    "mucus",
+    "smooth muscle",
+    "normal colon mucosa",
+    "cancer-associated stroma",
+    "colorectal adenocarcinoma epithelium"
+  ],
+  "fidelity": {
+    "frechet": 19.40777711056526,
+    "precision": 0.588,
+    "recall": 0.587,
+    "mmd_rbf": 0.029153168201446533,
+    "c2st_accuracy": 0.9112512385967557,
+    "reference_real_train_vs_real_val": {
+      "frechet": 0.1477594554670654,
+      "precision": 0.9636666666666667,
+      "recall": 0.9646666666666667,
+      "mmd_rbf": -0.0002636909484863281,
+      "c2st_accuracy": 0.49250074887537476
+    },
+    "n_real": 3000,
+    "n_synthetic": 3000,
+    "frechet_unreliable_small_n": false,
+    "label_consistency": {
+      "accuracy_on_synthetic": 0.8612222222222222,
+      "reference_accuracy_on_real_val": 0.9636,
+      "per_class": {
+        "adipose": 0.813,
+        "background": 0.87,
+        "debris": 0.922,
+        "lymphocytes": 0.852,
+        "mucus": 0.913,
+        "smooth muscle": 0.931,
+        "normal colon mucosa": 0.844,
+        "cancer-associated stroma": 0.731,
+        "colorectal adenocarcinoma epithelium": 0.875
+      }
+    },
+    "per_class": {
+      "adipose": {
+        "precision": 0.592,
+        "recall": 0.6234,
+        "n_real_ref": 1041,
+        "reference": "val"
+      },
+      "background": {
+        "precision": 0.699,
+        "recall": 0.9082,
+        "n_real_ref": 1057,
+        "reference": "val"
+      },
+      "debris": {
+        "precision": 0.553,
+        "recall": 0.5321,
+        "n_real_ref": 1152,
+        "reference": "val"
+      },
+      "lymphocytes": {
+        "precision": 0.463,
+        "recall": 0.4152,
+        "n_real_ref": 1156,
+        "reference": "val"
+      },
+      "mucus": {
+        "precision": 0.693,
+        "recall": 0.2955,
+        "n_real_ref": 890,
+        "reference": "val"
+      },
+      "smooth muscle": {
+        "precision": 0.405,
+        "recall": 0.5975,
+        "n_real_ref": 1354,
+        "reference": "val"
+      },
+      "normal colon mucosa": {
+        "precision": 0.592,
+        "recall": 0.4641,
+        "n_real_ref": 877,
+        "reference": "val"
+      },
+      "cancer-associated stroma": {
+        "precision": 0.77,
+        "recall": 0.4976,
+        "n_real_ref": 1045,
+        "reference": "val"
+      },
+      "colorectal adenocarcinoma epithelium": {
+        "precision": 0.396,
+        "recall": 0.4483,
+        "n_real_ref": 1432,
+        "reference": "val"
+      }
+    }
+  },
+  "memorization": {
+    "space": "pixels_scaled_0_1",
+    "frac_nearest_real_is_train": 0.521,
+    "frac_nearest_real_is_train_expected_if_no_memorization": 0.5,
+    "n_train_in_pool": 2999,
+    "n_heldout_in_pool": 3000,
+    "heldout_split": "val",
+    "median_nn_dist_synthetic_to_train": 5.080021619796753,
+    "median_nn_dist_real_heldout_to_train": 4.063844680786133,
+    "ratio_synthetic_over_real": 1.2500530947491932,
+    "frac_synthetic_closer_than_real_p1": 0.0,
+    "frac_synthetic_closer_than_real_p5": 0.002,
+    "n_exact_copies": 0
+  },
+  "utility": {
+    "mode": "tstr",
+    "classifier": "small CNN",
+    "n_seeds": 3,
+    "test_split": "test",
+    "classifier_epochs": 6,
+    "train_on_synthetic": {
+      "accuracy": 0.778644382544104,
+      "balanced_accuracy": 0.735507993516629,
+      "macro_f1": 0.7062652006940247,
+      "per_class_recall": {
+        "adipose": 0.8732,
+        "background": 1.0,
+        "debris": 0.5437,
+        "lymphocytes": 0.8654,
+        "mucus": 0.8338,
+        "smooth muscle": 0.1301,
+        "normal colon mucosa": 0.9091,
+        "cancer-associated stroma": 0.7102,
+        "colorectal adenocarcinoma epithelium": 0.754
+      },
+      "per_class_f1": {
+        "adipose": 0.9169,
+        "background": 0.9595,
+        "debris": 0.4537,
+        "lymphocytes": 0.8461,
+        "mucus": 0.8844,
+        "smooth muscle": 0.1868,
+        "normal colon mucosa": 0.7744,
+        "cancer-associated stroma": 0.503,
+        "colorectal adenocarcinoma epithelium": 0.8317
+      },
+      "macro_f1_sd_across_seeds": 0.010148611433009875,
+      "macro_f1_per_seed": [
+        0.7165,
+        0.7098,
+        0.6924
+      ]
+    },
+    "train_on_real_same_size": {
+      "accuracy": 0.8320798514391828,
+      "balanced_accuracy": 0.787721693393558,
+      "macro_f1": 0.7793608926270833,
+      "per_class_recall": {
+        "adipose": 0.9659,
+        "background": 1.0,
+        "debris": 0.6854,
+        "lymphocytes": 0.9217,
+        "mucus": 0.7394,
+        "smooth muscle": 0.6137,
+        "normal colon mucosa": 0.8871,
+        "cancer-associated stroma": 0.4204,
+        "colorectal adenocarcinoma epithelium": 0.8559
+      },
+      "per_class_f1": {
+        "adipose": 0.9364,
+        "background": 0.8928,
+        "debris": 0.541,
+        "lymphocytes": 0.9161,
+        "mucus": 0.8326,
+        "smooth muscle": 0.6953,
+        "normal colon mucosa": 0.8455,
+        "cancer-associated stroma": 0.4657,
+        "colorectal adenocarcinoma epithelium": 0.8887
+      },
+      "macro_f1_sd_across_seeds": 0.00497595454720898,
+      "macro_f1_per_seed": [
+        0.7821,
+        0.7836,
+        0.7724
+      ]
+    },
+    "n_train_each": 9000,
+    "tstr_over_trtr_accuracy": 0.9357808402611171,
+    "macro_f1_diff_95ci_(syn_minus_real)": [
+      -0.0835,
+      -0.0631
+    ]
+  }
+}

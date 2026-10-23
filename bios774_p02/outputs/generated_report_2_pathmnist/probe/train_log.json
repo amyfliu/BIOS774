@@ -1,0 +1,18 @@
+{
+  "stop_reason": "completed",
+  "train_seconds": 28.8,
+  "epochs": [
+    {
+      "epoch": 1,
+      "seconds": 27.4,
+      "loss": 0.24475027128863028
+    }
+  ],
+  "final_diagnostics": {
+    "eps_mse_t5pct": 0.398171991109848,
+    "eps_mse_t25pct": 0.11561866849660873,
+    "eps_mse_t50pct": 0.061384860426187515,
+    "eps_mse_t75pct": 0.04621179401874542,
+    "eps_mse_t95pct": 0.04313238710165024
+  }
+}

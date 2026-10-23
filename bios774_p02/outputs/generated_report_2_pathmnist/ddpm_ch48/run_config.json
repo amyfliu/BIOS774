@@ -1,0 +1,58 @@
+{
+  "dataset": "pathmnist",
+  "modality": "image",
+  "model": "ddpm",
+  "backbone": "conv",
+  "prep": {
+    "spec": "scale_pm1"
+  },
+  "conditional": true,
+  "include_classes": [],
+  "exclude_classes": [],
+  "n_train": 89996,
+  "model_input_shape": [
+    3,
+    28,
+    28
+  ],
+  "epochs_requested": 100,
+  "epochs_run": 18,
+  "batch_size": 128,
+  "lr": 0.0002,
+  "params": {
+    "T": 1000,
+    "schedule": "cosine",
+    "ch": 48,
+    "hidden": 512,
+    "n_layers": 4,
+    "p_uncond": 0.1,
+    "ema_decay": 0.999
+  },
+  "n_parameters": 1004019,
+  "max_minutes": 34.0,
+  "seed": 0,
+  "device": "mps",
+  "smoke": false,
+  "train_class_counts": {
+    "adipose": 9366,
+    "background": 9509,
+    "debris": 10360,
+    "lymphocytes": 10401,
+    "mucus": 8006,
+    "smooth muscle": 12182,
+    "normal colon mucosa": 7886,
+    "cancer-associated stroma": 9401,
+    "colorectal adenocarcinoma epithelium": 12885
+  },
+  "classes": [
+    "adipose",
+    "background",
+    "debris",
+    "lymphocytes",
+    "mucus",
+    "smooth muscle",
+    "normal colon mucosa",
+    "cancer-associated stroma",
+    "colorectal adenocarcinoma epithelium"
+  ]
+}
