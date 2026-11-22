@@ -1,0 +1,21 @@
+# Python >= 3.10. Data preparation (stage 1). Model/agent packages are added in stage 2.
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+pillow>=10.0
+h5py>=3.9
+anndata>=0.10
+scanpy>=1.10
+# reference cell-type labels for PBMC (CellTypist still passes an argument that
+# scikit-learn 1.8 removed, so stay below 1.8)
+celltypist>=1.6
+scikit-learn>=1.4,<1.8
+igraph>=0.10
+leidenalg>=0.10
+# representation learning (stage 2). On Apple-silicon Macs the standard torch
+# wheel includes the Apple GPU (MPS) backend.
+torch>=2.2
+matplotlib>=3.8
+# BiomedCLIP (frozen pretrained image + text encoders for ROCOv2)
+open_clip_torch>=2.24
+transformers>=4.40
