@@ -9,7 +9,7 @@
   "hidden": 256,
   "layers": 2,
   "dropout": 0.1,
-  "epochs": 300,
+  "epochs": 200,
   "batch_size": 256,
   "lr": 0.001,
   "weight_decay": 0.0001,
@@ -66,5 +66,5 @@
     "minutes": 0.27,
     "n_parameters": 175936
   },
-  "seconds": 17.4
+  "seconds": 17.3
 }

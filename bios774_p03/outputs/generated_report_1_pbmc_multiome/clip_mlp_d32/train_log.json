@@ -90,7 +90,7 @@
     "train_loss": 2.8423,
     "val_loss": 3.2677,
     "temperature": 0.0668,
-    "seconds": 1.4,
+    "seconds": 1.5,
     "train_clip": 2.8423
   },
   {
@@ -130,7 +130,7 @@
     "train_loss": 2.5269,
     "val_loss": 3.3052,
     "temperature": 0.0628,
-    "seconds": 2.0,
+    "seconds": 2.1,
     "train_clip": 2.5269
   },
   {
@@ -138,7 +138,7 @@
     "train_loss": 2.4835,
     "val_loss": 3.322,
     "temperature": 0.0619,
-    "seconds": 2.1,
+    "seconds": 2.2,
     "train_clip": 2.4835
   },
   {
@@ -173,7 +173,7 @@
     "train_loss": 2.2732,
     "val_loss": 3.4056,
     "temperature": 0.0585,
-    "seconds": 2.6,
+    "seconds": 2.7,
     "train_clip": 2.2732
   },
   {
@@ -181,7 +181,7 @@
     "train_loss": 2.2023,
     "val_loss": 3.4348,
     "temperature": 0.0577,
-    "seconds": 2.7,
+    "seconds": 2.8,
     "train_clip": 2.2023
   },
   {
@@ -189,7 +189,7 @@
     "train_loss": 2.166,
     "val_loss": 3.4431,
     "temperature": 0.0569,
-    "seconds": 2.8,
+    "seconds": 2.9,
     "train_clip": 2.166
   },
   {
@@ -205,7 +205,7 @@
     "train_loss": 2.05,
     "val_loss": 3.5152,
     "temperature": 0.0552,
-    "seconds": 3.1,
+    "seconds": 3.2,
     "train_clip": 2.05
   },
   {
@@ -213,7 +213,7 @@
     "train_loss": 2.011,
     "val_loss": 3.5177,
     "temperature": 0.0544,
-    "seconds": 3.2,
+    "seconds": 3.3,
     "train_clip": 2.011
   },
   {
@@ -221,7 +221,7 @@
     "train_loss": 1.9629,
     "val_loss": 3.5724,
     "temperature": 0.0536,
-    "seconds": 3.3,
+    "seconds": 3.4,
     "train_clip": 1.9629
   },
   {
@@ -229,7 +229,7 @@
     "train_loss": 1.9222,
     "val_loss": 3.5908,
     "temperature": 0.0529,
-    "seconds": 3.4,
+    "seconds": 3.5,
     "train_clip": 1.9222
   },
   {
@@ -237,7 +237,7 @@
     "train_loss": 1.8871,
     "val_loss": 3.6027,
     "temperature": 0.0522,
-    "seconds": 3.5,
+    "seconds": 3.6,
     "train_clip": 1.8871
   },
   {
@@ -256,7 +256,7 @@
     "train_loss": 1.7787,
     "val_loss": 3.6891,
     "temperature": 0.0507,
-    "seconds": 3.8,
+    "seconds": 3.9,
     "train_clip": 1.7787
   }
 ]

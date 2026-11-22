@@ -1,0 +1,10 @@
+/Users/amyfliu/Library/Python/3.9/lib/python/site-packages/sklearn/metrics/_classification.py:2524: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+/Users/amyfliu/Library/Python/3.9/lib/python/site-packages/sklearn/metrics/_classification.py:2524: UserWarning: y_pred contains classes not in y_true
+  warnings.warn("y_pred contains classes not in y_true")
+Traceback (most recent call last):
+  File "/Users/amyfliu/projects/BIOS774/bios774_p03/tools/evaluate.py", line 366, in <module>
+    main()
+  File "/Users/amyfliu/projects/BIOS774/bios774_p03/tools/evaluate.py", line 317, in main
+    pair, spec = item.split(":", 1)
+ValueError: not enough values to unpack (expected 2, got 1)

@@ -1,139 +1,140 @@
-# generated_report_1: PBMC Multiome — joint RNA+ATAC cell representation
+# generated_report_1: PBMC Multiome — a joint RNA+ATAC cell representation
 
-**Verdict:** A joint RNA+ATAC embedding identifies cell types at least as well as either modality alone (no proven gain) and additionally lets one modality be matched to the other, but predicting one modality from the other is only modestly better than guessing the average cell.
+**Verdict:** Multimodal helps: a jointly trained RNA+ATAC embedding identifies fine cell types better than either modality alone (+0.05 balanced accuracy, CI excludes 0), but a plain concatenate-and-compress baseline is statistically indistinguishable from it, and predicting ATAC from RNA works barely better than guessing the average.
 
 ## 1. Summary
 
-- **Question:** Can one embedding of RNA and chromatin accessibility (ATAC) find cell types as well as either alone, and how well can each modality be predicted from the other?
-- **Approach:** Label-free contrastive training (CLIP-style) of two small neural encoders on 7,285 cells, compared with each modality alone and a simple combine-then-reduce baseline; scored on 1,560 held-out cells.
-- **Result:** Fine cell types: 0.88 balanced accuracy (joint) vs 0.85 (RNA) and 0.84 (ATAC) — higher, but the 95% intervals overlap. Matching a cell's ATAC to its RNA: correct partner in top 5 of 1,560 for 28% of cells (chance 0.3%).
-- **Recommendation:** Use the joint embedding when both modalities are needed (annotation plus cross-modal matching); the simple combined PCA is statistically indistinguishable for annotation alone. Verdict category: *multimodal enables*.
+- **Question:** Can one embedding of RNA and ATAC identify cell types at least as well as either modality alone, and how well can each modality be predicted from the other?
+- **Approach:** Compact RNA and ATAC summaries, then a contrastive model (CLIP-style, no labels used) that pulls the two views of each cell together; compared with each modality alone, simple concatenation, and a non-contrastive alternative (VICReg).
+- **Result:** On 17 fine cell types the joint embedding scores 0.884 balanced accuracy vs 0.831 (RNA alone) and 0.833 (ATAC alone); ATAC→RNA prediction beats the average-profile baseline (r 0.466 vs 0.300), RNA→ATAC barely does (AUROC 0.671 vs 0.661).
+- **Recommendation:** Use the joint embedding when both modalities exist; concatenation + PCA is a near-equal, simpler choice. Treat RNA→ATAC prediction as weak.
 
 ## 2. Data at a glance
 
-- 10,405 nuclei from one healthy donor, RNA (25,598 genes) and ATAC (111,698 peaks) measured in the same cells; split 7,285 / 1,560 / 1,560 (train / validation / test).
-- Both matrices are very sparse (94% and 92% zeros). ATAC depth tracks the first principal axis (correlation 0.86), so that axis was dropped.
-- Labels: 8 coarse and 17 fine cell types, predicted from RNA by a reference classifier, so they favour RNA. Classes are very uneven: T cells 936 test cells, but 2–7 for the rarest three.
+- 10,405 nuclei from one healthy donor, both modalities measured in the same cell: 25,598 genes (94% zeros) and 111,698 chromatin peaks (92% zeros). Split 7,285 train / 1,560 validation / 1,560 test.
+- Labels: 8 coarse and 17 fine cell types, predicted by a reference classifier from **RNA only**, so they favour RNA-based representations. Several fine classes have under 10 test cells (e.g. 2 megakaryocyte precursors, 5 CD16− NK, 6 plasma, 7 pDC) and cannot be judged individually.
+- Imbalanced: 60% of test cells are T cells; the largest fine class (helper T cells, 573 test cells) is also the hardest.
 
-![Train class sizes and per-cell depth distributions for each modality](../outputs/generated_report_1_pbmc_multiome/profile.png){width=90%}
+![Cells per type and sequencing depth per modality](../outputs/generated_report_1_pbmc_multiome/profile.png){width=90%}
+
+*Left: training cells per coarse type (very uneven). Middle/right: total counts per cell for RNA and ATAC.*
 
 ## 3. Decision path
 
 | # | Step | Decision | Why |
 |:---|:------|:------------------|:-------------------------|
-| 1 | Goal | Joint cell typing plus cross-modal prediction | Objective names cell-type identification first, then predicting each modality from other |
-| 2 | Data prep | Standard RNA and ATAC reductions | Counts are sparse; depth-normalised, compact inputs train faster and denoise |
-| 3 | Combine modalities | CLIP-style alignment, VICReg as alternative | Cells are paired and prediction across modalities needs a shared space |
-| 4 | Settings | Default settings sized to 7k cells | Small inputs train in minutes; defaults are standard for this size |
-| 5 | Training check | CLIP overfits early; VICReg healthier | CLIP validation loss rose after epoch 11 while training loss kept falling |
-| 6 | Evaluate | All learned models match RNA on coarse labels | Coarse cell types are easy; fine types separate the methods slightly |
-| 7 | Adjust | Regularise CLIP (dropout, smaller network) | Original CLIP overfit and joint trailed early fusion on fine types |
-| 8 | Encoder + loss | Choose regularised CLIP as main model | Best fine-type score and best cross-modal matching on validation |
-| 9 | Downstream | Cell typing and cross-modal prediction run | These are the two analyses the objective asked for |
-| 10 | Recommend | Use regularised joint CLIP; RNA PCA if cheap | Joint matches or beats each modality and adds cross-modal matching |
+| 1 | Goal | Classify cell types; predict each modality from other | Objective names joint cell-type identification and cross-modal prediction; no label training mentioned |
+| 2 | Data prep | Standard reductions per modality, plus prediction targets | RNA is overdispersed counts; ATAC is near-binary and sparse, so each gets its usual treatment |
+| 3 | Combine modalities | Contrastive alignment vs early-fusion baselines | Paired cells and cross-prediction goal need aligned spaces; baselines show if learning helps |
+| 4 | Settings | Mid-size networks, 32 dims, 8 min each | Small data, fast epochs; budget split between main and alternative models |
+| 5 | Training check | CLIP overfits early; VICReg weaker matching | Validation loss rose after epoch 11 while training loss kept falling |
+| 6 | Adjust | Retrain CLIP with stronger regularisation | First CLIP run overfit quickly |
+| 7 | Evaluate | Regularised CLIP best learned model on val | Beat both single modalities and early fusion on fine cell types; retrieval far above chance |
+| 8 | Downstream | Cell-type probe and cross-modality prediction | These are the two analyses the objective asked for |
+| 9 | Recommend | Use aligned CLIP embedding for cell types | It beats each modality alone on fine cell types; early fusion is a close, simpler rival |
 
-The turning point was step 7: the first CLIP model overfit after ~11 epochs and trailed the simple baseline on fine types (0.83 vs 0.88 on validation); a smaller, more strongly regularised network raised it to 0.90.
+The turning point was the first contrastive run: it overfit after 11 epochs (fine-type accuracy on validation 0.832); stronger regularisation lifted it to 0.900 on validation and made it the chosen model.
 
 ## 4. Methods compared
 
-- **RNA only / ATAC only (baselines):** principal-component reduction of one modality to 32 dimensions.
-- **Early fusion (baseline):** standardise both modalities, concatenate, reduce to 32 dimensions; no learning.
-- **Joint contrastive model (main, label-free):** one small network per modality, trained so that a cell's RNA and ATAC embeddings are close and other cells' are far (CLIP-style, 32 dimensions). Its joint embedding averages the two modality embeddings. No labels were used in training.
-- **Joint non-contrastive model (alternative):** same networks trained with a variance/decorrelation objective (VICReg) instead of negatives.
-- Choices were made on validation data; test data were used only after the choice.
+- **RNA alone / ATAC alone:** the 32 leading principal components of each modality's standard summary (no learning, no labels).
+- **Early fusion:** both summaries standardised, stacked, and compressed to 32 components.
+- **Joint embedding (CLIP-style, chosen):** one small neural network per modality, trained so a cell's RNA and ATAC embeddings are closest to each other among all cells in a batch (contrastive learning). No labels used. The version with heavier regularisation was chosen on validation data.
+- **Joint embedding (VICReg):** same idea without negative pairs; the alternative.
+- Models were chosen on validation (fine-type accuracy 0.900 for the chosen model vs 0.880 early fusion, 0.868 VICReg, 0.849 RNA alone, 0.818 ATAC alone); test data were used only for the final numbers.
 
 ## 5. Results
 
-Test set, 1,560 cells. Chance balanced accuracy is 0.125 (coarse) and lower for fine types; cross-modal top-5 chance is 0.003.
+Test set, 1,560 cells. Chance is 0.059 (fine) and 0.125 (coarse) balanced accuracy.
 
-| Representation | Coarse types (bal. acc.) | Fine types (bal. acc., 95% CI) | ATAC→RNA per-cell r | RNA→ATAC per-cell AUROC | Top-5 match RNA→ATAC |
-|:---|:---|:---|:---|:---|:---|
-| RNA only | 0.977 | 0.831 [0.794, 0.867] | – | 0.671 | – |
-| ATAC only | 0.951 | 0.833 [0.790, 0.875] | 0.457 | – | – |
-| Early fusion (PCA) | 0.976 | 0.849 [0.811, 0.885] | – | – | – |
-| **Joint contrastive (main)** | **0.983** | **0.884 [0.858, 0.908]** | 0.466 | 0.671 | 0.28 |
-| Joint VICReg | 0.960 | 0.827 [0.785, 0.858] | 0.476 | – | 0.14 |
-| Train-mean baseline | – | – | 0.300 | 0.661 | 0.003 (chance) |
+| representation | coarse types (8) | fine types (17) |
+|:---|:---|:---|
+| RNA alone | 0.977 | 0.831 |
+| ATAC alone | 0.951 | 0.833 |
+| Early fusion (concatenate + PCA) | 0.976 | 0.849 |
+| **Joint embedding (CLIP-style)** | **0.983** | **0.884** |
+| Joint embedding (VICReg) | 0.960 | 0.827 |
 
-![Test comparison of all representations](../outputs/generated_report_1_pbmc_multiome/comparison_test.png){width=90%}
+Paired differences on fine types (same test cells, 95% CI): joint vs RNA alone **+0.053 [+0.015, +0.087]**; joint vs ATAC alone **+0.051 [+0.011, +0.096]**; joint vs early fusion +0.035 [−0.000, +0.075] (cannot be told apart). On coarse types all differences from RNA alone include 0. VICReg shows no gain over RNA alone (−0.004 [−0.036, +0.025]).
 
-![Joint contrastive embedding on test cells (left, coloured by coarse type) and both modalities in the shared space (right); types form separate groups and the two modalities overlap in broadly corresponding regions, with grey pair lines often crossing sub-clusters](../outputs/generated_report_1_pbmc_multiome/clip_mlp_d32_reg/embedding.png){width=90%}
+![Comparison of all models on test](../outputs/generated_report_1_pbmc_multiome/comparison_test.png){width=90%}
+
+*Bars: probe accuracy for coarse and fine types, and top-5 cross-modal retrieval in each direction (only models with a shared space have retrieval bars). The joint CLIP-style models are highest on fine types.*
+
+![Joint embedding on test cells](../outputs/generated_report_1_pbmc_multiome/clip_mlp_d32_reg/embedding.png){width=90%}
+
+*Left: test cells in the joint embedding coloured by coarse type; monocytes, B cells and T cells form separate groups, T cells split into several sub-clouds. Right: RNA (blue) and ATAC (orange) embeddings of the same cells largely occupy overlapping regions but are not co-located cell by cell.*
 
 ## 6. Downstream analyses
 
 ### 6.1 Cell-type identification
-A linear classifier trained on the training cells' embeddings was scored on test cells. The joint contrastive embedding reaches 0.884 balanced accuracy on fine types versus 0.852 for its own RNA part, 0.838 for its ATAC part and 0.849 for early fusion; coarse types are near ceiling for everything except ATAC alone (0.951). The joint model's interval [0.858, 0.908] overlaps the best single modality's [0.815, 0.880], so "at least as well" is met but "better" is not proven. Since the labels came from RNA, a tie was the most one could expect. The 2–7-cell classes carry no conclusion.
+A linear classifier trained on training-cell embeddings labels test cells. The joint embedding reaches 0.884 balanced accuracy on fine types (RNA 0.831, ATAC 0.833, chance 0.059) and 0.983 on coarse types. Best handled large classes: classical monocytes (recall 0.96) and CD16+ NK (0.98). Weakest large class: Tcm/Naive helper T cells (573 cells, recall 0.61 — vs 0.60 RNA alone and 0.56 ATAC alone), which are hard to separate from neighbouring T subtypes in every representation. Clustering with k-means (not the objective's focus) is not better for the joint model: ARI 0.281 vs 0.425 for RNA alone, so its types are separable by a linear classifier but not grouped as compact clusters.
 
-### 6.2 Predicting each modality from the other
-A ridge regression from one modality's embedding predicts the other. ATAC→RNA: mean per-cell correlation 0.466 [0.458, 0.474] versus 0.300 for always predicting the average cell and 0.457 for ATAC-only PCA; only 13.5% of genes have per-gene correlation above 0.3. RNA→ATAC (on-or-off for 10,000 common peaks): per-cell AUROC 0.671 vs 0.661 for the average-cell baseline; per-peak AUROC 0.597 (0.5 = guessing). So expression is partly recoverable from chromatin, but peak-level prediction from RNA is weak, and the joint model gives little extra over plain PCA here.
-
-### 6.3 Cross-modal matching (extra)
-For 28% of cells the true partner modality is in the top 5 of 1,560 (chance 0.3%); the average true partner is ahead of 97.6% of candidates (FOSCTTM 0.024). Only the aligned models can do this.
+### 6.2 Predicting one modality from the other
+A ridge regression from the source modality's embedding predicts the other modality. **ATAC→RNA** (2,000 variable genes): per-cell correlation 0.466 with the joint model's ATAC encoder, 0.457 with ATAC alone, 0.300 for always predicting the training average. The joint model's gain over ATAC alone is statistically clear (+0.009 [+0.008, +0.011]) but small. Per gene the correlation averages only 0.118, and 13.5% of genes exceed 0.3. **RNA→ATAC** (10,000 most common peaks, open/closed): per-cell AUROC 0.671 vs 0.661 for the average baseline, per-peak AUROC 0.597 vs 0.5 chance; the joint model and RNA alone are indistinguishable (difference +0.000 [−0.000, +0.000]). Cross-modal matching of single cells is far above chance (fraction of cells ranked ahead of the true partner 0.024 vs 0.5; true partner in the top 5 of 1,560 for 28% of cells vs 0.3% chance) but is a coarse, cell-type-level match.
 
 ## 7. Recommendation
 
-Use the regularised joint contrastive embedding when both modalities are measured and either cell annotation or cross-modal matching is wanted (fine types 0.884 vs 0.852 for the best single modality; matching 0.28 vs 0.003 chance). For annotation alone, early-fusion PCA (0.849) or RNA PCA are statistically indistinguishable and simpler. Caveats: labels derive from RNA, one donor, and the joint-vs-single difference rests on overlapping intervals. Evidence that would change this: labels independent of RNA (e.g. protein-based) or more donors showing a clear ATAC contribution.
+For cell-type identification when both modalities are available, use the joint CLIP-style embedding: it beats RNA alone (+0.053 [+0.015, +0.087]) and ATAC alone (+0.051 [+0.011, +0.096]) on fine types and matches them on coarse types. Because its edge over early fusion has a CI touching 0 (+0.035 [−0.000, +0.075]), concatenation + PCA is an acceptable simpler alternative. When only one modality is measured, either alone does equally well on fine types here. For cross-modal prediction, ATAC→RNA is modestly informative; RNA→ATAC is not useful beyond the average profile. Caveats: labels were predicted from RNA, one donor, tiny classes unresolved, and the joint model is worse than PCA baselines for k-means clustering. More donors, labels not derived from RNA, or a larger test set would change the strength of this conclusion.
 
 ## 8. Limitations
 
-- One donor and one assay run; no batch generalisation tested.
-- Labels are RNA-derived predictions, favouring RNA and capping what ATAC can add.
-- Rare classes (2–7 test cells) cannot be assessed; the primary comparison uses all classes equally weighted.
-- Single seed per model; the regularisation fix was chosen on validation after seeing a weakness, a small tuning step.
+- One donor and one dataset; no external replication.
+- Labels come from an RNA-based reference classifier, so they underestimate how much ATAC could add.
+- Test classes with fewer than ~10 cells (several fine types) carry no individual conclusion; balanced accuracy is noisy (CI width ≈ 0.08).
+- Only a few model configurations were tried, and both prediction tasks use a simple ridge regression on 32-dimensional embeddings, which limits per-gene accuracy.
 
 ## Appendix A. Full decision log
 
-1. **Goal** *(objective skill)* — Primary: classification/integration on label_fine (17 classes) and label (8); joint vs RNA alone vs ATAC alone, probe balanced accuracy + macro-F1. Secondary: cross-modal prediction rna->atac (binary_top10000, AUROC) and atac->rna (log1p_hvg2000, Pearson r) vs train-mean baseline. No labels in training (label-free). Success: joint probe bal. acc. on label_fine >= best single modality (CI overlap or better = 'at least as well'); prediction clearly above train-mean baseline. Labels come from RNA (CellTypist) so joint can at best tie RNA; tiny classes (<10 test cells) not conclusive.
-   - *Evidence:* profile.json: n_train=7285; label classes 8, label_fine 17; smallest train class 11
-   - *Alternatives rejected:* supcon_clip: rejected, objective does not allow labels for training
-2. **Data prep** *(preprocessing skill)* — rna: log1p_hvg2000_pca50 (encoder input); atac: tfidf_lsi50_drop1 (72% nonzeros<=2, 92% zeros, ATAC-like; first LSI comp corr with depth r=0.86 so dropped, 49 dims). Targets: rna log1p_hvg2000 (Pearson r), atac binary_top10000 (AUROC).
-   - *Evidence:* profile.json atac frac_le_2=0.72; features/atac__tfidf_lsi50_drop1.json corr=0.856; rna PCA50 explained var 0.333, atac 0.067
-   - *Alternatives rejected:* lsi100/pca100: only if fine-label probe weak
-3. **Combine modalities** *(fusion skill)* — Baselines: rna_only_pca, atac_only_pca, early_fusion_pca (dim 32). Primary: clip with mlp encoders dim 32, label-free. One alternative: vicreg (many same-type look-alike cells are false negatives for contrastive loss).
-   - *Evidence:* n_train=7285 paired; objective includes cross-modal prediction
-   - *Alternatives rejected:* supcon_clip: labels not allowed; simclr: single modality
-4. **Settings** *(training skill)* — clip: mlp hidden256 x2, dim 32, batch 512, lr 1e-3, dropout 0.1, epochs 300 patience 20, max 8 min. vicreg: batch 256, max 5 min. Total planned 13 of 20 min, 7 kept for iteration.
-   - *Evidence:* smoke runs OK (train_log.json); n_train=7285
-   - *Alternatives rejected:* larger dim: not needed for 8 classes
-5. **Training check** *(training skill)* — clip: best_epoch 11 of 31, train loss 1.82 vs val 3.68 at epoch 30, val R@1 0.137 (chance ~0.001); effective rank 12.8/32 on val. vicreg: best_epoch 59 of 79, val R@1 0.053, eff rank 8.4/32. No collapse (sd>0). Action: rerun clip with stronger regularisation.
-   - *Evidence:* clip_mlp_d32/train_log.json, run_config.json summary; metrics_val.json collapse
-   - *Alternatives rejected:* accept as is: overfit symptom matches training-skill rule (best_epoch <=10% ... borderline)
-6. **Evaluate** *(evaluation skill)* — val probe bal acc label: rna 0.976, atac 0.827, early fusion 0.980, clip 0.981, vicreg 0.984. label_fine: rna 0.849, atac 0.818, early fusion 0.880, clip joint 0.832, vicreg joint 0.868 (CIs ~±0.04, overlapping). Cross: atac->rna per-cell r clip 0.463, vicreg 0.475, atac-only 0.456 vs train-mean 0.30; rna->atac per-feature AUROC ~0.60 for all. Retrieval: clip R@5 0.27, FOSCTTM 0.025 (chance R@5 0.003); vicreg R@5 0.13. Joint CLIP is not above early fusion on label_fine -> iterate on CLIP regularisation.
-   - *Evidence:* comparison_val.md, metrics_val.json
-   - *Alternatives rejected:* -
-7. **Adjust** *(training skill)* — clip_mlp_d32_reg: hidden 128, dropout 0.3, weight decay 1e-3. Trained 0.29 min (best epoch 127 of 147, no early overfit). Val label_fine joint probe 0.900 (was 0.832; early fusion 0.880; rna 0.849); label 0.979; retrieval R@5 0.276/0.265, FOSCTTM 0.024; atac->rna r 0.466. Total training minutes used ~0.7 of 20.
-   - *Evidence:* comparison_val.md; clip_mlp_d32_reg/metrics_val.json, train_log.json
-   - *Alternatives rejected:* vicreg regularised: not needed, vicreg retrieval 2x worse
-8. **Encoder + loss** *(evaluation skill)* — Report on test: clip_mlp_d32_reg (primary, label-free), vicreg_mlp_d32 (alternative), baselines rna_only_pca, atac_only_pca, early_fusion_pca. Original clip_mlp_d32 dropped (superseded).
+1. **Goal** *(objective skill)* — Tasks: (1) integration/classification: probe balanced accuracy on label_fine (primary; 17 classes) and label (coarse, 8 classes), joint vs RNA-alone vs ATAC-alone vs pca_concat; (2) cross-modal prediction rna->atac and atac->rna via evaluate cross. Labels NOT used in training (label-free clip primary). Success: joint probe bal-acc on label_fine >= best single modality with paired-difference CI not below 0 (>= means 'at least as well'); 'helps' only if CI excludes 0 positive. Prediction: per-sample Pearson r (RNA target) / AUROC (ATAC target) CI above train-mean baseline. Labels come from CellTypist on RNA only so favour RNA; classes <10 test cells (pDC 7, Plasma 6, Mk 2 etc.) uninterpretable individually.
+   - *Evidence:* profile.json: test n=1560, label 8 classes smallest train 11, label_fine 17 classes; DATA.md label source RNA
+   - *Alternatives rejected:* supcon_clip rejected: labels not allowed for training in objective
+2. **Data prep** *(preprocessing skill)* — rna: log1p_hvg2000_pca50 (encoder input); atac: tfidf_lsi50_drop1 (first LSI comp corr with depth 0.856 -> dropped, 49 dims). Targets: rna log1p_hvg2000 (Pearson), atac binary_top10000 (AUROC).
+   - *Evidence:* profile.json: rna 94.2% zeros, overdispersion 1.23, 68% nonzeros=1; atac 91.8% zeros, 72% nonzeros<=2, 10% =1; features/*.json: rna PCA var 0.333, atac LSI var 0.067
+   - *Alternatives rejected:* lsi100/pca100 deferred unless fine-label probe weak
+3. **Combine modalities** *(fusion skill)* — Baselines: rna_only_pca, atac_only_pca (pca_concat single input), early_fusion_pca (pca_concat both). Primary: clip with mlp encoders dim 32, label-free. Alternative: vicreg mlp dim 32.
+   - *Evidence:* n_train=7285 (>2000, so clip ok); many same-type cells -> false-negative risk motivates vicreg comparison
+   - *Alternatives rejected:* supcon_clip rejected: labels not allowed; simclr: single modality only
+4. **Settings** *(training skill)* — clip mlp d32 hidden256 layers2 dropout0.1 batch512 lr1e-3 wd1e-4, max 8 min; vicreg same with batch 256, max 5 min; 7 min kept for iteration. Total max <= 20. Smoked clip OK (R@1 above chance 1/1560).
+   - *Evidence:* smoke run val R@1 0.006-0.009, loss decreasing
+   - *Alternatives rejected:* bigger dim rejected: bigger not better at n~1e4
+5. **Training check** *(training skill)* — clip_mlp_d32: best_epoch 11/31, early stop, val R@1 0.137 vs chance ~0.0006; train loss 1.8 vs val 3.7 -> overfitting. vicreg_mlp_d32: best epoch 59/79, val R@1 0.053. Both took <0.3 min. Iterate on clip with more regularisation.
+   - *Evidence:* train_log.json / run_config.json summary of each run
+   - *Alternatives rejected:* none
+6. **Adjust** *(training skill)* — clip_mlp_d32_reg: hidden128 dropout0.3 wd1e-3, max 4 min (total budget used <= 8+5+4=17)
+   - *Evidence:* clip_mlp_d32 best_epoch 11/31
+   - *Alternatives rejected:* fewer layers
+7. **Evaluate** *(evaluation skill)* — val label_fine probe bal-acc: clip_mlp_d32_reg 0.900, early_fusion_pca 0.880, vicreg 0.868, rna_only 0.849, atac_only 0.818, clip_mlp_d32 0.832 (overfit). Coarse label ~0.98 for all joint models vs RNA 0.976, ATAC 0.827. clip_reg FOSCTTM 0.024 (chance 0.5), R@5 ~0.27 vs 0.003. Cross: atac->rna per-cell r 0.466 vs baseline 0.30; rna->atac per-cell AUROC 0.672 vs mean baseline 0.661 (small). Chosen for test: clip_mlp_d32_reg; also test baselines rna_only, atac_only, early_fusion and vicreg (alternative).
    - *Evidence:* comparison_val.md
-   - *Alternatives rejected:* early_fusion_pca: close on label_fine (0.880) but gives no cross-modal map
-9. **Downstream** *(recommendation skill)* — Test (n=1560). label_fine probe bal acc: clip joint 0.884 [0.858,0.908]; RNA enc 0.852 [0.815,0.880]; ATAC enc 0.838; rna_only 0.831; atac_only 0.833; early fusion 0.849; vicreg joint 0.827. label: clip joint 0.983, rna_only 0.977, atac_only 0.951. atac->rna per-cell r 0.466 [0.458,0.474] vs atac_only 0.457 [0.448,0.465] vs train-mean 0.300; per-gene r>0.3 for 13.5% genes. rna->atac per-sample AUROC 0.671 vs train-mean 0.661, per-peak AUROC 0.597 (0.5 chance); rna_only 0.599. Retrieval R@5 0.28/0.27 vs chance 0.003, FOSCTTM 0.024 (0.5 chance).
-   - *Evidence:* comparison_test.md; */metrics.json
-   - *Alternatives rejected:* -
-10. **Recommend** *(recommendation skill)* — Verdict: Multimodal enables. Joint CLIP embedding is at least as good as either modality for cell types (fine 0.884 vs best single 0.852, CIs overlap, so no proven gain) and uniquely supports cross-modal matching (R@5 0.28 vs 0.003). Prediction of each modality from the other is only modestly above the train-mean baseline (ATAC->RNA r 0.466 vs 0.300; RNA->ATAC per-sample AUROC 0.671 vs 0.661). Caveats: labels predicted from RNA by CellTypist, one donor, tiny classes (2-7 test cells), early fusion PCA is within CI. Would change: RNA-independent labels, more donors.
-   - *Evidence:* comparison_test.md, metrics.json files
-   - *Alternatives rejected:* early_fusion_pca: simpler and within CI on label_fine
+   - *Alternatives rejected:* early_fusion_pca is simpler; kept as strongest-baseline reference on test; k-means ARI best for pca baselines
+8. **Downstream** *(recommendation skill)* — Classification: test label_fine probe bal-acc clip_reg 0.884 vs rna 0.831, atac 0.833, early fusion 0.849 (chance 0.059); coarse 0.983 vs 0.977/0.951/0.976. Weakest large class: Tcm/Naive helper T (n=573) recall 0.61 clip_reg, 0.60 rna, 0.56 atac. Prediction: atac->rna per-cell r 0.466 (clip_reg encoder) vs 0.457 (ATAC alone) vs 0.300 train-mean baseline; per-feature r 0.118, 13.5% genes r>0.3. rna->atac per-cell AUROC 0.671 vs 0.661 baseline, per-feature AUROC 0.597 (0.5 chance): weak. Retrieval FOSCTTM 0.024 (chance 0.5), R@5 0.28 vs 0.003.
+   - *Evidence:* comparison_test.md, comparison_test_vs_*.md, clip_mlp_d32_reg/metrics.json, rna_only_pca/metrics.json, atac_only_pca/metrics.json
+   - *Alternatives rejected:* none
+9. **Recommend** *(recommendation skill)* — Verdict: Multimodal helps (vs single modalities). Use clip_mlp_d32_reg joint embedding for annotation when both modalities exist; early_fusion_pca is within CI (+0.035 [-0.000,+0.075]) and simpler. For prediction: ATAC->RNA clear gain over mean baseline (r 0.466 vs 0.300), RNA->ATAC negligible. Caveats: labels from RNA via CellTypist; one donor; small classes uninterpretable; k-means ARI not better than PCA baselines.
+   - *Evidence:* label_fine test: clip_reg 0.884 vs RNA 0.831 diff +0.053 [+0.015,+0.087]; vs ATAC 0.833 +0.051 [+0.011,+0.096]; vs early fusion +0.035 [-0.000,+0.075]
+   - *Alternatives rejected:* early_fusion_pca; vicreg (no gain: 0.827)
 
 ## Appendix B. Training details
 
-- Joint contrastive (final): two-layer networks, hidden 128, dropout 0.3, weight decay 1e-3, batch 512, 32 dimensions; stopped early at epoch 147 (best epoch 127), 0.29 min. Validation top-1 matching 0.141. Effective rank (val) 9.5/32, no collapse.
-- First joint contrastive run (hidden 256, dropout 0.1) overfit: best epoch 11 of 31, train loss 1.82 vs validation 3.68. Superseded.
-- VICReg: batch 256, best epoch 59 of 79, 0.27 min.
-- Total training time under 1 minute of the 20-minute budget. Loss curves: `loss.png` in each model folder.
+- Chosen model: CLIP-style, 2-layer MLP encoders (hidden 128, dropout 0.3, weight decay 1e-3), 32 dimensions, batch 512; stopped early at epoch 147 with best epoch 127; 0.23 min; validation top-1 retrieval 0.141.
+- First CLIP run (hidden 256, dropout 0.1): best epoch 11 of 31, overfit (train loss 1.8 vs val 3.7); 0.07 min.
+- VICReg: best epoch 59 of 79, 0.27 min, validation top-1 retrieval 0.053.
+- Budgeted maxima 8 + 5 + 4 = 17 of 20 minutes. No collapse: no dead dimensions; effective rank of the chosen joint embedding 9.4 of 32; modality gap 0.12.
 
-![Final joint contrastive loss curves](../outputs/generated_report_1_pbmc_multiome/clip_mlp_d32_reg/loss.png){width=90%}
+![Loss curves, chosen model](../outputs/generated_report_1_pbmc_multiome/clip_mlp_d32_reg/loss.png){width=90%}
 
 ## Appendix C. Glossary
 
-- **Balanced accuracy:** mean recall over cell types, so rare types count equally.
-- **Linear probe:** a linear classifier trained on frozen embeddings.
-- **CLIP-style contrastive:** pulls paired samples together and pushes others apart.
-- **VICReg:** alignment without negatives, keeping dimensions varied and decorrelated.
-- **ATAC / LSI:** chromatin accessibility; LSI is its standard dimension reduction.
-- **AUROC:** probability a random "on" peak ranks above a random "off" one (0.5 = chance).
-- **FOSCTTM:** average fraction of candidates closer than the true partner (0 perfect, 0.5 random).
-- **Effective rank:** number of embedding directions actually used.
-- **Early fusion:** concatenating modalities before reducing.
+- **Balanced accuracy (linear probe):** average per-class recall of a linear classifier fit on training-cell embeddings.
+- **Contrastive learning (CLIP-style):** training to make matching pairs similar and non-matching pairs dissimilar.
+- **VICReg:** a non-contrastive alternative that keeps matched pairs close while preventing collapse.
+- **PCA / LSI:** linear compression to a few components (LSI is the version used for ATAC).
+- **Early fusion:** concatenating modalities before compressing.
+- **Paired bootstrap CI:** 95% interval for a difference between two models scored on the same cells.
+- **ARI:** agreement of k-means clusters with labels (0 random, 1 perfect).
+- **FOSCTTM:** average fraction of cells ranked closer than the true partner (0 perfect, 0.5 random).
+- **AUROC:** probability a truly open peak is scored above a closed one (0.5 chance).
+- **Pearson r:** correlation of predicted and observed values.
 
 ## Appendix D. Reproduce
 
@@ -142,20 +143,3 @@ Tool calls in the order the agent ran them (smoke tests and --help omitted):
 ```bash
 python3 tools/inspect_data.py --data data/pbmc_multiome --out outputs/generated_report_1_pbmc_multiome
 ```
-
-The auto-extracted history captured only the first command. The remaining commands (same order, `O=outputs/generated_report_1_pbmc_multiome`, `D=data/pbmc_multiome`):
-
-```bash
-python3 tools/preprocess.py --data $D --out $O --modality rna --spec log1p_hvg2000_pca50
-python3 tools/preprocess.py --data $D --out $O --modality atac --spec tfidf_lsi50_drop1
-python3 tools/preprocess.py --data $D --out $O --modality rna --spec log1p_hvg2000
-python3 tools/preprocess.py --data $D --out $O --modality atac --spec binary_top10000
-python3 tools/train.py --data $D --out $O/rna_only_pca --inputs rna:log1p_hvg2000_pca50 --method pca_concat --dim 32
-python3 tools/train.py --data $D --out $O/atac_only_pca --inputs atac:tfidf_lsi50_drop1 --method pca_concat --dim 32
-python3 tools/train.py --data $D --out $O/early_fusion_pca --inputs rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1 --method pca_concat --dim 32
-python3 tools/train.py --data $D --out $O/vicreg_mlp_d32 --inputs rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1 --method vicreg --dim 32 --encoder mlp --batch-size 256 --epochs 300 --patience 20 --max-minutes 5
-python3 tools/train.py --data $D --out $O/clip_mlp_d32_reg --inputs rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1 --method clip --dim 32 --encoder mlp --hidden 128 --dropout 0.3 --weight-decay 1e-3 --batch-size 512 --epochs 300 --patience 20 --max-minutes 5
-python3 tools/evaluate.py --data $D --run $O/clip_mlp_d32_reg --split test --tasks structure,retrieval,collapse,cross --labels label,label_fine --cross "rna->atac:binary_top10000,atac->rna:log1p_hvg2000"
-python3 tools/compare_runs.py --out $O --split test
-```
-(The other models were evaluated analogously; the first CLIP run used the defaults with `--max-minutes 8`.)

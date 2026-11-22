@@ -9,7 +9,7 @@
   "hidden": 256,
   "layers": 2,
   "dropout": 0.1,
-  "epochs": 300,
+  "epochs": 200,
   "batch_size": 512,
   "lr": 0.001,
   "weight_decay": 0.0001,
@@ -63,8 +63,8 @@
     "best_val_loss": 3.2677,
     "stop_reason": "early stop (val loss not improving for 20 epochs)",
     "val_recall_at_1_kept_model": 0.137,
-    "minutes": 0.06,
+    "minutes": 0.07,
     "n_parameters": 175936
   },
-  "seconds": 5.0
+  "seconds": 5.1
 }

@@ -1,12 +1,11 @@
 | # | Step | Decision | Why |
 |--|------|------------------|-------------------------|
-| 1 | Goal | Joint cell typing plus cross-modal prediction | Objective names cell-type identification first, then predicting each modality from other |
-| 2 | Data prep | Standard RNA and ATAC reductions | Counts are sparse; depth-normalised, compact inputs train faster and denoise |
-| 3 | Combine modalities | CLIP-style alignment, VICReg as alternative | Cells are paired and prediction across modalities needs a shared space |
-| 4 | Settings | Default settings sized to 7k cells | Small inputs train in minutes; defaults are standard for this size |
-| 5 | Training check | CLIP overfits early; VICReg healthier | CLIP validation loss rose after epoch 11 while training loss kept falling |
-| 6 | Evaluate | All learned models match RNA on coarse labels | Coarse cell types are easy; fine types separate the methods slightly |
-| 7 | Adjust | Regularise CLIP (dropout, smaller network) | Original CLIP overfit and joint trailed early fusion on fine types |
-| 8 | Encoder + loss | Choose regularised CLIP as main model | Best fine-type score and best cross-modal matching on validation |
-| 9 | Downstream | Cell typing and cross-modal prediction run | These are the two analyses the objective asked for |
-| 10 | Recommend | Use regularised joint CLIP; RNA PCA if cheap | Joint matches or beats each modality and adds cross-modal matching |
+| 1 | Goal | Classify cell types; predict each modality from other | Objective names joint cell-type identification and cross-modal prediction; no label training mentioned |
+| 2 | Data prep | Standard reductions per modality, plus prediction targets | RNA is overdispersed counts; ATAC is near-binary and sparse, so each gets its usual treatment |
+| 3 | Combine modalities | Contrastive alignment vs early-fusion baselines | Paired cells and cross-prediction goal need aligned spaces; baselines show if learning helps |
+| 4 | Settings | Mid-size networks, 32 dims, 8 min each | Small data, fast epochs; budget split between main and alternative models |
+| 5 | Training check | CLIP overfits early; VICReg weaker matching | Validation loss rose after epoch 11 while training loss kept falling |
+| 6 | Adjust | Retrain CLIP with stronger regularisation | First CLIP run overfit quickly |
+| 7 | Evaluate | Regularised CLIP best learned model on val | Beat both single modalities and early fusion on fine cell types; retrieval far above chance |
+| 8 | Downstream | Cell-type probe and cross-modality prediction | These are the two analyses the objective asked for |
+| 9 | Recommend | Use aligned CLIP embedding for cell types | It beats each modality alone on fine cell types; early fusion is a close, simpler rival |

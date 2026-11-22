@@ -110,7 +110,7 @@
     "train_loss": 10.4673,
     "val_loss": 11.8192,
     "temperature": 0.07,
-    "seconds": 2.4,
+    "seconds": 2.3,
     "train_invariance": 0.1797,
     "train_variance": 0.0418,
     "train_covariance": 4.9282
@@ -120,7 +120,7 @@
     "train_loss": 10.2439,
     "val_loss": 11.6617,
     "temperature": 0.07,
-    "seconds": 2.6,
+    "seconds": 2.5,
     "train_invariance": 0.1729,
     "train_variance": 0.045,
     "train_covariance": 4.7952
@@ -130,7 +130,7 @@
     "train_loss": 9.9598,
     "val_loss": 11.7096,
     "temperature": 0.07,
-    "seconds": 2.8,
+    "seconds": 2.7,
     "train_invariance": 0.1682,
     "train_variance": 0.0402,
     "train_covariance": 4.7501
@@ -140,7 +140,7 @@
     "train_loss": 9.945,
     "val_loss": 11.4954,
     "temperature": 0.07,
-    "seconds": 3.0,
+    "seconds": 2.9,
     "train_invariance": 0.1652,
     "train_variance": 0.0399,
     "train_covariance": 4.8173
@@ -283,7 +283,7 @@
     "train_loss": 8.3123,
     "val_loss": 11.5486,
     "temperature": 0.07,
-    "seconds": 5.9,
+    "seconds": 5.8,
     "train_invariance": 0.1453,
     "train_variance": 0.0253,
     "train_covariance": 4.0479
@@ -293,7 +293,7 @@
     "train_loss": 8.5706,
     "val_loss": 11.3615,
     "temperature": 0.07,
-    "seconds": 6.1,
+    "seconds": 6.0,
     "train_invariance": 0.148,
     "train_variance": 0.0328,
     "train_covariance": 4.0506
@@ -316,7 +316,7 @@
     "train_loss": 8.4884,
     "val_loss": 10.8463,
     "temperature": 0.07,
-    "seconds": 6.5,
+    "seconds": 6.4,
     "train_invariance": 0.1479,
     "train_variance": 0.0261,
     "train_covariance": 4.1402
@@ -326,7 +326,7 @@
     "train_loss": 8.2397,
     "val_loss": 10.9975,
     "temperature": 0.07,
-    "seconds": 6.7,
+    "seconds": 6.6,
     "train_invariance": 0.1405,
     "train_variance": 0.0293,
     "train_covariance": 3.9941
@@ -336,7 +336,7 @@
     "train_loss": 8.2654,
     "val_loss": 10.8856,
     "temperature": 0.07,
-    "seconds": 6.9,
+    "seconds": 6.8,
     "train_invariance": 0.1383,
     "train_variance": 0.0295,
     "train_covariance": 4.0715
@@ -346,7 +346,7 @@
     "train_loss": 8.2241,
     "val_loss": 10.6383,
     "temperature": 0.07,
-    "seconds": 7.1,
+    "seconds": 7.0,
     "train_invariance": 0.1381,
     "train_variance": 0.0296,
     "train_covariance": 4.031
@@ -406,7 +406,7 @@
     "train_loss": 7.8677,
     "val_loss": 11.186,
     "temperature": 0.07,
-    "seconds": 8.3,
+    "seconds": 8.2,
     "train_invariance": 0.1299,
     "train_variance": 0.0258,
     "train_covariance": 3.9746,
@@ -522,7 +522,7 @@
     "train_loss": 7.4677,
     "val_loss": 10.7026,
     "temperature": 0.07,
-    "seconds": 10.6,
+    "seconds": 10.5,
     "train_invariance": 0.1181,
     "train_variance": 0.0247,
     "train_covariance": 3.8977
@@ -532,7 +532,7 @@
     "train_loss": 7.3143,
     "val_loss": 10.8968,
     "temperature": 0.07,
-    "seconds": 10.8,
+    "seconds": 10.7,
     "train_invariance": 0.1145,
     "train_variance": 0.0214,
     "train_covariance": 3.9149
@@ -542,7 +542,7 @@
     "train_loss": 7.379,
     "val_loss": 11.1357,
     "temperature": 0.07,
-    "seconds": 11.0,
+    "seconds": 10.9,
     "train_invariance": 0.1136,
     "train_variance": 0.0229,
     "train_covariance": 3.9658
@@ -552,7 +552,7 @@
     "train_loss": 7.5094,
     "val_loss": 10.8158,
     "temperature": 0.07,
-    "seconds": 11.2,
+    "seconds": 11.1,
     "train_invariance": 0.1103,
     "train_variance": 0.0357,
     "train_covariance": 3.8604
@@ -562,7 +562,7 @@
     "train_loss": 7.3554,
     "val_loss": 10.9042,
     "temperature": 0.07,
-    "seconds": 11.4,
+    "seconds": 11.3,
     "train_invariance": 0.1143,
     "train_variance": 0.0199,
     "train_covariance": 3.9996
@@ -572,7 +572,7 @@
     "train_loss": 7.4066,
     "val_loss": 10.7675,
     "temperature": 0.07,
-    "seconds": 11.6,
+    "seconds": 11.5,
     "train_invariance": 0.1111,
     "train_variance": 0.0261,
     "train_covariance": 3.9763
@@ -582,7 +582,7 @@
     "train_loss": 7.1073,
     "val_loss": 10.74,
     "temperature": 0.07,
-    "seconds": 11.8,
+    "seconds": 11.7,
     "train_invariance": 0.1087,
     "train_variance": 0.0202,
     "train_covariance": 3.8845
@@ -592,7 +592,7 @@
     "train_loss": 7.2117,
     "val_loss": 10.8782,
     "temperature": 0.07,
-    "seconds": 12.0,
+    "seconds": 11.9,
     "train_invariance": 0.11,
     "train_variance": 0.0231,
     "train_covariance": 3.8841
@@ -602,7 +602,7 @@
     "train_loss": 7.2592,
     "val_loss": 10.5179,
     "temperature": 0.07,
-    "seconds": 12.2,
+    "seconds": 12.1,
     "train_invariance": 0.1064,
     "train_variance": 0.0243,
     "train_covariance": 3.9909
@@ -612,7 +612,7 @@
     "train_loss": 7.217,
     "val_loss": 10.9794,
     "temperature": 0.07,
-    "seconds": 12.4,
+    "seconds": 12.3,
     "train_invariance": 0.1081,
     "train_variance": 0.0249,
     "train_covariance": 3.8926,
@@ -625,7 +625,7 @@
     "train_loss": 7.1757,
     "val_loss": 11.4514,
     "temperature": 0.07,
-    "seconds": 12.6,
+    "seconds": 12.5,
     "train_invariance": 0.1082,
     "train_variance": 0.023,
     "train_covariance": 3.8943
@@ -635,7 +635,7 @@
     "train_loss": 7.2829,
     "val_loss": 10.7538,
     "temperature": 0.07,
-    "seconds": 12.8,
+    "seconds": 12.7,
     "train_invariance": 0.109,
     "train_variance": 0.0273,
     "train_covariance": 3.8745
@@ -645,7 +645,7 @@
     "train_loss": 7.1474,
     "val_loss": 11.0462,
     "temperature": 0.07,
-    "seconds": 13.0,
+    "seconds": 12.9,
     "train_invariance": 0.1064,
     "train_variance": 0.0198,
     "train_covariance": 3.9906
