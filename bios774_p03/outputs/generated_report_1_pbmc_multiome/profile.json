@@ -1,0 +1,173 @@
+{
+  "dataset": "pbmc_multiome",
+  "description": "10x PBMC Multiome: paired scRNA-seq gene counts + scATAC-seq peak counts per nucleus",
+  "pairing": "same cell measured in both modalities (row i of each matrix = obs row i)",
+  "n_samples": 10405,
+  "splits": {
+    "train": 7285,
+    "val": 1560,
+    "test": 1560
+  },
+  "modalities": {
+    "rna": {
+      "kind": "counts",
+      "n_features": 25598,
+      "fraction_zero": 0.942,
+      "library_size": {
+        "p5": 612.8,
+        "p25": 1965.0,
+        "p50": 2555.0,
+        "p75": 3613.0,
+        "p95": 6280.2
+      },
+      "features_detected_per_sample": {
+        "p5": 437.6,
+        "p25": 1116.0,
+        "p50": 1370.0,
+        "p75": 1810.0,
+        "p95": 2684.0
+      },
+      "fraction_nonzero_values_equal_1": 0.6835,
+      "fraction_nonzero_values_le_2": 0.8516,
+      "max_value": 5600.0,
+      "features_in_ge_1pct_samples": 12636,
+      "features_in_ge_10pct_samples": 4573,
+      "mean_variance_loglog_slope_top2000": 1.4782,
+      "median_overdispersion_top2000": 1.232
+    },
+    "atac": {
+      "kind": "counts",
+      "n_features": 111698,
+      "fraction_zero": 0.9184,
+      "library_size": {
+        "p5": 4238.6,
+        "p25": 17936.0,
+        "p50": 22774.0,
+        "p75": 28115.0,
+        "p95": 49125.2
+      },
+      "features_detected_per_sample": {
+        "p5": 2037.2,
+        "p25": 7288.0,
+        "p50": 8835.0,
+        "p75": 11095.0,
+        "p95": 16280.6
+      },
+      "fraction_nonzero_values_equal_1": 0.1049,
+      "fraction_nonzero_values_le_2": 0.7221,
+      "max_value": 1180.0,
+      "features_in_ge_1pct_samples": 96203,
+      "features_in_ge_10pct_samples": 21498,
+      "mean_variance_loglog_slope_top2000": 1.3194,
+      "median_overdispersion_top2000": 0.7586
+    }
+  },
+  "labels": {
+    "label": {
+      "n_classes": 8,
+      "counts_by_split": {
+        "train": {
+          "T cells": 4367,
+          "Monocytes": 1946,
+          "ILC": 410,
+          "B cells": 389,
+          "DC": 101,
+          "pDC": 34,
+          "Plasma cells": 27,
+          "Megakaryocyte precursor": 11
+        },
+        "val": {
+          "T cells": 936,
+          "Monocytes": 417,
+          "ILC": 88,
+          "B cells": 83,
+          "DC": 21,
+          "pDC": 7,
+          "Plasma cells": 6,
+          "Megakaryocyte precursor": 2
+        },
+        "test": {
+          "T cells": 936,
+          "Monocytes": 417,
+          "ILC": 88,
+          "B cells": 83,
+          "DC": 21,
+          "pDC": 7,
+          "Plasma cells": 6,
+          "Megakaryocyte precursor": 2
+        }
+      },
+      "smallest_class_train": 11,
+      "largest_class_train": 4367,
+      "imbalance_ratio_train": 397.0,
+      "majority_class_fraction_test": 0.6
+    },
+    "label_fine": {
+      "n_classes": 17,
+      "counts_by_split": {
+        "train": {
+          "Tcm/Naive helper T cells": 2672,
+          "Classical monocytes": 1787,
+          "Tem/Trm cytotoxic T cells": 503,
+          "Tcm/Naive cytotoxic T cells": 428,
+          "Tem/Effector helper T cells": 411,
+          "Memory B cells": 286,
+          "CD16+ NK cells": 276,
+          "Tem/Temra cytotoxic T cells": 204,
+          "Non-classical monocytes": 176,
+          "Regulatory T cells": 166,
+          "DC2": 101,
+          "MAIT cells": 95,
+          "Naive B cells": 86,
+          "pDC": 34,
+          "Plasma cells": 27,
+          "CD16- NK cells": 22,
+          "Megakaryocyte precursor": 11
+        },
+        "val": {
+          "Tcm/Naive helper T cells": 580,
+          "Classical monocytes": 381,
+          "Tem/Trm cytotoxic T cells": 103,
+          "Tcm/Naive cytotoxic T cells": 87,
+          "Tem/Effector helper T cells": 84,
+          "CD16+ NK cells": 61,
+          "Memory B cells": 61,
+          "Tem/Temra cytotoxic T cells": 45,
+          "Non-classical monocytes": 39,
+          "Regulatory T cells": 37,
+          "MAIT cells": 22,
+          "DC2": 21,
+          "Naive B cells": 19,
+          "pDC": 7,
+          "Plasma cells": 6,
+          "CD16- NK cells": 5,
+          "Megakaryocyte precursor": 2
+        },
+        "test": {
+          "Tcm/Naive helper T cells": 573,
+          "Classical monocytes": 380,
+          "Tcm/Naive cytotoxic T cells": 109,
+          "Tem/Trm cytotoxic T cells": 99,
+          "Tem/Effector helper T cells": 87,
+          "Memory B cells": 61,
+          "CD16+ NK cells": 58,
+          "Tem/Temra cytotoxic T cells": 40,
+          "Non-classical monocytes": 40,
+          "Regulatory T cells": 32,
+          "DC2": 21,
+          "MAIT cells": 21,
+          "Naive B cells": 19,
+          "pDC": 7,
+          "Plasma cells": 6,
+          "CD16- NK cells": 5,
+          "Megakaryocyte precursor": 2
+        }
+      },
+      "smallest_class_train": 11,
+      "largest_class_train": 2672,
+      "imbalance_ratio_train": 242.9091,
+      "majority_class_fraction_test": 0.3673
+    }
+  },
+  "primary_label": "label"
+}

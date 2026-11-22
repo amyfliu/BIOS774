@@ -1,0 +1,159 @@
+{
+  "run": "outputs/generated_report_1_pbmc_multiome/early_fusion_pca",
+  "method": "pca_concat",
+  "inputs": "rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1",
+  "uses_labels": false,
+  "split_evaluated": "test",
+  "n_evaluated": 1560,
+  "structure": {
+    "label": {
+      "z_joint": {
+        "n_classes": 8,
+        "majority_baseline_accuracy": 0.6,
+        "chance_balanced_accuracy": 0.125,
+        "probe_balanced_accuracy": 0.9756,
+        "probe_balanced_accuracy_ci95": [
+          0.9554,
+          0.9894
+        ],
+        "probe_macro_f1": 0.9551,
+        "probe_accuracy": 0.9667,
+        "probe_per_class_recall": {
+          "B cells": {
+            "n_test": 83,
+            "recall": 1.0
+          },
+          "DC": {
+            "n_test": 21,
+            "recall": 0.9048
+          },
+          "ILC": {
+            "n_test": 88,
+            "recall": 0.9545
+          },
+          "Megakaryocyte precursor": {
+            "n_test": 2,
+            "recall": 1.0
+          },
+          "Monocytes": {
+            "n_test": 417,
+            "recall": 0.9904
+          },
+          "Plasma cells": {
+            "n_test": 6,
+            "recall": 1.0
+          },
+          "T cells": {
+            "n_test": 936,
+            "recall": 0.9551
+          },
+          "pDC": {
+            "n_test": 7,
+            "recall": 1.0
+          }
+        },
+        "knn15_balanced_accuracy": 0.967,
+        "kmeans_ari": 0.4038,
+        "kmeans_nmi": 0.62,
+        "silhouette_cosine": 0.0549
+      }
+    },
+    "label_fine": {
+      "z_joint": {
+        "n_classes": 17,
+        "majority_baseline_accuracy": 0.3673,
+        "chance_balanced_accuracy": 0.0588,
+        "probe_balanced_accuracy": 0.8487,
+        "probe_balanced_accuracy_ci95": [
+          0.8113,
+          0.8845
+        ],
+        "probe_macro_f1": 0.8036,
+        "probe_accuracy": 0.8038,
+        "probe_per_class_recall": {
+          "CD16+ NK cells": {
+            "n_test": 58,
+            "recall": 0.9655
+          },
+          "CD16- NK cells": {
+            "n_test": 5,
+            "recall": 0.6
+          },
+          "Classical monocytes": {
+            "n_test": 380,
+            "recall": 0.9711
+          },
+          "DC2": {
+            "n_test": 21,
+            "recall": 0.9048
+          },
+          "MAIT cells": {
+            "n_test": 21,
+            "recall": 0.8571
+          },
+          "Megakaryocyte precursor": {
+            "n_test": 2,
+            "recall": 1.0
+          },
+          "Memory B cells": {
+            "n_test": 61,
+            "recall": 0.8361
+          },
+          "Naive B cells": {
+            "n_test": 19,
+            "recall": 0.5263
+          },
+          "Non-classical monocytes": {
+            "n_test": 40,
+            "recall": 0.9
+          },
+          "Plasma cells": {
+            "n_test": 6,
+            "recall": 1.0
+          },
+          "Regulatory T cells": {
+            "n_test": 32,
+            "recall": 0.8438
+          },
+          "Tcm/Naive cytotoxic T cells": {
+            "n_test": 109,
+            "recall": 0.8624
+          },
+          "Tcm/Naive helper T cells": {
+            "n_test": 573,
+            "recall": 0.6492
+          },
+          "Tem/Effector helper T cells": {
+            "n_test": 87,
+            "recall": 0.8391
+          },
+          "Tem/Temra cytotoxic T cells": {
+            "n_test": 40,
+            "recall": 0.925
+          },
+          "Tem/Trm cytotoxic T cells": {
+            "n_test": 99,
+            "recall": 0.7475
+          },
+          "pDC": {
+            "n_test": 7,
+            "recall": 1.0
+          }
+        },
+        "knn15_balanced_accuracy": 0.8421,
+        "kmeans_ari": 0.339,
+        "kmeans_nmi": 0.6022,
+        "silhouette_cosine": 0.038
+      }
+    }
+  },
+  "collapse": {
+    "z_joint": {
+      "dim": 32,
+      "effective_rank": 27.0211,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0707,
+      "uniformity": -3.5223
+    }
+  }
+}

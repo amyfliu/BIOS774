@@ -31,24 +31,39 @@ Answer the objective in one sentence, then:
    when only RNA is measured" or "fine-tuned adapter for retrieval; the
    zero-shot model is within its CI for modality classification".
 2. **The deciding numbers**: the chosen model vs the best baseline on the
-   primary metric, with CIs.
+   primary metric, as a PAIRED difference with its 95% CI
+   (`comparison_test_vs_<baseline>.md`), next to the two values.
 3. **Verdict categories** (pick one, use it in the header, Summary and
    Recommendation):
    - *Multimodal helps*: the chosen multimodal representation beats the best
-     single-modality / zero-shot baseline on the primary metric with
-     non-overlapping CIs.
+     single-modality / zero-shot baseline on the primary metric, with a paired
+     difference whose CI excludes 0 and a size that matters.
    - *Multimodal enables*: no gain on classification, but it provides
      something a single modality cannot (retrieval, cross-modal prediction).
-   - *No measurable gain*: within CIs of the best baseline — recommend the
-     simpler baseline (fewer moving parts), and say what evidence would
-     change this.
+   - *No measurable gain*: the paired difference vs the best baseline has a CI
+     that includes 0 (or is too small to matter) — recommend the simpler
+     baseline (fewer moving parts), and say what evidence would change this.
    - *Can't tell*: the test set cannot resolve the question (too few samples
      in the relevant classes); say which data would.
 4. **Caveats that change how to use it**: label provenance (labels predicted
    from one modality), text shortcuts, label-trained models, duplicates,
-   subset size, one donor / one data source.
+   subset size, one donor / one data source, and **pretraining overlap**: if
+   a pretrained encoder was trained on data from the same source as this
+   dataset (compare `DATA.md` source with what is known about the encoder's
+   pretraining data), its zero-shot scores — and anything built on them — may
+   be inflated by having seen test samples. State it as a possibility unless
+   the overlap can be ruled out; it cannot be measured with these tools.
 5. **What would change the recommendation** (one or two concrete items).
 
-Implementation matters: prefer the simplest representation within the CI of
-the best — a frozen pretrained model or PCA is easier to deploy and audit than
-a trained encoder.
+Implementation matters: prefer the simplest representation whose paired
+difference from the best includes 0 — a frozen pretrained model or PCA is
+easier to deploy and audit than a trained encoder.
+
+# Naming numbers consistently
+A model with several embeddings (joint, plus one per modality) yields
+several "RNA" numbers. In the Summary, Results and Recommendation, "RNA
+alone" / "image alone" always means the single-modality BASELINE model. If
+you also discuss a multimodal model's own per-modality embedding (e.g. its
+RNA encoder), name it explicitly ("the joint model's RNA encoder") and never
+put it where a baseline number is expected. The comparison table and the
+prose must show the same numbers for the same names.

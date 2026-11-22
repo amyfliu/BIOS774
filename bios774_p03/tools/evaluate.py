@@ -21,7 +21,10 @@ Tasks (choose the ones that measure the objective):
               AUROC. Always next to the train-mean baseline.
 
 Each headline number comes with a chance level or baseline and a 95% bootstrap
-interval over the evaluated samples.
+interval over the evaluated samples. Per-sample outputs (probe predictions,
+retrieval ranks, per-sample prediction scores) are saved to
+predictions_<split>.npz so compare_runs.py --reference can test differences
+between models PAIRED on the same samples.
 
 --split val   for CHOOSING between models (writes metrics_val.json; no plots)
 --split test  for the FINAL numbers of the chosen models (writes metrics.json +
@@ -40,6 +43,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import Dataset, feature_path, l2n, load_embeddings, load_features, load_json, rounded, save_json  # noqa: E402
 
 RNG = np.random.default_rng(0)
+PRED = {}  # per-sample outputs -> predictions_<split>.npz (paired comparisons in compare_runs.py)
+
+
+def safe(item: str) -> str:
+    """cross-task name -> npz-safe key ('rna->atac:binary_top500' -> 'rna_to_atac__binary_top500')."""
+    return item.replace("->", "_to_").replace(":", "__")
 
 
 def boot_ci(stat_fn, n, B=200):
@@ -71,6 +80,7 @@ def structure(Z, codes, classes, tr, te):
            "chance_balanced_accuracy": 1 / len(np.unique(ytr))}
     lr = LogisticRegression(max_iter=2000, C=1.0, class_weight="balanced").fit(A[tr], ytr)
     p = lr.predict(A[te])
+    out["_pred"] = p.astype(np.int32)  # per-sample predictions, saved for paired comparisons
     out["probe_balanced_accuracy"] = float(balanced_accuracy_score(yte, p))
     out["probe_balanced_accuracy_ci95"] = boot_ci(lambda i: balanced_accuracy_score(yte[i], p[i]), len(te))
     out["probe_macro_f1"] = float(f1_score(yte, p, average="macro"))
@@ -103,7 +113,8 @@ def ranks(za, zb):
 
 
 def retrieval(Za, Zb, te, n_max=2000):
-    idx = te if len(te) <= n_max else np.sort(RNG.choice(te, n_max, replace=False))
+    # same candidate pool for every model (own seed), so models can be compared pair-wise
+    idx = te if len(te) <= n_max else np.sort(np.random.default_rng(0).choice(te, n_max, replace=False))
     n = len(idx)
     out = {"n_candidates": n}
     for name, (A, B) in {"a_to_b": (Za[idx], Zb[idx]), "b_to_a": (Zb[idx], Za[idx])}.items():
@@ -113,6 +124,7 @@ def retrieval(Za, Zb, te, n_max=2000):
         d["median_rank"] = float(np.median(r) + 1)
         d["foscttm"] = float((r / (n - 1)).mean())
         out[name] = d
+        out[f"_ranks_{name}"] = r.astype(np.int32)
     out["chance"] = {f"recall_at_{k}": k / n for k in (1, 5, 10)} | {"median_rank": (n + 1) / 2, "foscttm": 0.5}
     return out, idx
 
@@ -166,8 +178,12 @@ def cross_predict(Zs, Y, tr, va, te, binary):
         out["per_feature_auroc_mean"] = float(aucs.mean())
         out["per_feature_auroc_median"] = float(np.median(aucs))
         out["per_feature_auroc_baseline"] = 0.5
-        ps = np.array([roc_auc_score(T[i], P[i]) for i in range(len(te)) if 0 < T[i].sum() < T.shape[1]])
-        bs = np.array([roc_auc_score(T[i], base[i]) for i in range(len(te)) if 0 < T[i].sum() < T.shape[1]])
+        okc = np.array([0 < T[i].sum() < T.shape[1] for i in range(len(te))])
+        ps_all = np.full(len(te), np.nan)
+        ps_all[okc] = [roc_auc_score(T[i], P[i]) for i in np.flatnonzero(okc)]
+        ps = ps_all[okc]
+        bs = np.array([roc_auc_score(T[i], base[i]) for i in np.flatnonzero(okc)])
+        out["_per_sample"] = ps_all
         out["per_sample_auroc_mean"] = float(ps.mean())
         out["per_sample_auroc_ci95"] = boot_ci(lambda i: float(ps[i].mean()), len(ps))
         out["per_sample_auroc_baseline_train_mean"] = float(bs.mean())
@@ -180,6 +196,7 @@ def cross_predict(Zs, Y, tr, va, te, binary):
         out["fraction_features_r_gt_0.3"] = float((rf > 0.3).mean())
         out["per_feature_pearson_baseline"] = 0.0
         rs = per_sample_r(P, T)
+        out["_per_sample"] = rs
         out["per_sample_pearson_mean"] = float(rs.mean())
         out["per_sample_pearson_ci95"] = boot_ci(lambda i: float(rs[i].mean()), len(rs))
         out["per_sample_pearson_baseline_train_mean"] = float(per_sample_r(base, T).mean())
@@ -267,9 +284,15 @@ def main():
             if codes is None:
                 continue
             metrics["structure"][col] = {k: structure(Z, codes, classes, tr, te) for k, Z in emb.items()}
+            PRED[f"y__{col}"] = codes[te].astype(np.int32)
+            for k, d in metrics["structure"][col].items():
+                PRED[f"probe__{col}__{k}"] = d.pop("_pred")
     if "retrieval" in tasks:
         if len(mod_keys) == 2 and emb[mod_keys[0]].shape[1] == emb[mod_keys[1]].shape[1]:
-            r, _ = retrieval(emb[mod_keys[0]], emb[mod_keys[1]], te, a.retrieval_n)
+            r, ridx = retrieval(emb[mod_keys[0]], emb[mod_keys[1]], te, a.retrieval_n)
+            PRED["retrieval_idx"] = ridx.astype(np.int64)
+            for d in ("a_to_b", "b_to_a"):
+                PRED[f"ranks_{d}"] = r.pop(f"_ranks_{d}")
             r["a"], r["b"] = mod_keys[0][2:], mod_keys[1][2:]
             metrics["retrieval"] = r
         else:
@@ -299,10 +322,14 @@ def main():
                 continue
             Y, info = load_features(feature_path(fdir, tgt, spec.strip()))
             binary = set(np.unique(Y[tr][:200])) <= {0.0, 1.0}
-            metrics["cross"][item] = cross_predict(emb[key], Y, tr_fit, va_sel, te, binary) | {"target_binary": binary}
+            res = cross_predict(emb[key], Y, tr_fit, va_sel, te, binary) | {"target_binary": binary}
+            PRED[f"cross__{safe(item)}"] = res.pop("_per_sample").astype(np.float32)
+            metrics["cross"][item] = res
 
     fname = "metrics.json" if a.split == "test" else "metrics_val.json"
     save_json(rounded(metrics), run / fname)
+    PRED["idx"] = te.astype(np.int64)
+    np.savez_compressed(run / f"predictions_{a.split}.npz", **PRED)
     if not a.no_plot and a.split == "test":
         codes, classes = ds.labels()
         pairs = None

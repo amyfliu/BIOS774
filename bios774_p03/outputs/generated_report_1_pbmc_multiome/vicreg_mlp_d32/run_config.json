@@ -1,0 +1,70 @@
+{
+  "data": "data/pbmc_multiome",
+  "out": "outputs/generated_report_1_pbmc_multiome/vicreg_mlp_d32",
+  "inputs": "rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1",
+  "features_dir": null,
+  "method": "vicreg",
+  "dim": 32,
+  "encoder": "mlp",
+  "hidden": 256,
+  "layers": 2,
+  "dropout": 0.1,
+  "epochs": 300,
+  "batch_size": 256,
+  "lr": 0.001,
+  "weight_decay": 0.0001,
+  "temperature": 0.07,
+  "learn_temperature": true,
+  "label": null,
+  "supcon_weight": 0.5,
+  "supcon_temperature": 0.1,
+  "mask_p": 0.3,
+  "noise": 0.1,
+  "patience": 20,
+  "eval_every": 10,
+  "max_minutes": 5.0,
+  "seed": 0,
+  "device": null,
+  "smoke": false,
+  "inputs_resolved": {
+    "rna": {
+      "spec": "log1p_hvg2000_pca50",
+      "dim": 50,
+      "steps": [
+        "normalise to 1e4 per sample + log1p",
+        "keep 2000 most variable features (train)",
+        "PCA to 50 components (fit on train)"
+      ]
+    },
+    "atac": {
+      "spec": "tfidf_lsi50_drop1",
+      "dim": 49,
+      "steps": [
+        "TF-IDF (IDF from train) + log1p(1e4 * x)",
+        "LSI to 50 components (fit on train)",
+        "drop first 1 component(s) (corr with depth r=0.86)"
+      ]
+    }
+  },
+  "embedding_keys": [
+    "z_rna",
+    "z_atac",
+    "z_joint"
+  ],
+  "embedding_dim": {
+    "z_rna": 32,
+    "z_atac": 32,
+    "z_joint": 32
+  },
+  "uses_labels": false,
+  "summary": {
+    "epochs_run": 79,
+    "best_epoch": 59,
+    "best_val_loss": 10.5179,
+    "stop_reason": "early stop (val loss not improving for 20 epochs)",
+    "val_recall_at_1_kept_model": 0.053,
+    "minutes": 0.27,
+    "n_parameters": 175936
+  },
+  "seconds": 17.4
+}

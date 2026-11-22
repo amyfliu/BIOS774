@@ -1,0 +1,319 @@
+{
+  "run": "outputs/generated_report_1_pbmc_multiome/rna_only_pca",
+  "method": "pca_concat",
+  "inputs": "rna:log1p_hvg2000_pca50",
+  "uses_labels": false,
+  "split_evaluated": "val",
+  "n_evaluated": 1560,
+  "structure": {
+    "label": {
+      "z_joint": {
+        "n_classes": 8,
+        "majority_baseline_accuracy": 0.6,
+        "chance_balanced_accuracy": 0.125,
+        "probe_balanced_accuracy": 0.9764,
+        "probe_balanced_accuracy_ci95": [
+          0.9597,
+          0.9867
+        ],
+        "probe_macro_f1": 0.9524,
+        "probe_accuracy": 0.9641,
+        "probe_per_class_recall": {
+          "B cells": {
+            "n_test": 83,
+            "recall": 1.0
+          },
+          "DC": {
+            "n_test": 21,
+            "recall": 0.9524
+          },
+          "ILC": {
+            "n_test": 88,
+            "recall": 0.9205
+          },
+          "Megakaryocyte precursor": {
+            "n_test": 2,
+            "recall": 1.0
+          },
+          "Monocytes": {
+            "n_test": 417,
+            "recall": 0.9808
+          },
+          "Plasma cells": {
+            "n_test": 6,
+            "recall": 1.0
+          },
+          "T cells": {
+            "n_test": 936,
+            "recall": 0.9573
+          },
+          "pDC": {
+            "n_test": 7,
+            "recall": 1.0
+          }
+        },
+        "knn15_balanced_accuracy": 0.9482,
+        "kmeans_ari": 0.3561,
+        "kmeans_nmi": 0.5764,
+        "silhouette_cosine": -0.0288
+      },
+      "z_rna": {
+        "n_classes": 8,
+        "majority_baseline_accuracy": 0.6,
+        "chance_balanced_accuracy": 0.125,
+        "probe_balanced_accuracy": 0.9764,
+        "probe_balanced_accuracy_ci95": [
+          0.9571,
+          0.9886
+        ],
+        "probe_macro_f1": 0.9524,
+        "probe_accuracy": 0.9641,
+        "probe_per_class_recall": {
+          "B cells": {
+            "n_test": 83,
+            "recall": 1.0
+          },
+          "DC": {
+            "n_test": 21,
+            "recall": 0.9524
+          },
+          "ILC": {
+            "n_test": 88,
+            "recall": 0.9205
+          },
+          "Megakaryocyte precursor": {
+            "n_test": 2,
+            "recall": 1.0
+          },
+          "Monocytes": {
+            "n_test": 417,
+            "recall": 0.9808
+          },
+          "Plasma cells": {
+            "n_test": 6,
+            "recall": 1.0
+          },
+          "T cells": {
+            "n_test": 936,
+            "recall": 0.9573
+          },
+          "pDC": {
+            "n_test": 7,
+            "recall": 1.0
+          }
+        },
+        "knn15_balanced_accuracy": 0.9482,
+        "kmeans_ari": 0.3561,
+        "kmeans_nmi": 0.5764,
+        "silhouette_cosine": -0.0288
+      }
+    },
+    "label_fine": {
+      "z_joint": {
+        "n_classes": 17,
+        "majority_baseline_accuracy": 0.3718,
+        "chance_balanced_accuracy": 0.0588,
+        "probe_balanced_accuracy": 0.8491,
+        "probe_balanced_accuracy_ci95": [
+          0.8033,
+          0.885
+        ],
+        "probe_macro_f1": 0.7873,
+        "probe_accuracy": 0.7846,
+        "probe_per_class_recall": {
+          "CD16+ NK cells": {
+            "n_test": 61,
+            "recall": 0.9344
+          },
+          "CD16- NK cells": {
+            "n_test": 5,
+            "recall": 0.6
+          },
+          "Classical monocytes": {
+            "n_test": 381,
+            "recall": 0.9633
+          },
+          "DC2": {
+            "n_test": 21,
+            "recall": 0.9048
+          },
+          "MAIT cells": {
+            "n_test": 22,
+            "recall": 1.0
+          },
+          "Megakaryocyte precursor": {
+            "n_test": 2,
+            "recall": 1.0
+          },
+          "Memory B cells": {
+            "n_test": 61,
+            "recall": 0.6557
+          },
+          "Naive B cells": {
+            "n_test": 19,
+            "recall": 0.6842
+          },
+          "Non-classical monocytes": {
+            "n_test": 39,
+            "recall": 1.0
+          },
+          "Plasma cells": {
+            "n_test": 6,
+            "recall": 1.0
+          },
+          "Regulatory T cells": {
+            "n_test": 37,
+            "recall": 0.8378
+          },
+          "Tcm/Naive cytotoxic T cells": {
+            "n_test": 87,
+            "recall": 0.8736
+          },
+          "Tcm/Naive helper T cells": {
+            "n_test": 580,
+            "recall": 0.6276
+          },
+          "Tem/Effector helper T cells": {
+            "n_test": 84,
+            "recall": 0.6786
+          },
+          "Tem/Temra cytotoxic T cells": {
+            "n_test": 45,
+            "recall": 0.8889
+          },
+          "Tem/Trm cytotoxic T cells": {
+            "n_test": 103,
+            "recall": 0.7864
+          },
+          "pDC": {
+            "n_test": 7,
+            "recall": 1.0
+          }
+        },
+        "knn15_balanced_accuracy": 0.7682,
+        "kmeans_ari": 0.2379,
+        "kmeans_nmi": 0.5368,
+        "silhouette_cosine": -0.0225
+      },
+      "z_rna": {
+        "n_classes": 17,
+        "majority_baseline_accuracy": 0.3718,
+        "chance_balanced_accuracy": 0.0588,
+        "probe_balanced_accuracy": 0.8491,
+        "probe_balanced_accuracy_ci95": [
+          0.8117,
+          0.8766
+        ],
+        "probe_macro_f1": 0.7873,
+        "probe_accuracy": 0.7846,
+        "probe_per_class_recall": {
+          "CD16+ NK cells": {
+            "n_test": 61,
+            "recall": 0.9344
+          },
+          "CD16- NK cells": {
+            "n_test": 5,
+            "recall": 0.6
+          },
+          "Classical monocytes": {
+            "n_test": 381,
+            "recall": 0.9633
+          },
+          "DC2": {
+            "n_test": 21,
+            "recall": 0.9048
+          },
+          "MAIT cells": {
+            "n_test": 22,
+            "recall": 1.0
+          },
+          "Megakaryocyte precursor": {
+            "n_test": 2,
+            "recall": 1.0
+          },
+          "Memory B cells": {
+            "n_test": 61,
+            "recall": 0.6557
+          },
+          "Naive B cells": {
+            "n_test": 19,
+            "recall": 0.6842
+          },
+          "Non-classical monocytes": {
+            "n_test": 39,
+            "recall": 1.0
+          },
+          "Plasma cells": {
+            "n_test": 6,
+            "recall": 1.0
+          },
+          "Regulatory T cells": {
+            "n_test": 37,
+            "recall": 0.8378
+          },
+          "Tcm/Naive cytotoxic T cells": {
+            "n_test": 87,
+            "recall": 0.8736
+          },
+          "Tcm/Naive helper T cells": {
+            "n_test": 580,
+            "recall": 0.6276
+          },
+          "Tem/Effector helper T cells": {
+            "n_test": 84,
+            "recall": 0.6786
+          },
+          "Tem/Temra cytotoxic T cells": {
+            "n_test": 45,
+            "recall": 0.8889
+          },
+          "Tem/Trm cytotoxic T cells": {
+            "n_test": 103,
+            "recall": 0.7864
+          },
+          "pDC": {
+            "n_test": 7,
+            "recall": 1.0
+          }
+        },
+        "knn15_balanced_accuracy": 0.7682,
+        "kmeans_ari": 0.2379,
+        "kmeans_nmi": 0.5368,
+        "silhouette_cosine": -0.0225
+      }
+    }
+  },
+  "collapse": {
+    "z_joint": {
+      "dim": 32,
+      "effective_rank": 31.6043,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0412,
+      "uniformity": -3.6908
+    },
+    "z_rna": {
+      "dim": 32,
+      "effective_rank": 31.6043,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0412,
+      "uniformity": -3.6908
+    }
+  },
+  "cross": {
+    "rna->atac:binary_top10000": {
+      "ridge_alpha_chosen_on_val": 1000,
+      "n_targets": 10000,
+      "n_test": 1560,
+      "per_feature_auroc_mean": 0.6012,
+      "per_feature_auroc_median": 0.5941,
+      "per_feature_auroc_baseline": 0.5,
+      "per_sample_auroc_mean": 0.6709,
+      "per_sample_auroc_ci95": [
+        0.6698,
+        0.6719
+      ],
+      "per_sample_auroc_baseline_train_mean": 0.6613,
+      "target_binary": true
+    }
+  }
+}

@@ -81,7 +81,7 @@ log it as a decision, and continue.
 | `python tools/preprocess.py --data D --out O --modality M --spec SPEC` | one modality → feature matrix, fit on train | `O/features/M__SPEC.npz` + `.json` |
 | `python tools/train.py --data D --out O/<label> --inputs M1:SPEC1[,M2:SPEC2] --method {pca_concat,identity,clip,vicreg,supcon_clip,simclr} [--encoder {linear,mlp,adapter}] --dim K ... --max-minutes T [--smoke]` | learn (or build) the representation | `embeddings.npz`, `run_config.json`, `train_log.json`, `loss.png`, `model.pt` |
 | `python tools/evaluate.py --data D --run O/<label> --split {val,test} --tasks structure,retrieval,collapse,cross [--labels ...] [--cross src->tgt:SPEC,...]` | score a representation | `metrics_val.json` or `metrics.json` (+ `embedding.png` on test) |
-| `python tools/compare_runs.py --out O --split {val,test} [--label L]` | one table across all models | `comparison_<split>.md/.json/.png` |
+| `python tools/compare_runs.py --out O --split {val,test} [--reference MODEL]` | one table across all models (all label columns); with `--reference`, paired bootstrap differences of every model vs MODEL on the same samples | `comparison_<split>.md/.json/.png`, `comparison_<split>_vs_MODEL.md/.json` |
 | `python tools/log_decision.py --out O --step S --short "..." --why "..." --decision ... --evidence ... --alternatives ... --skill ...` | append to the decision log | `O/decisions.jsonl` |
 | `python tools/run_summary.py --out O` | Decision-path table, full decision list, command history | `O/decision_path.md`, `O/decisions.md`, `O/commands.md` |
 | `python tools/export_report.py reports/<name>.md` | tidy the report layout and export the PDF | `reports/<name>.md` (tidied), `.pdf` |
@@ -116,7 +116,9 @@ they are evidence too, and you can read images.
    `iteration`. Unused budget is not a goal in itself.
 9. **Choose** the representation(s) for the report (on val evidence), then
    run `evaluate.py --split test` on them and the baselines, and
-   `compare_runs.py --split test`.
+   `compare_runs.py --split test --reference <strongest baseline>`. Claims of
+   "better / worse / no difference" in the report rest on these paired
+   differences, not on overlapping intervals.
 10. **Downstream + recommendation** (recommendation skill) → log
     `downstream` and `recommendation` decisions.
 11. Run `tools/run_summary.py --out <output folder>`, **write the report**
@@ -132,9 +134,11 @@ Write for a reader who knows statistics but not this code. Five principles:
    correct caption was among the model's top 5 out of 2,000"), giving the
    technical term once in parentheses and defining it in the glossary. No
    file names, variable names, flags or spec strings in the main text.
-3. **Each number once.** Show the few numbers that decide the verdict, next
-   to their baseline and chance level; put everything else (CIs, full
-   metrics, settings) in the appendix.
+3. **Each number once, one name per number.** Show the few numbers that
+   decide the verdict, next to their baseline and chance level, and the paired
+   difference (with CI) that decides "better or not"; put everything else in
+   the appendix. A name ("RNA alone") always refers to the same model and the
+   same number throughout the report (recommendation skill).
 4. **Figures must earn their place.** Look at each image; its caption says
    what is actually visible.
 5. **One consistent verdict** in the header, Summary and Recommendation.

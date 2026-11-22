@@ -26,7 +26,9 @@ way, predict ATAC?").
 1. `evaluate.py --split val` for every model → `compare_runs.py --split val`
    → choose. Log the choice with the val numbers.
 2. `evaluate.py --split test` for the chosen model(s) AND the baselines →
-   `compare_runs.py --split test` → these numbers go in the report.
+   `compare_runs.py --split test --reference <best single-modality baseline>`
+   (and once more with `--reference <early fusion or zero-shot>` if that is the
+   stronger baseline for a claim) → these numbers go in the report.
 If test disagrees with val (e.g. ranking flips within overlapping CIs), say
 so — do not switch models because of it.
 
@@ -40,9 +42,20 @@ so — do not switch models because of it.
   classes a representation fails on.
 - *kNN balanced accuracy*: does the neighbourhood structure (not just a
   linear direction) carry the label?
-- Differences smaller than the overlap of the two 95% CIs are not
-  meaningful; with ~1,500 test samples and tens of classes, expect CI widths
-  of a few points.
+- **"Is A better than B?" is answered by the PAIRED difference**
+  (`comparison_<split>_vs_<reference>.md`): both models are scored on the same
+  samples, so resampling them together removes the shared sample-to-sample
+  noise. Overlapping per-model intervals are NOT evidence of no difference —
+  never conclude "no proven gain" from them. Report the difference with its CI
+  ("+0.05 [+0.02, +0.08]"), and judge size as well as sign: with thousands of
+  samples a tiny difference (e.g. +0.004 in per-cell r) can exclude 0 and still
+  be practically irrelevant — say so.
+- Small classes dominate the noise of balanced accuracy (each class weighs
+  the same): name classes with < ~10 evaluated samples as uninterpretable.
+- **Name the weakest LARGE class**: from `probe_per_class_recall`, the class
+  with the most samples among those with low recall (e.g. < 0.75). A big
+  class that is often misclassified matters more to users than a tiny one,
+  and it usually points to biologically/visually similar neighbours.
 - Labels made from one modality (DATA.md) cap what the other can add —
   read "joint ≈ that modality alone" as expected, not as failure.
 - Text shortcut: if the label is predictable from words alone
@@ -51,7 +64,11 @@ so — do not switch models because of it.
 
 **Clustering**: ARI (0 = random, 1 = identical to labels) and NMI; kmeans
 uses k = number of classes, so very imbalanced labels depress ARI even for a
-good embedding — interpret with the probe.
+good embedding — interpret with the probe. Even when the objective does not
+ask for clustering, mention it if the chosen model's ARI is clearly the
+worst of the compared models: it means classes are linearly separable but not
+grouped into compact clusters, which matters to anyone who will cluster the
+embedding.
 
 **Retrieval (`retrieval`)**: recall@k = fraction of queries whose true partner
 is in the top k out of `n_candidates`; chance is k / n_candidates. Report
@@ -91,3 +108,6 @@ modalities or two clouds?). `comparison_<split>.png` for the report.
   embedding (average of modalities) may be hurt by a modality gap: compare
   per-modality probes, and consider using the best modality's embedding.
 - Adapter never beats zero-shot on val → stop; zero-shot is the answer.
+  A very strong zero-shot baseline leaves little headroom: judge a gain
+  against the zero-shot CI, and remember it may be inflated by pretraining
+  overlap (recommendation skill).

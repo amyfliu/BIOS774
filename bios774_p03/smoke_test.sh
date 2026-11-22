@@ -65,8 +65,9 @@ step "evaluate val (rna_only)" "$PY" tools/evaluate.py --data $D --run $O/rna_on
 step "evaluate val (clip)" "$PY" tools/evaluate.py --data $D --run $O/clip --split val --tasks structure,retrieval,collapse,cross --cross "$X"
 step "evaluate val (vicreg)" "$PY" tools/evaluate.py --data $D --run $O/vicreg --split val --tasks structure,retrieval,collapse,cross --cross "$X"
 step "evaluate test (clip)" "$PY" tools/evaluate.py --data $D --run $O/clip --split test --tasks structure,retrieval,collapse,cross --cross "$X"
-step "compare val" "$PY" tools/compare_runs.py --out $O --split val --label label_fine
-step "compare test" "$PY" tools/compare_runs.py --out $O --split test
+step "evaluate test (rna_only)" "$PY" tools/evaluate.py --data $D --run $O/rna_only --split test --tasks structure,collapse,cross --cross "$X" --no-plot
+step "compare val" "$PY" tools/compare_runs.py --out $O --split val
+step "compare test, paired vs rna_only" "$PY" tools/compare_runs.py --out $O --split test --reference rna_only
 
 echo "== image + text (dev rocov2)"
 D=data/_dev/rocov2; O=$OUT/rocov2
@@ -79,7 +80,7 @@ step "train clip adapter" "$PY" tools/train.py --data $D --out $O/adapter --inpu
 step "evaluate val (adapter)" "$PY" tools/evaluate.py --data $D --run $O/adapter --split val --tasks structure,retrieval,collapse
 step "evaluate test (adapter)" "$PY" tools/evaluate.py --data $D --run $O/adapter --split test --tasks structure,retrieval,collapse
 step "evaluate test (identity)" "$PY" tools/evaluate.py --data $D --run $O/identity --split test --tasks structure,retrieval,collapse
-step "compare test" "$PY" tools/compare_runs.py --out $O --split test
+step "compare test, paired vs identity" "$PY" tools/compare_runs.py --out $O --split test --reference identity
 
 echo "== logging + report"
 step "log_decision" "$PY" tools/log_decision.py --out $OUT --step other --short "smoke" --why "test" --decision "smoke test" --evidence "n/a"

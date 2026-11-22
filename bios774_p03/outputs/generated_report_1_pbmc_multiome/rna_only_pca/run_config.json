@@ -1,0 +1,37 @@
+{
+  "data": "data/pbmc_multiome",
+  "out": "outputs/generated_report_1_pbmc_multiome/rna_only_pca",
+  "inputs": "rna:log1p_hvg2000_pca50",
+  "features_dir": null,
+  "method": "pca_concat",
+  "dim": 32,
+  "label": null,
+  "seed": 0,
+  "device": null,
+  "smoke": false,
+  "inputs_resolved": {
+    "rna": {
+      "spec": "log1p_hvg2000_pca50",
+      "dim": 50,
+      "steps": [
+        "normalise to 1e4 per sample + log1p",
+        "keep 2000 most variable features (train)",
+        "PCA to 50 components (fit on train)"
+      ]
+    }
+  },
+  "embedding_keys": [
+    "z_joint",
+    "z_rna"
+  ],
+  "embedding_dim": {
+    "z_joint": 32,
+    "z_rna": 32
+  },
+  "uses_labels": false,
+  "summary": {
+    "explained_variance_ratio_sum": 0.6406,
+    "dim": 32
+  },
+  "seconds": 0.6
+}
