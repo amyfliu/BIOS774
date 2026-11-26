@@ -1,4 +1,5 @@
-# Python >= 3.10. Data preparation (stage 1). Model/agent packages are added in stage 2.
+# Python >= 3.9 (tested with 3.9.6 on macOS).
+# Data preparation:
 numpy>=1.26
 scipy>=1.11
 pandas>=2.0
@@ -12,7 +13,7 @@ celltypist>=1.6
 scikit-learn>=1.4,<1.8
 igraph>=0.10
 leidenalg>=0.10
-# representation learning (stage 2). On Apple-silicon Macs the standard torch
+# Representation learning. On Apple-silicon Macs the standard torch
 # wheel includes the Apple GPU (MPS) backend.
 torch>=2.2
 matplotlib>=3.8

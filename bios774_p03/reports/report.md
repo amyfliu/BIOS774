@@ -1,8 +1,8 @@
 ---
 header-includes:
-
-  - \usepackage{float}
-  - \floatplacement{figure}{H}
+- \usepackage{float}
+- \floatplacement{figure}{H}
+output: pdf_document
 ---
 
 # Building an AI Agent for Multimodal Representation Learning
