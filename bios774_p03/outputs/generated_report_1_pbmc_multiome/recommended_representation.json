@@ -1,0 +1,21 @@
+{
+  "dataset": "pbmc_multiome",
+  "source_model": "clip_mlp_d32_reg",
+  "method": "clip",
+  "inputs": "rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1",
+  "uses_labels": false,
+  "keys": [
+    "z_atac",
+    "z_rna"
+  ],
+  "dims": {
+    "z_atac": 32,
+    "z_rna": 32
+  },
+  "n_samples": 10405,
+  "dtype": "float16",
+  "max_abs_rounding_error": 0.0039043426513671875,
+  "rows": "same order as data/<name>/obs.csv; join on sample_id",
+  "joint": "joint = normalise(mean(normalise(z_a), normalise(z_b))) over the stored modality keys",
+  "full_precision_source": "outputs/generated_report_1_pbmc_multiome/clip_mlp_d32_reg/embeddings.npz"
+}

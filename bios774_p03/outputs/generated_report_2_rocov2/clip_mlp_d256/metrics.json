@@ -1,5 +1,5 @@
 {
-  "run": "outputs/generated_report_2_rocov2/clip_mlp_d512",
+  "run": "outputs/generated_report_2_rocov2/clip_mlp_d256",
   "method": "clip",
   "inputs": "image:biomedclip,text:biomedclip",
   "uses_labels": false,
@@ -11,25 +11,25 @@
         "n_classes": 6,
         "majority_baseline_accuracy": 0.3585,
         "chance_balanced_accuracy": 0.1667,
-        "probe_balanced_accuracy": 0.9726,
+        "probe_balanced_accuracy": 0.9744,
         "probe_balanced_accuracy_ci95": [
-          0.9672,
-          0.9783
+          0.9683,
+          0.9806
         ],
-        "probe_macro_f1": 0.9295,
-        "probe_accuracy": 0.9535,
+        "probe_macro_f1": 0.941,
+        "probe_accuracy": 0.9595,
         "probe_per_class_recall": {
           "Angiography": {
             "n_test": 82,
-            "recall": 1.0
+            "recall": 0.9878
           },
           "CT": {
             "n_test": 717,
-            "recall": 0.9484
+            "recall": 0.9637
           },
           "MRI": {
             "n_test": 301,
-            "recall": 0.9701
+            "recall": 0.9801
           },
           "PET": {
             "n_test": 13,
@@ -41,25 +41,25 @@
           },
           "X-ray": {
             "n_test": 565,
-            "recall": 0.9168
+            "recall": 0.915
           }
         },
-        "knn15_balanced_accuracy": 0.9746,
-        "kmeans_ari": 0.2258,
-        "kmeans_nmi": 0.3714,
-        "silhouette_cosine": 0.0395
+        "knn15_balanced_accuracy": 0.9776,
+        "kmeans_ari": 0.4852,
+        "kmeans_nmi": 0.5287,
+        "silhouette_cosine": 0.0603
       },
       "z_text": {
         "n_classes": 6,
         "majority_baseline_accuracy": 0.3585,
         "chance_balanced_accuracy": 0.1667,
-        "probe_balanced_accuracy": 0.8996,
+        "probe_balanced_accuracy": 0.914,
         "probe_balanced_accuracy_ci95": [
-          0.8584,
-          0.9447
+          0.8719,
+          0.9546
         ],
-        "probe_macro_f1": 0.8816,
-        "probe_accuracy": 0.9235,
+        "probe_macro_f1": 0.8949,
+        "probe_accuracy": 0.9285,
         "probe_per_class_recall": {
           "Angiography": {
             "n_test": 82,
@@ -71,49 +71,49 @@
           },
           "MRI": {
             "n_test": 301,
-            "recall": 0.9502
+            "recall": 0.9535
           },
           "PET": {
             "n_test": 13,
-            "recall": 0.6923
+            "recall": 0.7692
           },
           "Ultrasound": {
             "n_test": 322,
-            "recall": 0.9627
+            "recall": 0.9441
           },
           "X-ray": {
             "n_test": 565,
-            "recall": 0.8743
+            "recall": 0.8991
           }
         },
-        "knn15_balanced_accuracy": 0.9192,
-        "kmeans_ari": 0.4421,
-        "kmeans_nmi": 0.4112,
-        "silhouette_cosine": 0.0383
+        "knn15_balanced_accuracy": 0.9223,
+        "kmeans_ari": 0.4696,
+        "kmeans_nmi": 0.5629,
+        "silhouette_cosine": 0.07534
       },
       "z_joint": {
         "n_classes": 6,
         "majority_baseline_accuracy": 0.3585,
         "chance_balanced_accuracy": 0.1667,
-        "probe_balanced_accuracy": 0.9758,
+        "probe_balanced_accuracy": 0.9787,
         "probe_balanced_accuracy_ci95": [
-          0.97,
-          0.9811
+          0.9735,
+          0.983
         ],
-        "probe_macro_f1": 0.9438,
-        "probe_accuracy": 0.9605,
+        "probe_macro_f1": 0.9439,
+        "probe_accuracy": 0.9625,
         "probe_per_class_recall": {
           "Angiography": {
             "n_test": 82,
-            "recall": 0.9878
+            "recall": 1.0
           },
           "CT": {
             "n_test": 717,
-            "recall": 0.9596
+            "recall": 0.9693
           },
           "MRI": {
             "n_test": 301,
-            "recall": 0.99
+            "recall": 0.9934
           },
           "PET": {
             "n_test": 13,
@@ -121,49 +121,49 @@
           },
           "Ultrasound": {
             "n_test": 322,
-            "recall": 0.9969
+            "recall": 1.0
           },
           "X-ray": {
             "n_test": 565,
-            "recall": 0.9204
+            "recall": 0.9097
           }
         },
-        "knn15_balanced_accuracy": 0.964,
-        "kmeans_ari": 0.6105,
-        "kmeans_nmi": 0.7451,
-        "silhouette_cosine": 0.0617
+        "knn15_balanced_accuracy": 0.9652,
+        "kmeans_ari": 0.6178,
+        "kmeans_nmi": 0.7566,
+        "silhouette_cosine": 0.09222
       }
     }
   },
   "retrieval": {
     "n_candidates": 2000,
     "a_to_b": {
-      "recall_at_1": 0.3595,
-      "recall_at_5": 0.6755,
-      "recall_at_10": 0.789,
+      "recall_at_1": 0.3445,
+      "recall_at_5": 0.6675,
+      "recall_at_10": 0.786,
       "recall_at_5_ci95": [
-        0.658,
-        0.6975
+        0.647,
+        0.6871
       ],
       "median_rank": 3.0,
-      "foscttm": 0.0077
+      "foscttm": 0.006129
     },
     "b_to_a": {
-      "recall_at_1": 0.3605,
-      "recall_at_5": 0.682,
-      "recall_at_10": 0.8015,
+      "recall_at_1": 0.3485,
+      "recall_at_5": 0.673,
+      "recall_at_10": 0.7865,
       "recall_at_5_ci95": [
-        0.66,
-        0.703
+        0.6515,
+        0.6935
       ],
       "median_rank": 3.0,
-      "foscttm": 0.0078
+      "foscttm": 0.006325
     },
     "chance": {
       "recall_at_1": 0.0005,
       "recall_at_5": 0.0025,
       "recall_at_10": 0.005,
-      "median_rank": 1000.5,
+      "median_rank": 1000.0,
       "foscttm": 0.5
     },
     "a": "image",
@@ -171,28 +171,28 @@
   },
   "collapse": {
     "z_image": {
-      "dim": 512,
-      "effective_rank": 33.8376,
+      "dim": 256,
+      "effective_rank": 28.3,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0733,
-      "uniformity": -3.6093
+      "top_component_variance_share": 0.07497,
+      "uniformity": -3.51
     },
     "z_text": {
-      "dim": 512,
-      "effective_rank": 33.5285,
+      "dim": 256,
+      "effective_rank": 28.65,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0767,
-      "uniformity": -3.6399
+      "top_component_variance_share": 0.07566,
+      "uniformity": -3.568
     },
     "z_joint": {
-      "dim": 512,
-      "effective_rank": 33.466,
+      "dim": 256,
+      "effective_rank": 27.51,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0711,
-      "uniformity": -3.6192
+      "top_component_variance_share": 0.09241,
+      "uniformity": -3.536
     },
-    "alignment_paired_sq_dist": 0.7672,
-    "alignment_random_pairs_sq_dist": 2.0088,
-    "modality_gap_centroid_dist": 0.1899
+    "alignment_paired_sq_dist": 0.7063,
+    "alignment_random_pairs_sq_dist": 2.005,
+    "modality_gap_centroid_dist": 0.2183
   }
 }

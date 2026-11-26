@@ -162,7 +162,7 @@
       "z_rna": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3673,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8249,
         "probe_balanced_accuracy_ci95": [
           0.7869,
@@ -248,7 +248,7 @@
       "z_atac": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3673,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8338,
         "probe_balanced_accuracy_ci95": [
           0.7924,
@@ -329,12 +329,12 @@
         "knn15_balanced_accuracy": 0.7215,
         "kmeans_ari": 0.297,
         "kmeans_nmi": 0.5758,
-        "silhouette_cosine": 0.0831
+        "silhouette_cosine": 0.08306
       },
       "z_joint": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3673,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8271,
         "probe_balanced_accuracy_ci95": [
           0.7846,
@@ -422,7 +422,7 @@
   "retrieval": {
     "n_candidates": 1560,
     "a_to_b": {
-      "recall_at_1": 0.0455,
+      "recall_at_1": 0.04551,
       "recall_at_5": 0.1365,
       "recall_at_10": 0.2167,
       "recall_at_5_ci95": [
@@ -430,10 +430,10 @@
         0.1526
       ],
       "median_rank": 42.0,
-      "foscttm": 0.0485
+      "foscttm": 0.04849
     },
     "b_to_a": {
-      "recall_at_1": 0.0513,
+      "recall_at_1": 0.05128,
       "recall_at_5": 0.1423,
       "recall_at_10": 0.2282,
       "recall_at_5_ci95": [
@@ -441,12 +441,12 @@
         0.1584
       ],
       "median_rank": 41.0,
-      "foscttm": 0.0477
+      "foscttm": 0.04771
     },
     "chance": {
-      "recall_at_1": 0.0006,
-      "recall_at_5": 0.0032,
-      "recall_at_10": 0.0064,
+      "recall_at_1": 0.000641,
+      "recall_at_5": 0.003205,
+      "recall_at_10": 0.00641,
       "median_rank": 780.5,
       "foscttm": 0.5
     },
@@ -456,28 +456,28 @@
   "collapse": {
     "z_rna": {
       "dim": 32,
-      "effective_rank": 11.7891,
+      "effective_rank": 11.79,
       "dead_dims": 0,
       "top_component_variance_share": 0.1091,
-      "uniformity": -2.3502
+      "uniformity": -2.35
     },
     "z_atac": {
       "dim": 32,
-      "effective_rank": 10.8981,
+      "effective_rank": 10.9,
       "dead_dims": 0,
       "top_component_variance_share": 0.152,
-      "uniformity": -2.2925
+      "uniformity": -2.292
     },
     "z_joint": {
       "dim": 32,
       "effective_rank": 8.349,
       "dead_dims": 0,
       "top_component_variance_share": 0.2727,
-      "uniformity": -2.2908
+      "uniformity": -2.291
     },
     "alignment_paired_sq_dist": 0.2161,
-    "alignment_random_pairs_sq_dist": 1.9223,
-    "modality_gap_centroid_dist": 0.0265
+    "alignment_random_pairs_sq_dist": 1.922,
+    "modality_gap_centroid_dist": 0.02646
   },
   "cross": {
     "rna->atac:binary_top10000": {
@@ -500,7 +500,7 @@
       "n_targets": 2000,
       "n_test": 1560,
       "per_feature_pearson_mean": 0.1201,
-      "per_feature_pearson_median": 0.0399,
+      "per_feature_pearson_median": 0.03994,
       "fraction_features_r_gt_0.3": 0.1385,
       "per_feature_pearson_baseline": 0.0,
       "per_sample_pearson_mean": 0.4757,
@@ -509,8 +509,8 @@
         0.4843
       ],
       "per_sample_pearson_baseline_train_mean": 0.3004,
-      "mse": 0.0777,
-      "mse_baseline_train_mean": 0.0947,
+      "mse": 0.07773,
+      "mse_baseline_train_mean": 0.09468,
       "r2_vs_baseline": 0.1791,
       "target_binary": false
     }

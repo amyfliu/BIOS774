@@ -9,10 +9,10 @@
     "chance[label]": 0.125,
     "probe_bal_acc[label_fine]": 0.818,
     "kmeans_ari[label_fine]": 0.255,
-    "chance[label_fine]": 0.059,
+    "chance[label_fine]": 0.0588,
     "atac->rna per-cell r": 0.456,
     "atac->rna per-cell r (baseline)": 0.3,
-    "eff_rank(joint)": 17.592
+    "eff_rank(joint)": 17.6
   },
   {
     "model": "clip_mlp_d32",
@@ -20,20 +20,24 @@
     "inputs": "rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1",
     "uses_labels": "no",
     "probe_bal_acc[label]": 0.981,
+    "probe_bal_acc[label](atac)": 0.853,
+    "probe_bal_acc[label](rna)": 0.977,
     "kmeans_ari[label]": 0.284,
     "chance[label]": 0.125,
     "probe_bal_acc[label_fine]": 0.832,
+    "probe_bal_acc[label_fine](atac)": 0.85,
+    "probe_bal_acc[label_fine](rna)": 0.84,
     "kmeans_ari[label_fine]": 0.257,
-    "chance[label_fine]": 0.059,
+    "chance[label_fine]": 0.0588,
     "R@5 rna->atac": 0.272,
     "R@5 atac->rna": 0.255,
-    "FOSCTTM": 0.025,
-    "R@5 chance": 0.003,
+    "FOSCTTM": 0.0254,
+    "R@5 chance": 0.0032,
     "rna->atac per-feature AUROC": 0.599,
     "rna->atac per-cell AUROC": 0.672,
     "atac->rna per-cell r": 0.463,
     "atac->rna per-cell r (baseline)": 0.3,
-    "eff_rank(joint)": 12.815
+    "eff_rank(joint)": 12.8
   },
   {
     "model": "clip_mlp_d32_reg",
@@ -41,20 +45,24 @@
     "inputs": "rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1",
     "uses_labels": "no",
     "probe_bal_acc[label]": 0.979,
+    "probe_bal_acc[label](atac)": 0.894,
+    "probe_bal_acc[label](rna)": 0.973,
     "kmeans_ari[label]": 0.295,
     "chance[label]": 0.125,
     "probe_bal_acc[label_fine]": 0.9,
+    "probe_bal_acc[label_fine](atac)": 0.848,
+    "probe_bal_acc[label_fine](rna)": 0.889,
     "kmeans_ari[label_fine]": 0.29,
-    "chance[label_fine]": 0.059,
+    "chance[label_fine]": 0.0588,
     "R@5 rna->atac": 0.276,
     "R@5 atac->rna": 0.265,
     "FOSCTTM": 0.024,
-    "R@5 chance": 0.003,
+    "R@5 chance": 0.0032,
     "rna->atac per-feature AUROC": 0.598,
     "rna->atac per-cell AUROC": 0.672,
     "atac->rna per-cell r": 0.466,
     "atac->rna per-cell r (baseline)": 0.3,
-    "eff_rank(joint)": 9.472
+    "eff_rank(joint)": 9.47
   },
   {
     "model": "early_fusion_pca",
@@ -66,8 +74,8 @@
     "chance[label]": 0.125,
     "probe_bal_acc[label_fine]": 0.88,
     "kmeans_ari[label_fine]": 0.292,
-    "chance[label_fine]": 0.059,
-    "eff_rank(joint)": 26.95
+    "chance[label_fine]": 0.0588,
+    "eff_rank(joint)": 26.9
   },
   {
     "model": "rna_only_pca",
@@ -79,10 +87,10 @@
     "chance[label]": 0.125,
     "probe_bal_acc[label_fine]": 0.849,
     "kmeans_ari[label_fine]": 0.238,
-    "chance[label_fine]": 0.059,
+    "chance[label_fine]": 0.0588,
     "rna->atac per-feature AUROC": 0.601,
     "rna->atac per-cell AUROC": 0.671,
-    "eff_rank(joint)": 31.604
+    "eff_rank(joint)": 31.6
   },
   {
     "model": "vicreg_mlp_d32",
@@ -90,19 +98,23 @@
     "inputs": "rna:log1p_hvg2000_pca50,atac:tfidf_lsi50_drop1",
     "uses_labels": "no",
     "probe_bal_acc[label]": 0.984,
+    "probe_bal_acc[label](atac)": 0.963,
+    "probe_bal_acc[label](rna)": 0.98,
     "kmeans_ari[label]": 0.308,
     "chance[label]": 0.125,
     "probe_bal_acc[label_fine]": 0.868,
+    "probe_bal_acc[label_fine](atac)": 0.834,
+    "probe_bal_acc[label_fine](rna)": 0.843,
     "kmeans_ari[label_fine]": 0.267,
-    "chance[label_fine]": 0.059,
+    "chance[label_fine]": 0.0588,
     "R@5 rna->atac": 0.131,
     "R@5 atac->rna": 0.143,
-    "FOSCTTM": 0.046,
-    "R@5 chance": 0.003,
+    "FOSCTTM": 0.0465,
+    "R@5 chance": 0.0032,
     "rna->atac per-feature AUROC": 0.587,
     "rna->atac per-cell AUROC": 0.672,
     "atac->rna per-cell r": 0.475,
     "atac->rna per-cell r (baseline)": 0.3,
-    "eff_rank(joint)": 8.372
+    "eff_rank(joint)": 8.37
   }
 ]

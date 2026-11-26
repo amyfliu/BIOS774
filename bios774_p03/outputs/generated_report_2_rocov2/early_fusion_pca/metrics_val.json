@@ -47,20 +47,17 @@
         "knn15_balanced_accuracy": 0.721,
         "kmeans_ari": 0.1379,
         "kmeans_nmi": 0.2591,
-        "silhouette_cosine": -0.0273
+        "silhouette_cosine": -0.02728
       }
     }
-  },
-  "retrieval": {
-    "skipped": "needs two modality embeddings of equal dimension (have [])"
   },
   "collapse": {
     "z_joint": {
       "dim": 32,
-      "effective_rank": 31.0063,
+      "effective_rank": 31.01,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0451,
-      "uniformity": -3.6642
+      "top_component_variance_share": 0.04507,
+      "uniformity": -3.664
     }
   }
 }

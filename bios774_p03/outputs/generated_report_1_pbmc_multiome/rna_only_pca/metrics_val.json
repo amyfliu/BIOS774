@@ -55,7 +55,7 @@
         "knn15_balanced_accuracy": 0.9482,
         "kmeans_ari": 0.3561,
         "kmeans_nmi": 0.5764,
-        "silhouette_cosine": -0.0288
+        "silhouette_cosine": -0.02883
       },
       "z_rna": {
         "n_classes": 8,
@@ -105,14 +105,14 @@
         "knn15_balanced_accuracy": 0.9482,
         "kmeans_ari": 0.3561,
         "kmeans_nmi": 0.5764,
-        "silhouette_cosine": -0.0288
+        "silhouette_cosine": -0.02883
       }
     },
     "label_fine": {
       "z_joint": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8491,
         "probe_balanced_accuracy_ci95": [
           0.8033,
@@ -193,12 +193,12 @@
         "knn15_balanced_accuracy": 0.7682,
         "kmeans_ari": 0.2379,
         "kmeans_nmi": 0.5368,
-        "silhouette_cosine": -0.0225
+        "silhouette_cosine": -0.02255
       },
       "z_rna": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8491,
         "probe_balanced_accuracy_ci95": [
           0.8117,
@@ -279,24 +279,24 @@
         "knn15_balanced_accuracy": 0.7682,
         "kmeans_ari": 0.2379,
         "kmeans_nmi": 0.5368,
-        "silhouette_cosine": -0.0225
+        "silhouette_cosine": -0.02255
       }
     }
   },
   "collapse": {
     "z_joint": {
       "dim": 32,
-      "effective_rank": 31.6043,
+      "effective_rank": 31.6,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0412,
-      "uniformity": -3.6908
+      "top_component_variance_share": 0.04115,
+      "uniformity": -3.691
     },
     "z_rna": {
       "dim": 32,
-      "effective_rank": 31.6043,
+      "effective_rank": 31.6,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0412,
-      "uniformity": -3.6908
+      "top_component_variance_share": 0.04115,
+      "uniformity": -3.691
     }
   },
   "cross": {
@@ -314,6 +314,9 @@
       ],
       "per_sample_auroc_baseline_train_mean": 0.6613,
       "target_binary": true
+    },
+    "atac->rna:log1p_hvg2000": {
+      "skipped": "run has no embedding of atac (keys ['z_joint', 'z_rna'])"
     }
   }
 }

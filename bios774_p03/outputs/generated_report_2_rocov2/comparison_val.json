@@ -11,9 +11,9 @@
     "chance[label]": 0.167,
     "R@5 image->text": 0.81,
     "R@5 text->image": 0.807,
-    "FOSCTTM": 0.004,
-    "R@5 chance": 0.003,
-    "eff_rank(joint)": 52.881
+    "FOSCTTM": 0.00368,
+    "R@5 chance": 0.0025,
+    "eff_rank(joint)": 52.9
   },
   {
     "model": "clip_adapter_d512",
@@ -27,41 +27,25 @@
     "chance[label]": 0.167,
     "R@5 image->text": 0.81,
     "R@5 text->image": 0.807,
-    "FOSCTTM": 0.004,
-    "R@5 chance": 0.003,
-    "eff_rank(joint)": 52.881
+    "FOSCTTM": 0.00368,
+    "R@5 chance": 0.0025,
+    "eff_rank(joint)": 52.9
   },
   {
-    "model": "clip_adapter_d512_lr1e5",
+    "model": "clip_mlp_d256",
     "method": "clip",
     "inputs": "image:biomedclip,text:biomedclip",
     "uses_labels": "no",
-    "probe_bal_acc[label]": 0.972,
-    "probe_bal_acc[label](image)": 0.968,
-    "probe_bal_acc[label](text)": 0.954,
-    "kmeans_ari[label]": 0.465,
-    "chance[label]": 0.167,
-    "R@5 image->text": 0.81,
-    "R@5 text->image": 0.807,
-    "FOSCTTM": 0.004,
-    "R@5 chance": 0.003,
-    "eff_rank(joint)": 52.881
-  },
-  {
-    "model": "clip_mlp_d512",
-    "method": "clip",
-    "inputs": "image:biomedclip,text:biomedclip",
-    "uses_labels": "no",
-    "probe_bal_acc[label]": 0.968,
+    "probe_bal_acc[label]": 0.975,
     "probe_bal_acc[label](image)": 0.969,
     "probe_bal_acc[label](text)": 0.93,
-    "kmeans_ari[label]": 0.564,
+    "kmeans_ari[label]": 0.599,
     "chance[label]": 0.167,
-    "R@5 image->text": 0.693,
-    "R@5 text->image": 0.689,
-    "FOSCTTM": 0.008,
-    "R@5 chance": 0.003,
-    "eff_rank(joint)": 33.422
+    "R@5 image->text": 0.668,
+    "R@5 text->image": 0.675,
+    "FOSCTTM": 0.00647,
+    "R@5 chance": 0.0025,
+    "eff_rank(joint)": 27.5
   },
   {
     "model": "early_fusion_pca",
@@ -71,7 +55,7 @@
     "probe_bal_acc[label]": 0.703,
     "kmeans_ari[label]": 0.138,
     "chance[label]": 0.167,
-    "eff_rank(joint)": 31.006
+    "eff_rank(joint)": 31.0
   },
   {
     "model": "image_only_pca",
@@ -79,9 +63,9 @@
     "inputs": "image:pixels32_pca50",
     "uses_labels": "no",
     "probe_bal_acc[label]": 0.585,
-    "kmeans_ari[label]": 0.08,
+    "kmeans_ari[label]": 0.0797,
     "chance[label]": 0.167,
-    "eff_rank(joint)": 31.108
+    "eff_rank(joint)": 31.1
   },
   {
     "model": "text_only_pca",
@@ -89,8 +73,8 @@
     "inputs": "text:tfidf_svd128",
     "uses_labels": "no",
     "probe_bal_acc[label]": 0.809,
-    "kmeans_ari[label]": 0.054,
+    "kmeans_ari[label]": 0.0543,
     "chance[label]": 0.167,
-    "eff_rank(joint)": 31.311
+    "eff_rank(joint)": 31.3
   }
 ]

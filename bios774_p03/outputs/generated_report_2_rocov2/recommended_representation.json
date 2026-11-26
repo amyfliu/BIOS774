@@ -1,0 +1,21 @@
+{
+  "dataset": "rocov2",
+  "source_model": "biomedclip_zeroshot",
+  "method": "identity",
+  "inputs": "image:biomedclip,text:biomedclip",
+  "uses_labels": false,
+  "keys": [
+    "z_image",
+    "z_text"
+  ],
+  "dims": {
+    "z_image": 512,
+    "z_text": 512
+  },
+  "n_samples": 24000,
+  "dtype": "float16",
+  "max_abs_rounding_error": 0.0078125,
+  "rows": "same order as data/<name>/obs.csv; join on sample_id",
+  "joint": "joint = normalise(mean(normalise(z_a), normalise(z_b))) over the stored modality keys",
+  "full_precision_source": "outputs/generated_report_2_rocov2/biomedclip_zeroshot/embeddings.npz"
+}

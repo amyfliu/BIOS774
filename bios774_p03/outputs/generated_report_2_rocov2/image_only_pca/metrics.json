@@ -47,7 +47,7 @@
         "knn15_balanced_accuracy": 0.6912,
         "kmeans_ari": 0.106,
         "kmeans_nmi": 0.1945,
-        "silhouette_cosine": -0.0451
+        "silhouette_cosine": -0.04514
       },
       "z_image": {
         "n_classes": 6,
@@ -89,27 +89,24 @@
         "knn15_balanced_accuracy": 0.6912,
         "kmeans_ari": 0.106,
         "kmeans_nmi": 0.1945,
-        "silhouette_cosine": -0.0451
+        "silhouette_cosine": -0.04514
       }
     }
-  },
-  "retrieval": {
-    "skipped": "needs two modality embeddings of equal dimension (have [('z_image', 32)])"
   },
   "collapse": {
     "z_joint": {
       "dim": 32,
-      "effective_rank": 31.085,
+      "effective_rank": 31.08,
       "dead_dims": 0,
       "top_component_variance_share": 0.0438,
-      "uniformity": -3.6649
+      "uniformity": -3.665
     },
     "z_image": {
       "dim": 32,
-      "effective_rank": 31.085,
+      "effective_rank": 31.08,
       "dead_dims": 0,
       "top_component_variance_share": 0.0438,
-      "uniformity": -3.6649
+      "uniformity": -3.665
     }
   }
 }

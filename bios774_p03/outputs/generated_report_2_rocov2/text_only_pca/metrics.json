@@ -45,9 +45,9 @@
           }
         },
         "knn15_balanced_accuracy": 0.6156,
-        "kmeans_ari": 0.0248,
+        "kmeans_ari": 0.02484,
         "kmeans_nmi": 0.0986,
-        "silhouette_cosine": 0.0074
+        "silhouette_cosine": 0.007419
       },
       "z_text": {
         "n_classes": 6,
@@ -87,29 +87,26 @@
           }
         },
         "knn15_balanced_accuracy": 0.6156,
-        "kmeans_ari": 0.0248,
+        "kmeans_ari": 0.02484,
         "kmeans_nmi": 0.0986,
-        "silhouette_cosine": 0.0074
+        "silhouette_cosine": 0.007419
       }
     }
-  },
-  "retrieval": {
-    "skipped": "needs two modality embeddings of equal dimension (have [('z_text', 32)])"
   },
   "collapse": {
     "z_joint": {
       "dim": 32,
-      "effective_rank": 31.0984,
+      "effective_rank": 31.1,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0532,
-      "uniformity": -3.6814
+      "top_component_variance_share": 0.05322,
+      "uniformity": -3.681
     },
     "z_text": {
       "dim": 32,
-      "effective_rank": 31.0984,
+      "effective_rank": 31.1,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0532,
-      "uniformity": -3.6814
+      "top_component_variance_share": 0.05322,
+      "uniformity": -3.681
     }
   }
 }

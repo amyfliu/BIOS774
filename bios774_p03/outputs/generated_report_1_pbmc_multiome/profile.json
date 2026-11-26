@@ -18,7 +18,7 @@
         "p25": 1965.0,
         "p50": 2555.0,
         "p75": 3613.0,
-        "p95": 6280.2
+        "p95": 6280.0
       },
       "features_detected_per_sample": {
         "p5": 437.6,
@@ -32,7 +32,7 @@
       "max_value": 5600.0,
       "features_in_ge_1pct_samples": 12636,
       "features_in_ge_10pct_samples": 4573,
-      "mean_variance_loglog_slope_top2000": 1.4782,
+      "mean_variance_loglog_slope_top2000": 1.478,
       "median_overdispersion_top2000": 1.232
     },
     "atac": {
@@ -40,25 +40,25 @@
       "n_features": 111698,
       "fraction_zero": 0.9184,
       "library_size": {
-        "p5": 4238.6,
-        "p25": 17936.0,
-        "p50": 22774.0,
-        "p75": 28115.0,
-        "p95": 49125.2
+        "p5": 4239.0,
+        "p25": 17940.0,
+        "p50": 22770.0,
+        "p75": 28120.0,
+        "p95": 49130.0
       },
       "features_detected_per_sample": {
-        "p5": 2037.2,
+        "p5": 2037.0,
         "p25": 7288.0,
         "p50": 8835.0,
-        "p75": 11095.0,
-        "p95": 16280.6
+        "p75": 11100.0,
+        "p95": 16280.0
       },
       "fraction_nonzero_values_equal_1": 0.1049,
       "fraction_nonzero_values_le_2": 0.7221,
       "max_value": 1180.0,
       "features_in_ge_1pct_samples": 96203,
       "features_in_ge_10pct_samples": 21498,
-      "mean_variance_loglog_slope_top2000": 1.3194,
+      "mean_variance_loglog_slope_top2000": 1.319,
       "median_overdispersion_top2000": 0.7586
     }
   },
@@ -165,7 +165,7 @@
       },
       "smallest_class_train": 11,
       "largest_class_train": 2672,
-      "imbalance_ratio_train": 242.9091,
+      "imbalance_ratio_train": 242.9,
       "majority_class_fraction_test": 0.3673
     }
   },

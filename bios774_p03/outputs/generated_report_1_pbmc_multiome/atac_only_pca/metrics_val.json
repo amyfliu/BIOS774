@@ -55,7 +55,7 @@
         "knn15_balanced_accuracy": 0.9484,
         "kmeans_ari": 0.3584,
         "kmeans_nmi": 0.5293,
-        "silhouette_cosine": 0.0724
+        "silhouette_cosine": 0.07239
       },
       "z_atac": {
         "n_classes": 8,
@@ -105,14 +105,14 @@
         "knn15_balanced_accuracy": 0.9484,
         "kmeans_ari": 0.3584,
         "kmeans_nmi": 0.5293,
-        "silhouette_cosine": 0.0724
+        "silhouette_cosine": 0.07239
       }
     },
     "label_fine": {
       "z_joint": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8175,
         "probe_balanced_accuracy_ci95": [
           0.7776,
@@ -193,12 +193,12 @@
         "knn15_balanced_accuracy": 0.8247,
         "kmeans_ari": 0.2551,
         "kmeans_nmi": 0.527,
-        "silhouette_cosine": -0.0255
+        "silhouette_cosine": -0.02553
       },
       "z_atac": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8175,
         "probe_balanced_accuracy_ci95": [
           0.7715,
@@ -279,33 +279,36 @@
         "knn15_balanced_accuracy": 0.8247,
         "kmeans_ari": 0.2551,
         "kmeans_nmi": 0.527,
-        "silhouette_cosine": -0.0255
+        "silhouette_cosine": -0.02553
       }
     }
   },
   "collapse": {
     "z_joint": {
       "dim": 32,
-      "effective_rank": 17.5924,
+      "effective_rank": 17.59,
       "dead_dims": 0,
       "top_component_variance_share": 0.1065,
-      "uniformity": -3.0796
+      "uniformity": -3.08
     },
     "z_atac": {
       "dim": 32,
-      "effective_rank": 17.5924,
+      "effective_rank": 17.59,
       "dead_dims": 0,
       "top_component_variance_share": 0.1065,
-      "uniformity": -3.0796
+      "uniformity": -3.08
     }
   },
   "cross": {
+    "rna->atac:binary_top10000": {
+      "skipped": "run has no embedding of rna (keys ['z_joint', 'z_atac'])"
+    },
     "atac->rna:log1p_hvg2000": {
       "ridge_alpha_chosen_on_val": 100,
       "n_targets": 2000,
       "n_test": 1560,
       "per_feature_pearson_mean": 0.1124,
-      "per_feature_pearson_median": 0.0396,
+      "per_feature_pearson_median": 0.03962,
       "fraction_features_r_gt_0.3": 0.1255,
       "per_feature_pearson_baseline": 0.0,
       "per_sample_pearson_mean": 0.4564,
@@ -314,8 +317,8 @@
         0.4642
       ],
       "per_sample_pearson_baseline_train_mean": 0.3001,
-      "mse": 0.0799,
-      "mse_baseline_train_mean": 0.0953,
+      "mse": 0.07993,
+      "mse_baseline_train_mean": 0.09529,
       "r2_vs_baseline": 0.1613,
       "target_binary": false
     }

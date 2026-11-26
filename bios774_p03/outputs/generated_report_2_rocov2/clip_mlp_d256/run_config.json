@@ -1,12 +1,12 @@
 {
   "data": "data/rocov2",
-  "out": "outputs/generated_report_2_rocov2/clip_mlp_d512",
+  "out": "outputs/generated_report_2_rocov2/clip_mlp_d256",
   "inputs": "image:biomedclip,text:biomedclip",
   "features_dir": null,
   "method": "clip",
-  "dim": 512,
+  "dim": 256,
   "encoder": "mlp",
-  "hidden": 512,
+  "hidden": 256,
   "layers": 2,
   "dropout": 0.2,
   "epochs": 200,
@@ -49,22 +49,22 @@
     "z_joint"
   ],
   "embedding_dim": {
-    "z_image": 512,
-    "z_text": 512,
-    "z_joint": 512
+    "z_image": 256,
+    "z_text": 256,
+    "z_joint": 256
   },
   "uses_labels": false,
   "summary": {
-    "epochs_run": 47,
+    "epochs_run": 48,
     "selected_by": "val recall@1",
-    "best_epoch": 27,
+    "best_epoch": 28,
     "kept_initial_model": false,
-    "best_val_loss": 1.7547,
+    "best_val_loss": 1.718,
     "stop_reason": "early stop (val recall@1 not improving for 20 epochs)",
     "val_recall_at_1_initial": 0.001,
-    "val_recall_at_1_kept_model": 0.503,
-    "minutes": 0.41,
-    "n_parameters": 1580032
+    "val_recall_at_1_kept_model": 0.484,
+    "minutes": 0.54,
+    "n_parameters": 527872
   },
-  "seconds": 29.5
+  "seconds": 35.6
 }

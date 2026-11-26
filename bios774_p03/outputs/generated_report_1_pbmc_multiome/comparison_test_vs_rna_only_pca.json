@@ -4,10 +4,10 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9514,
     "reference_value": 0.977,
-    "difference": -0.0256,
+    "difference": -0.02562,
     "ci95": [
-      -0.0783,
-      0.0106
+      -0.07833,
+      0.01058
     ],
     "ci_excludes_0": false
   },
@@ -16,46 +16,10 @@
     "metric": "probe balanced accuracy [label_fine] (joint)",
     "model_value": 0.833,
     "reference_value": 0.8309,
-    "difference": 0.0021,
+    "difference": 0.00209,
     "ci95": [
-      -0.0566,
-      0.0579
-    ],
-    "ci_excludes_0": false
-  },
-  {
-    "model": "clip_mlp_d32",
-    "metric": "cross rna_to_atac__binary_top10000 per-sample mean",
-    "model_value": 0.6715,
-    "reference_value": 0.6709,
-    "difference": 0.0006,
-    "ci95": [
-      0.0005,
-      0.0007
-    ],
-    "ci_excludes_0": true
-  },
-  {
-    "model": "clip_mlp_d32",
-    "metric": "probe balanced accuracy [label] (joint)",
-    "model_value": 0.9831,
-    "reference_value": 0.977,
-    "difference": 0.0061,
-    "ci95": [
-      -0.0125,
-      0.0253
-    ],
-    "ci_excludes_0": false
-  },
-  {
-    "model": "clip_mlp_d32",
-    "metric": "probe balanced accuracy [label_fine] (joint)",
-    "model_value": 0.8659,
-    "reference_value": 0.8309,
-    "difference": 0.035,
-    "ci95": [
-      -0.0182,
-      0.0879
+      -0.05663,
+      0.05791
     ],
     "ci_excludes_0": false
   },
@@ -64,10 +28,10 @@
     "metric": "cross rna_to_atac__binary_top10000 per-sample mean",
     "model_value": 0.6708,
     "reference_value": 0.6709,
-    "difference": -0.0001,
+    "difference": -0.0001398,
     "ci95": [
-      -0.0003,
-      0.0
+      -0.0002948,
+      1.986e-05
     ],
     "ci_excludes_0": false
   },
@@ -76,10 +40,22 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9826,
     "reference_value": 0.977,
-    "difference": 0.0056,
+    "difference": 0.005621,
     "ci95": [
-      -0.012,
-      0.0255
+      -0.01244,
+      0.02517
+    ],
+    "ci_excludes_0": false
+  },
+  {
+    "model": "clip_mlp_d32_reg",
+    "metric": "probe balanced accuracy [label] (rna)",
+    "model_value": 0.9735,
+    "reference_value": 0.977,
+    "difference": -0.003486,
+    "ci95": [
+      -0.01308,
+      0.005931
     ],
     "ci_excludes_0": false
   },
@@ -88,22 +64,34 @@
     "metric": "probe balanced accuracy [label_fine] (joint)",
     "model_value": 0.8836,
     "reference_value": 0.8309,
-    "difference": 0.0527,
+    "difference": 0.05269,
     "ci95": [
-      0.015,
-      0.0867
+      0.01599,
+      0.08602
     ],
     "ci_excludes_0": true
+  },
+  {
+    "model": "clip_mlp_d32_reg",
+    "metric": "probe balanced accuracy [label_fine] (rna)",
+    "model_value": 0.8524,
+    "reference_value": 0.8309,
+    "difference": 0.02155,
+    "ci95": [
+      -0.003522,
+      0.05309
+    ],
+    "ci_excludes_0": false
   },
   {
     "model": "early_fusion_pca",
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9756,
     "reference_value": 0.977,
-    "difference": -0.0014,
+    "difference": -0.001373,
     "ci95": [
-      -0.0167,
-      0.0106
+      -0.01818,
+      0.01028
     ],
     "ci_excludes_0": false
   },
@@ -114,8 +102,8 @@
     "reference_value": 0.8309,
     "difference": 0.0178,
     "ci95": [
-      -0.0358,
-      0.068
+      -0.03409,
+      0.0666
     ],
     "ci_excludes_0": false
   },
@@ -124,10 +112,10 @@
     "metric": "cross rna_to_atac__binary_top10000 per-sample mean",
     "model_value": 0.6725,
     "reference_value": 0.6709,
-    "difference": 0.0016,
+    "difference": 0.001605,
     "ci95": [
-      0.0015,
-      0.0017
+      0.001487,
+      0.001724
     ],
     "ci_excludes_0": true
   },
@@ -136,10 +124,22 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9602,
     "reference_value": 0.977,
-    "difference": -0.0168,
+    "difference": -0.01677,
     "ci95": [
-      -0.0669,
-      0.0105
+      -0.06588,
+      0.009661
+    ],
+    "ci_excludes_0": false
+  },
+  {
+    "model": "vicreg_mlp_d32",
+    "metric": "probe balanced accuracy [label] (rna)",
+    "model_value": 0.9771,
+    "reference_value": 0.977,
+    "difference": 0.0001283,
+    "ci95": [
+      -0.007804,
+      0.008299
     ],
     "ci_excludes_0": false
   },
@@ -148,10 +148,22 @@
     "metric": "probe balanced accuracy [label_fine] (joint)",
     "model_value": 0.8271,
     "reference_value": 0.8309,
-    "difference": -0.0038,
+    "difference": -0.003773,
     "ci95": [
-      -0.036,
-      0.0247
+      -0.03604,
+      0.02469
+    ],
+    "ci_excludes_0": false
+  },
+  {
+    "model": "vicreg_mlp_d32",
+    "metric": "probe balanced accuracy [label_fine] (rna)",
+    "model_value": 0.8249,
+    "reference_value": 0.8309,
+    "difference": -0.005959,
+    "ci95": [
+      -0.03787,
+      0.03082
     ],
     "ci_excludes_0": false
   }

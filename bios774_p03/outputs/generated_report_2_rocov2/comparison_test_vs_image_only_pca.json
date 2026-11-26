@@ -1,0 +1,74 @@
+[
+  {
+    "model": "biomedclip_zeroshot",
+    "metric": "probe balanced accuracy [label] (image)",
+    "model_value": 0.972,
+    "reference_value": 0.6054,
+    "difference": 0.3666,
+    "ci95": [
+      0.3428,
+      0.3901
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "biomedclip_zeroshot",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.976,
+    "reference_value": 0.6054,
+    "difference": 0.3706,
+    "ci95": [
+      0.3465,
+      0.3938
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "clip_mlp_d256",
+    "metric": "probe balanced accuracy [label] (image)",
+    "model_value": 0.9744,
+    "reference_value": 0.6054,
+    "difference": 0.369,
+    "ci95": [
+      0.3459,
+      0.3934
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "clip_mlp_d256",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.9787,
+    "reference_value": 0.6054,
+    "difference": 0.3733,
+    "ci95": [
+      0.3498,
+      0.3973
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "early_fusion_pca",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.6944,
+    "reference_value": 0.6054,
+    "difference": 0.08898,
+    "ci95": [
+      0.07014,
+      0.1075
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "text_only_pca",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.7301,
+    "reference_value": 0.6054,
+    "difference": 0.1247,
+    "ci95": [
+      0.07024,
+      0.1822
+    ],
+    "ci_excludes_0": true
+  }
+]

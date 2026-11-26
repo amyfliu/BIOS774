@@ -6,6 +6,7 @@
   "method": "pca_concat",
   "dim": 32,
   "label": null,
+  "select_by": "val_loss",
   "seed": 0,
   "device": null,
   "smoke": false,

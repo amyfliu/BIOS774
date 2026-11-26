@@ -11,7 +11,7 @@
   "dropout": 0.1,
   "epochs": 200,
   "batch_size": 512,
-  "lr": 0.0,
+  "lr": 1e-05,
   "weight_decay": 0.0001,
   "temperature": 0.07,
   "learn_temperature": true,
@@ -23,7 +23,7 @@
   "select_by": "val_recall",
   "patience": 20,
   "eval_every": 10,
-  "max_minutes": 4.0,
+  "max_minutes": 3.0,
   "seed": 0,
   "device": null,
   "smoke": false,
@@ -59,12 +59,12 @@
     "selected_by": "val recall@1",
     "best_epoch": 0,
     "kept_initial_model": true,
-    "best_val_loss": 2.7673,
+    "best_val_loss": 2.767,
     "stop_reason": "early stop (val recall@1 not improving for 20 epochs)",
     "val_recall_at_1_initial": 0.623,
     "val_recall_at_1_kept_model": 0.623,
-    "minutes": 0.21,
+    "minutes": 0.27,
     "n_parameters": 525824
   },
-  "seconds": 17.5
+  "seconds": 21.3
 }

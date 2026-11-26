@@ -89,7 +89,7 @@
         "knn15_balanced_accuracy": 0.9327,
         "kmeans_ari": 0.527,
         "kmeans_nmi": 0.6543,
-        "silhouette_cosine": 0.0409
+        "silhouette_cosine": 0.04089
       },
       "z_joint": {
         "n_classes": 6,
@@ -146,7 +146,7 @@
         0.8275
       ],
       "median_rank": 2.0,
-      "foscttm": 0.0033
+      "foscttm": 0.003284
     },
     "b_to_a": {
       "recall_at_1": 0.4995,
@@ -157,13 +157,13 @@
         0.824
       ],
       "median_rank": 2.0,
-      "foscttm": 0.0041
+      "foscttm": 0.004073
     },
     "chance": {
       "recall_at_1": 0.0005,
       "recall_at_5": 0.0025,
       "recall_at_10": 0.005,
-      "median_rank": 1000.5,
+      "median_rank": 1000.0,
       "foscttm": 0.5
     },
     "a": "image",
@@ -172,27 +172,27 @@
   "collapse": {
     "z_image": {
       "dim": 512,
-      "effective_rank": 54.584,
+      "effective_rank": 54.58,
       "dead_dims": 0,
-      "top_component_variance_share": 0.086,
-      "uniformity": -2.2503
+      "top_component_variance_share": 0.08605,
+      "uniformity": -2.25
     },
     "z_text": {
       "dim": 512,
-      "effective_rank": 60.9099,
+      "effective_rank": 60.91,
       "dead_dims": 0,
       "top_component_variance_share": 0.079,
-      "uniformity": -1.8625
+      "uniformity": -1.862
     },
     "z_joint": {
       "dim": 512,
-      "effective_rank": 52.8811,
+      "effective_rank": 52.88,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0894,
-      "uniformity": -2.2065
+      "top_component_variance_share": 0.08938,
+      "uniformity": -2.206
     },
-    "alignment_paired_sq_dist": 1.0958,
-    "alignment_random_pairs_sq_dist": 1.7069,
+    "alignment_paired_sq_dist": 1.096,
+    "alignment_random_pairs_sq_dist": 1.707,
     "modality_gap_centroid_dist": 0.7967
   }
 }

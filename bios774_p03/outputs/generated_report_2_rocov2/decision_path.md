@@ -1,11 +1,12 @@
 | # | Step | Decision | Why |
 |--|------|------------------|-------------------------|
-| 1 | Goal | Retrieval first, image modality classification second | Objective names caption retrieval then modality classification; labels only for scoring |
-| 2 | Data prep | Use BiomedCLIP features plus simple baselines | Pretrained biomedical encoder matches the domain; simple features show what it buys |
-| 3 | Combine modalities | Fine-tune BiomedCLIP lightly; keep baselines | Pretrained model already aligns image and text; small fix may help |
-| 4 | Settings | Gentle settings, 8 + 5 minute budget | Start near a strong model; move slowly; keep minutes in reserve |
-| 5 | Training check | Adapter never beat the pretrained start | Matching got worse though loss fell; original model was kept |
-| 6 | Adjust | Retried adapter with 10x smaller step | First attempt never beat the pretrained start; skill allows one retry |
-| 7 | Evaluate | Pretrained model wins on val | Fine-tuning did not help; zero-shot is already very strong |
-| 8 | Downstream | Retrieval and image classification scored on test | Objective asks for both; zero-shot is the strongest model |
-| 9 | Recommend | Use frozen BiomedCLIP as is | Training added nothing; the pretrained model is already strongest |
+| 1 | Goal | Retrieval first, modality classification second | Objective names caption retrieval first; text words nearly give away the label |
+| 2 | Data prep | Use BiomedCLIP features plus simple baselines | In-domain pretrained encoder matches radiology figures and captions |
+| 3 | Combine modalities | Fine-tune BiomedCLIP with light adapters | Pretrained encoder already aligns both; adapters start from it and can't lose on val |
+| 4 | Settings | Gentle adapter training; small projection-head alternative | Zero-shot already matches well; small steps avoid damaging it |
+| 5 | Training check | Adapter never beat the starting model | Fine-tuning lowered matching on validation; try gentler step once |
+| 6 | Adjust | Retry adapter once at smaller step | Adapter fell below start; skill allows one gentler retry |
+| 7 | Training check | MLP heads match worse than zero-shot | Heads trained from scratch lose pretrained alignment |
+| 8 | Evaluate | Zero-shot model wins on validation | Training did not improve matching; frozen model is strongest |
+| 9 | Downstream | Retrieval and modality classification on test | Objective asks for both; measured on held-out test papers |
+| 10 | Recommend | Use frozen BiomedCLIP for both tasks | Nothing we trained beat it; simplest option is best |

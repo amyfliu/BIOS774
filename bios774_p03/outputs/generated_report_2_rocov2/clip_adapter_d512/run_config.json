@@ -59,12 +59,12 @@
     "selected_by": "val recall@1",
     "best_epoch": 0,
     "kept_initial_model": true,
-    "best_val_loss": 2.7673,
+    "best_val_loss": 2.767,
     "stop_reason": "early stop (val recall@1 not improving for 20 epochs)",
     "val_recall_at_1_initial": 0.623,
     "val_recall_at_1_kept_model": 0.623,
-    "minutes": 0.23,
+    "minutes": 0.26,
     "n_parameters": 525824
   },
-  "seconds": 18.3
+  "seconds": 20.1
 }

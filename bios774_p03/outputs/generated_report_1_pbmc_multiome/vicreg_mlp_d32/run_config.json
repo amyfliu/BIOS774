@@ -9,7 +9,7 @@
   "hidden": 256,
   "layers": 2,
   "dropout": 0.1,
-  "epochs": 200,
+  "epochs": 300,
   "batch_size": 256,
   "lr": 0.001,
   "weight_decay": 0.0001,
@@ -20,6 +20,7 @@
   "supcon_temperature": 0.1,
   "mask_p": 0.3,
   "noise": 0.1,
+  "select_by": "val_loss",
   "patience": 20,
   "eval_every": 10,
   "max_minutes": 5.0,
@@ -59,12 +60,15 @@
   "uses_labels": false,
   "summary": {
     "epochs_run": 79,
+    "selected_by": "val loss",
     "best_epoch": 59,
-    "best_val_loss": 10.5179,
+    "kept_initial_model": false,
+    "best_val_loss": 10.52,
     "stop_reason": "early stop (val loss not improving for 20 epochs)",
+    "val_recall_at_1_initial": 0.004,
     "val_recall_at_1_kept_model": 0.053,
-    "minutes": 0.27,
+    "minutes": 0.4,
     "n_parameters": 175936
   },
-  "seconds": 17.3
+  "seconds": 24.9
 }

@@ -4,10 +4,10 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9514,
     "reference_value": 0.9756,
-    "difference": -0.0242,
+    "difference": -0.02425,
     "ci95": [
-      -0.0752,
-      0.0076
+      -0.07521,
+      0.007571
     ],
     "ci_excludes_0": false
   },
@@ -16,34 +16,10 @@
     "metric": "probe balanced accuracy [label_fine] (joint)",
     "model_value": 0.833,
     "reference_value": 0.8487,
-    "difference": -0.0157,
+    "difference": -0.01571,
     "ci95": [
-      -0.0474,
-      0.0129
-    ],
-    "ci_excludes_0": false
-  },
-  {
-    "model": "clip_mlp_d32",
-    "metric": "probe balanced accuracy [label] (joint)",
-    "model_value": 0.9831,
-    "reference_value": 0.9756,
-    "difference": 0.0075,
-    "ci95": [
-      -0.0013,
-      0.0219
-    ],
-    "ci_excludes_0": false
-  },
-  {
-    "model": "clip_mlp_d32",
-    "metric": "probe balanced accuracy [label_fine] (joint)",
-    "model_value": 0.8659,
-    "reference_value": 0.8487,
-    "difference": 0.0172,
-    "ci95": [
-      -0.0058,
-      0.0405
+      -0.04739,
+      0.01292
     ],
     "ci_excludes_0": false
   },
@@ -52,10 +28,10 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9826,
     "reference_value": 0.9756,
-    "difference": 0.007,
+    "difference": 0.006995,
     "ci95": [
-      -0.0021,
-      0.0213
+      -0.001989,
+      0.02138
     ],
     "ci_excludes_0": false
   },
@@ -64,10 +40,10 @@
     "metric": "probe balanced accuracy [label_fine] (joint)",
     "model_value": 0.8836,
     "reference_value": 0.8487,
-    "difference": 0.0349,
+    "difference": 0.03489,
     "ci95": [
-      -0.0003,
-      0.0747
+      -0.001207,
+      0.07431
     ],
     "ci_excludes_0": false
   },
@@ -76,10 +52,10 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.977,
     "reference_value": 0.9756,
-    "difference": 0.0014,
+    "difference": 0.001373,
     "ci95": [
-      -0.0107,
-      0.0159
+      -0.01058,
+      0.01665
     ],
     "ci_excludes_0": false
   },
@@ -90,8 +66,8 @@
     "reference_value": 0.8487,
     "difference": -0.0178,
     "ci95": [
-      -0.0639,
-      0.0326
+      -0.06555,
+      0.03268
     ],
     "ci_excludes_0": false
   },
@@ -100,10 +76,10 @@
     "metric": "probe balanced accuracy [label] (joint)",
     "model_value": 0.9602,
     "reference_value": 0.9756,
-    "difference": -0.0154,
+    "difference": -0.01539,
     "ci95": [
-      -0.0678,
-      0.016
+      -0.06682,
+      0.01659
     ],
     "ci_excludes_0": false
   },
@@ -112,10 +88,10 @@
     "metric": "probe balanced accuracy [label_fine] (joint)",
     "model_value": 0.8271,
     "reference_value": 0.8487,
-    "difference": -0.0216,
+    "difference": -0.02157,
     "ci95": [
-      -0.0754,
-      0.0344
+      -0.07074,
+      0.03507
     ],
     "ci_excludes_0": false
   }

@@ -1,27 +1,30 @@
-1. **Goal** *(objective skill)* — Tasks: (1) image<->text retrieval, headline recall@5 both directions + FOSCTTM; (2) modality classification from IMAGE embedding, headline probe balanced accuracy (label 'label', 6 classes). No labels in training (label-free). Baselines: image alone, text alone, pca_concat early fusion, BiomedCLIP zero-shot identity. Success: tuned model's i2t and t2i recall@5 exceed zero-shot's by paired CI excluding 0, and image-probe bal. acc not below zero-shot image probe. Text-side classification not used (text shortcut). PET has 13 test samples: uninterpretable alone.
-   - *Evidence:* profile.json: text predicts label from words bal.acc 0.91 (chance 0.17); 42% captions name the label; test PET n=13; n_train 20000
-   - *Alternatives rejected:* supcon_clip: labels not granted for training, rejected
-2. **Data prep** *(preprocessing skill)* — image:biomedclip and text:biomedclip (512-d, shared space, cached) for encoders and zero-shot; image:pixels32_pca50 and text:tfidf_svd128 as simple baselines. No caption cleaning.
-   - *Evidence:* features/*.json: 24000 rows each; profile.json 70% grayscale images, median 16 words
-   - *Alternatives rejected:* No cross-modal prediction targets: objective does not ask for them
-3. **Combine modalities** *(fusion skill)* — Primary: clip with adapter encoders on biomedclip features, dim 512, select-by val_recall (light fine-tuning). Alternative: clip with mlp projection heads on same features. Baselines: image-only pca, text-only pca, pca_concat early fusion, biomedclip zero-shot identity. Label-free.
-   - *Evidence:* val zero-shot R@5 i2t 0.810 t2i 0.807, probe bal acc image 0.968 (metrics_val.json); retrieval already far above chance 0.0025
-   - *Alternatives rejected:* vicreg: n_train 20000 is large enough for clip; supcon_clip: labels not allowed
-4. **Settings** *(training skill)* — adapter: dim 512, batch 512, lr 1e-4, hidden 256, dropout 0.1, select-by val_recall, max 8 min. mlp alternative: dim 512, batch 512, lr 1e-3, hidden 512, layers 2, dropout 0.2, select-by val_recall, max 5 min. 7 min reserved for iteration (total <= 20).
-   - *Evidence:* training skill defaults; n_train 20000
-   - *Alternatives rejected:* larger lr: risks leaving the pretrained optimum
-5. **Training check** *(training skill)* — clip_adapter_d512: kept_initial_model True, best_epoch 0, early stop at epoch 20, val R@1 initial 0.623 vs 0.576-0.592 after training; train loss fell 2.40->1.16, val loss fell 2.77->1.35. Per skill: one iteration with 3-10x smaller lr.
-   - *Evidence:* clip_adapter_d512/run_config.json summary, train_log.json; 0.23 min used
-   - *Alternatives rejected:* more epochs: val recall not improving
-6. **Adjust** *(training skill)* — clip_adapter_d512_lr1e5 (lr 1e-5): again kept epoch 0; val R@1 fell to 0.565-0.577 during training. Stop tuning adapters.
-   - *Evidence:* clip_adapter_d512_lr1e5/run_config.json: kept_initial_model True, minutes 0.21
-   - *Alternatives rejected:* further lr cuts: skill says stop
-7. **Evaluate** *(evaluation skill)* — Chosen for report: BiomedCLIP zero-shot (adapter runs are numerically identical to it since epoch 0 kept). Alternative clip_mlp_d512 (trained from scratch projections on same features) is worse at retrieval and equal on classification. Baselines on val are far below on classification.
-   - *Evidence:* comparison_val.md: zero-shot R@5 i2t 0.810 / t2i 0.807, image probe 0.968; mlp R@5 0.693/0.689, image probe 0.969; image-only pca 0.585; text-only pca 0.809; early fusion 0.703
-   - *Alternatives rejected:* clip_mlp: lower retrieval
-8. **Downstream** *(recommendation skill)* — Test (n=2000): zero-shot R@5 i2t 0.808 [0.7905,0.824], t2i 0.808 (chance 0.0025), R@1 0.497/0.513; image probe bal acc 0.972 [0.9635,0.9791] (chance 0.167). clip_mlp_d512 retrieval worse by -0.133 [-0.152,-0.114] i2t and -0.126 [-0.146,-0.108] t2i; image probe +0.001 [-0.006,+0.008] (no difference). Pixel/TF-IDF baselines 0.605 image, 0.694 early fusion. Weakest large class: X-ray (recall 0.904, n=565). Modality gap 0.80 yet retrieval works.
-   - *Evidence:* metrics.json, comparison_test.md, comparison_test_vs_biomedclip_zeroshot.md
-   - *Alternatives rejected:* text-side classification not reported as evidence (text shortcut 0.91)
-9. **Recommend** *(recommendation skill)* — Verdict: No measurable gain from training; use frozen BiomedCLIP zero-shot for caption<->image retrieval and image encoder + linear probe for modality classification. Caveat: BiomedCLIP was pretrained on PubMed Central figure-caption pairs, same source as ROCOv2, so scores may be inflated by overlap (cannot be measured here). Would change if: test on an out-of-PMC dataset, or labelled/larger-scale fine-tuning.
+1. **Goal** *(objective skill)* — Tasks: image<->text retrieval (primary; recall@1/5/10 both ways, FOSCTTM) and imaging-modality classification from the IMAGE embedding (balanced accuracy, label 'label'). Labels NOT used in training (label-free clip/adapter). Baselines: image alone, text alone, pca_concat early fusion, BiomedCLIP zero-shot. Success: chosen model's paired image->text R@5 gain over zero-shot has CI excluding 0; otherwise recommend zero-shot. Classification judged on image side only.
+   - *Evidence:* profile.json: text alone predicts label with bal.acc 0.91 (chance 0.17); 42% of captions name their label; smallest class PET n_train=113 (test 13, uninterpretable alone); test n=2000
+   - *Alternatives rejected:* supcon_clip: labels not offered for training; not used
+2. **Data prep** *(preprocessing skill)* — image and text: biomedclip (512-d each, shared space) for encoders and zero-shot; image pixels32_pca50 and text tfidf_svd128 as weak baselines
+   - *Evidence:* features/*.json: 24000 x 512 / 24000 x 512 / 24000 x 50 / 24000 x 128; fitted on train only
+   - *Alternatives rejected:* no caption cleaning (objective doesn't ask)
+3. **Combine modalities** *(fusion skill)* — Primary: clip + adapter encoders on biomedclip features, dim 512, select-by val_recall. Alternative: clip with mlp projection heads. Baselines: image-only/text-only pca, pca_concat, identity zero-shot.
+   - *Evidence:* fusion skill rule: pretrained shared-space encoder -> adapter
+   - *Alternatives rejected:* from-scratch clip on weak features: no pretrained advantage; vicreg: no false-negative concern at n=20000
+4. **Settings** *(training skill)* — adapter: clip, dim 512, bs 512, lr 1e-4, select-by val_recall, 8 min. Alternative mlp heads dim 256, lr 1e-3, hidden 256, dropout 0.2, 5 min. Budget total 13 of 20 min, 7 reserved.
+   - *Evidence:* smoke: zero-shot val R@1 0.623 at epoch 0; smoke mlp from scratch 0.001->0.019
+   - *Alternatives rejected:* larger lr: risks losing pretrained alignment
+5. **Training check** *(training skill)* — clip_adapter_d512 kept epoch 0 (kept_initial_model true, 0.26 min); val R@1 fell to 0.576 at epoch 1 while train loss fell: overfitting. One iteration with lr 1e-5.
+   - *Evidence:* clip_adapter_d512/run_config.json: val_recall_at_1_initial 0.623, kept 0.623, best_epoch 0
+   - *Alternatives rejected:* stop now: allowed, but skill permits one lower-lr retry
+6. **Adjust** *(training skill)* — clip_adapter_d512_lr1e5 (lr 1e-5) also kept epoch 0; stop adapter tuning. Adapters therefore equal zero-shot (identical val metrics).
+   - *Evidence:* clip_adapter_d512_lr1e5/run_config.json: kept_initial_model true, val R@1 0.623 before and after
+   - *Alternatives rejected:* more iterations: rule says stop
+7. **Training check** *(training skill)* — clip_mlp_d256: best epoch 28 of 48, early stop; val loss rises after epoch ~10 while train falls (overfitting) but R@1 0.484 vs chance far lower; no collapse.
+   - *Evidence:* clip_mlp_d256/run_config.json: initial R@1 0.001, kept 0.484; metrics_val.json: R@5 0.668 vs zero-shot 0.810
+   - *Alternatives rejected:* stronger regularisation: would not close a 0.14 gap
+8. **Evaluate** *(evaluation skill)* — Choose frozen BiomedCLIP (adapter models are identical to it). Report on test: zero-shot, clip_mlp_d256 (alternative), and the three simple baselines.
+   - *Evidence:* comparison_val.md: R@5 img->txt 0.81 vs 0.668 (mlp); image-side probe 0.968 vs 0.969 (mlp); pixels PCA image 0.585; chance R@5 0.0025, probe chance 0.167
+   - *Alternatives rejected:* clip_mlp_d256: worse retrieval, equal classification
+9. **Downstream** *(recommendation skill)* — Retrieval: zero-shot image->text R@1 0.4965, R@5 0.808 [0.7905,0.824], R@10 0.882 of 2000 candidates (chance R@5 0.0025); text->image R@5 0.8085. Classification from image embedding: probe bal.acc 0.972 vs pixel-PCA image alone 0.605 (paired +0.367 [+0.343,+0.390]); weakest large class X-ray recall 0.904; PET n=13 uninterpretable.
+   - *Evidence:* biomedclip_zeroshot/metrics.json; comparison_test_vs_image_only_pca.md; comparison_test_vs_biomedclip_zeroshot.md
+   - *Alternatives rejected:* none
+10. **Recommend** *(recommendation skill)* — Verdict: multimodal enables (pretrained shared space gives retrieval; classification already ~0.97 from image). Recommend frozen BiomedCLIP image/text embeddings (exported). Trained MLP heads: retrieval R@5 -0.141 [-0.158,-0.122] vs zero-shot; classification +0.002 [-0.003,+0.008] (no difference). Caveat: BiomedCLIP was pretrained on PubMed Central figure-caption pairs (ROCOv2 is also PMC), so zero-shot scores may be inflated by overlap. Would change: an in-domain pretrained-free test set, or a larger lr-tuned adapter gaining on val.
    - *Evidence:* comparison_test_vs_biomedclip_zeroshot.md
-   - *Alternatives rejected:* clip_mlp_d512: worse retrieval, same classification
+   - *Alternatives rejected:* clip_mlp_d256, adapters (identical to zero-shot), pixel/TF-IDF baselines

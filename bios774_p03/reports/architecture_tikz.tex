@@ -1,0 +1,39 @@
+\documentclass[tikz,border=4pt]{standalone}
+\usetikzlibrary{positioning,arrows.meta,fit,backgrounds,calc}
+\begin{document}
+\begin{tikzpicture}[
+  node distance=1.0cm and 1.2cm,
+  box/.style={draw, rounded corners, align=center, minimum height=1.15cm, minimum width=2.7cm, font=\small, inner sep=5pt},
+  arrow/.style={-{Latex[length=2mm]}, thick},
+  layer/.style={draw, dashed, rounded corners, thick, inner sep=10pt}
+]
+% inputs
+\node[box] (agent) {\textbf{Agent (Claude Sonnet 5.5)}\\ LLM reasoning\\ \footnotesize reads evidence, decides,\\ \footnotesize logs every decision};
+\node[box, above=1.35cm of agent, xshift=-2.1cm] (dataset) {Dataset (any, via \texttt{prepare.py}):\\ \texttt{dataset.json} + \texttt{obs.csv}\\ modalities: counts / image / text\\ + \texttt{DATA.md}};
+\node[box, above=1.35cm of agent, xshift=2.3cm] (objective) {User objective\\ \footnotesize (plain text) +\\ \footnotesize training budget};
+\node[box, left=of agent] (instructions) {Instructions:\\ \texttt{AGENTS.md} +\\ 6$\times$ \texttt{SKILL.md}\\ \footnotesize objective, preprocessing,\\ \footnotesize fusion, training,\\ \footnotesize evaluation, recommendation};
+% compute layer
+\node[box, right=of agent, minimum width=3.3cm] (tools) {\textbf{Tools}\\ \texttt{inspect\_data.py}\\ \texttt{preprocess.py}\\ \texttt{train.py}\\ \texttt{evaluate.py} / \texttt{compare\_runs.py}};
+\node[box, right=of tools, minimum width=3.3cm] (results) {Results:\\ \texttt{profile.json}\\ \texttt{features/*.npz}\\ \texttt{embeddings.npz}, \texttt{train\_log.json}\\ \texttt{metrics\_val.json} / \texttt{metrics.json}\\ paired comparison tables + plots};
+% outputs
+\node[box, below=1.75cm of agent] (log) {Decision log:\\ \texttt{decisions.jsonl}\\ \footnotesize (\texttt{log\_decision.py})};
+\node[box, right=1.2cm of log, minimum width=3.0cm] (report) {Report:\\ \texttt{generated\_report\_<n>}\\ (.md / .pdf)};
+\node[box, right=1.2cm of report, minimum width=3.3cm] (rep) {Learned representation:\\ \texttt{recommended\_}\\ \texttt{representation.npz}};
+\node[font=\footnotesize, align=center, above=0.15cm of dataset, xshift=2.2cm] (cmd) {one command: \texttt{./run\_agent.sh <dataset> "<objective>" <report> <minutes>}};
+
+\begin{pgfonlayer}{background}
+\node[layer, fit=(instructions)(agent), label={[font=\small]above left:\textbf{Decision layer}}] {};
+\node[layer, fit=(tools)(results), label={[font=\small]above:\textbf{Compute layer} \footnotesize(PyTorch, Apple GPU; no decision logic)}] {};
+\end{pgfonlayer}
+
+\draw[arrow] (dataset) -- (agent);
+\draw[arrow] (objective) -- (agent);
+\draw[arrow] (instructions) -- (agent);
+\draw[arrow] (agent) -- (tools);
+\draw[arrow] (tools) -- (results);
+\draw[arrow] (agent) -- (log);
+\draw[arrow] (log) -- (report);
+\draw[arrow] (results.south) |- node[font=\footnotesize, pos=0.25, right, align=left] {\texttt{export\_}\\\texttt{representation.py}} (rep.east);
+\draw[arrow] (results.south west) ++(0.6,0) -- ++(0,-0.75) -| node[font=\footnotesize, fill=white, inner sep=1pt, pos=0.28] {results feed back: choose on val, iterate (max 3$\times$), report on test} ($(agent.south east)+(-0.35,0)$);
+\end{tikzpicture}
+\end{document}

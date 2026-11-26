@@ -1,61 +1,61 @@
 [
   {
-    "model": "clip_mlp_d512",
+    "model": "clip_mlp_d256",
     "metric": "probe balanced accuracy [label] (image)",
-    "model_value": 0.9726,
+    "model_value": 0.9744,
     "reference_value": 0.972,
-    "difference": 0.0006,
+    "difference": 0.002463,
     "ci95": [
-      -0.0059,
-      0.0081
+      -0.002582,
+      0.008288
     ],
     "ci_excludes_0": false
   },
   {
-    "model": "clip_mlp_d512",
+    "model": "clip_mlp_d256",
     "metric": "probe balanced accuracy [label] (joint)",
-    "model_value": 0.9758,
+    "model_value": 0.9787,
     "reference_value": 0.976,
-    "difference": -0.0002,
+    "difference": 0.002761,
     "ci95": [
-      -0.006,
-      0.0048
+      -0.0006663,
+      0.006238
     ],
     "ci_excludes_0": false
   },
   {
-    "model": "clip_mlp_d512",
+    "model": "clip_mlp_d256",
     "metric": "probe balanced accuracy [label] (text)",
-    "model_value": 0.8996,
+    "model_value": 0.914,
     "reference_value": 0.9191,
-    "difference": -0.0195,
+    "difference": -0.005086,
     "ci95": [
-      -0.048,
-      -0.0027
+      -0.01304,
+      0.003003
     ],
-    "ci_excludes_0": true
+    "ci_excludes_0": false
   },
   {
-    "model": "clip_mlp_d512",
+    "model": "clip_mlp_d256",
     "metric": "recall@5 a_to_b",
-    "model_value": 0.6755,
+    "model_value": 0.6675,
     "reference_value": 0.808,
-    "difference": -0.1325,
+    "difference": -0.1405,
     "ci95": [
-      -0.1525,
-      -0.114
+      -0.1585,
+      -0.1215
     ],
     "ci_excludes_0": true
   },
   {
-    "model": "clip_mlp_d512",
+    "model": "clip_mlp_d256",
     "metric": "recall@5 b_to_a",
-    "model_value": 0.682,
+    "model_value": 0.673,
     "reference_value": 0.8085,
-    "difference": -0.1265,
+    "difference": -0.1355,
     "ci95": [
-      -0.1455,
-      -0.1075
+      -0.154,
+      -0.1165
     ],
     "ci_excludes_0": true
   },

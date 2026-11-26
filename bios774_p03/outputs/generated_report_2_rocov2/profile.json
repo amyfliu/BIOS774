@@ -17,7 +17,7 @@
         "p25": 256.0,
         "p50": 295.5,
         "p75": 346.0,
-        "p95": 429.15
+        "p95": 429.2
       },
       "height": {
         "p5": 256.0,
@@ -29,17 +29,17 @@
       "aspect_ratio_w_over_h": {
         "p5": 0.6868,
         "p25": 0.9517,
-        "p50": 1.1562,
-        "p75": 1.3535,
-        "p95": 1.6764
+        "p50": 1.156,
+        "p75": 1.354,
+        "p95": 1.676
       },
       "fraction_grayscale": 0.7033,
       "mean_intensity_0_255": {
-        "p5": 27.7531,
-        "p25": 54.6114,
-        "p50": 81.1623,
-        "p75": 108.7719,
-        "p95": 163.3592
+        "p5": 27.75,
+        "p25": 54.61,
+        "p50": 81.16,
+        "p75": 108.8,
+        "p95": 163.4
       }
     },
     "text": {
@@ -136,7 +136,7 @@
           1339
         ]
       ],
-      "duplicate_text_fraction": 0.0037,
+      "duplicate_text_fraction": 0.003667,
       "texts_naming_own_label": {
         "label": {
           "per_class": {
@@ -189,7 +189,7 @@
       },
       "smallest_class_train": 113,
       "largest_class_train": 6998,
-      "imbalance_ratio_train": 61.9292,
+      "imbalance_ratio_train": 61.93,
       "majority_class_fraction_test": 0.3585
     }
   },

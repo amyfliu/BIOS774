@@ -55,14 +55,14 @@
         "knn15_balanced_accuracy": 0.9794,
         "kmeans_ari": 0.364,
         "kmeans_nmi": 0.5958,
-        "silhouette_cosine": 0.0532
+        "silhouette_cosine": 0.05322
       }
     },
     "label_fine": {
       "z_joint": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8798,
         "probe_balanced_accuracy_ci95": [
           0.8484,
@@ -143,17 +143,17 @@
         "knn15_balanced_accuracy": 0.8745,
         "kmeans_ari": 0.2921,
         "kmeans_nmi": 0.6098,
-        "silhouette_cosine": 0.0341
+        "silhouette_cosine": 0.03405
       }
     }
   },
   "collapse": {
     "z_joint": {
       "dim": 32,
-      "effective_rank": 26.9502,
+      "effective_rank": 26.95,
       "dead_dims": 0,
-      "top_component_variance_share": 0.0701,
-      "uniformity": -3.5239
+      "top_component_variance_share": 0.07014,
+      "uniformity": -3.524
     }
   }
 }

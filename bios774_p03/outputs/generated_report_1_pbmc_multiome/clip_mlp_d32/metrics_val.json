@@ -55,7 +55,7 @@
         "knn15_balanced_accuracy": 0.9573,
         "kmeans_ari": 0.3336,
         "kmeans_nmi": 0.553,
-        "silhouette_cosine": 0.0721
+        "silhouette_cosine": 0.07207
       },
       "z_atac": {
         "n_classes": 8,
@@ -162,7 +162,7 @@
       "z_rna": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8401,
         "probe_balanced_accuracy_ci95": [
           0.7869,
@@ -243,12 +243,12 @@
         "knn15_balanced_accuracy": 0.8253,
         "kmeans_ari": 0.2684,
         "kmeans_nmi": 0.5723,
-        "silhouette_cosine": 0.039
+        "silhouette_cosine": 0.03904
       },
       "z_atac": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8501,
         "probe_balanced_accuracy_ci95": [
           0.8044,
@@ -329,12 +329,12 @@
         "knn15_balanced_accuracy": 0.8209,
         "kmeans_ari": 0.2399,
         "kmeans_nmi": 0.5287,
-        "silhouette_cosine": 0.0583
+        "silhouette_cosine": 0.05833
       },
       "z_joint": {
         "n_classes": 17,
         "majority_baseline_accuracy": 0.3718,
-        "chance_balanced_accuracy": 0.0588,
+        "chance_balanced_accuracy": 0.05882,
         "probe_balanced_accuracy": 0.8324,
         "probe_balanced_accuracy_ci95": [
           0.7861,
@@ -415,14 +415,14 @@
         "knn15_balanced_accuracy": 0.8655,
         "kmeans_ari": 0.2565,
         "kmeans_nmi": 0.5866,
-        "silhouette_cosine": 0.0743
+        "silhouette_cosine": 0.07427
       }
     }
   },
   "retrieval": {
     "n_candidates": 1560,
     "a_to_b": {
-      "recall_at_1": 0.0949,
+      "recall_at_1": 0.09487,
       "recall_at_5": 0.2724,
       "recall_at_10": 0.3891,
       "recall_at_5_ci95": [
@@ -430,10 +430,10 @@
         0.2923
       ],
       "median_rank": 18.0,
-      "foscttm": 0.0247
+      "foscttm": 0.02468
     },
     "b_to_a": {
-      "recall_at_1": 0.0974,
+      "recall_at_1": 0.09744,
       "recall_at_5": 0.2551,
       "recall_at_10": 0.3712,
       "recall_at_5_ci95": [
@@ -441,12 +441,12 @@
         0.275
       ],
       "median_rank": 18.5,
-      "foscttm": 0.0261
+      "foscttm": 0.02615
     },
     "chance": {
-      "recall_at_1": 0.0006,
-      "recall_at_5": 0.0032,
-      "recall_at_10": 0.0064,
+      "recall_at_1": 0.000641,
+      "recall_at_5": 0.003205,
+      "recall_at_10": 0.00641,
       "median_rank": 780.5,
       "foscttm": 0.5
     },
@@ -456,24 +456,24 @@
   "collapse": {
     "z_rna": {
       "dim": 32,
-      "effective_rank": 15.0316,
+      "effective_rank": 15.03,
       "dead_dims": 0,
       "top_component_variance_share": 0.183,
-      "uniformity": -2.9991
+      "uniformity": -2.999
     },
     "z_atac": {
       "dim": 32,
-      "effective_rank": 12.2485,
+      "effective_rank": 12.25,
       "dead_dims": 0,
       "top_component_variance_share": 0.2245,
-      "uniformity": -2.7655
+      "uniformity": -2.766
     },
     "z_joint": {
       "dim": 32,
-      "effective_rank": 12.8153,
+      "effective_rank": 12.82,
       "dead_dims": 0,
       "top_component_variance_share": 0.2192,
-      "uniformity": -2.7991
+      "uniformity": -2.799
     },
     "alignment_paired_sq_dist": 0.5815,
     "alignment_random_pairs_sq_dist": 1.968,
@@ -500,7 +500,7 @@
       "n_targets": 2000,
       "n_test": 1560,
       "per_feature_pearson_mean": 0.1153,
-      "per_feature_pearson_median": 0.0403,
+      "per_feature_pearson_median": 0.04028,
       "fraction_features_r_gt_0.3": 0.1325,
       "per_feature_pearson_baseline": 0.0,
       "per_sample_pearson_mean": 0.4628,
@@ -509,8 +509,8 @@
         0.4698
       ],
       "per_sample_pearson_baseline_train_mean": 0.3001,
-      "mse": 0.0797,
-      "mse_baseline_train_mean": 0.0953,
+      "mse": 0.07966,
+      "mse_baseline_train_mean": 0.09529,
       "r2_vs_baseline": 0.1641,
       "target_binary": false
     }
