@@ -68,6 +68,7 @@ step "evaluate test (clip)" "$PY" tools/evaluate.py --data $D --run $O/clip --sp
 step "evaluate test (rna_only)" "$PY" tools/evaluate.py --data $D --run $O/rna_only --split test --tasks structure,collapse,cross --cross "$X" --no-plot
 step "compare val" "$PY" tools/compare_runs.py --out $O --split val
 step "compare test, paired vs rna_only" "$PY" tools/compare_runs.py --out $O --split test --reference rna_only
+step "export representation (clip)" "$PY" tools/export_representation.py --data $D --run $O/clip
 
 echo "== image + text (dev rocov2)"
 D=data/_dev/rocov2; O=$OUT/rocov2

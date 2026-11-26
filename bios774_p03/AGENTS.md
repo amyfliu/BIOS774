@@ -82,6 +82,7 @@ log it as a decision, and continue.
 | `python tools/train.py --data D --out O/<label> --inputs M1:SPEC1[,M2:SPEC2] --method {pca_concat,identity,clip,vicreg,supcon_clip,simclr} [--encoder {linear,mlp,adapter}] --dim K ... --max-minutes T [--smoke]` | learn (or build) the representation | `embeddings.npz`, `run_config.json`, `train_log.json`, `loss.png`, `model.pt` |
 | `python tools/evaluate.py --data D --run O/<label> --split {val,test} --tasks structure,retrieval,collapse,cross [--labels ...] [--cross src->tgt:SPEC,...]` | score a representation | `metrics_val.json` or `metrics.json` (+ `embedding.png` on test) |
 | `python tools/compare_runs.py --out O --split {val,test} [--reference MODEL]` | one table across all models (all label columns); with `--reference`, paired bootstrap differences of every model vs MODEL on the same samples | `comparison_<split>.md/.json/.png`, `comparison_<split>_vs_MODEL.md/.json` |
+| `python tools/export_representation.py --data D --run O/<recommended model>` | save the recommended representation (per-sample vectors, float16, with sample ids) — the deliverable | `O/recommended_representation.npz` + `.json` |
 | `python tools/log_decision.py --out O --step S --short "..." --why "..." --decision ... --evidence ... --alternatives ... --skill ...` | append to the decision log | `O/decisions.jsonl` |
 | `python tools/run_summary.py --out O` | Decision-path table, full decision list, command history | `O/decision_path.md`, `O/decisions.md`, `O/commands.md` |
 | `python tools/export_report.py reports/<name>.md` | tidy the report layout and export the PDF | `reports/<name>.md` (tidied), `.pdf` |
@@ -120,7 +121,9 @@ they are evidence too, and you can read images.
    "better / worse / no difference" in the report rest on these paired
    differences, not on overlapping intervals.
 10. **Downstream + recommendation** (recommendation skill) → log
-    `downstream` and `recommendation` decisions.
+    `downstream` and `recommendation` decisions, then run
+    `export_representation.py` on the recommended model (if the recommendation
+    differs by use, export the one for the objective's primary task).
 11. Run `tools/run_summary.py --out <output folder>`, **write the report**
     (format below), then run `tools/export_report.py` on it.
 
@@ -178,5 +181,5 @@ report) — the `.md` is the deliverable.
 # Finish
 
 End with a short final message: what you decided, the headline metrics
-(with file names), the recommendation, and the paths of the report and the
-decision log.
+(with file names), the recommendation, and the paths of the report, the
+decision log and `recommended_representation.npz`.

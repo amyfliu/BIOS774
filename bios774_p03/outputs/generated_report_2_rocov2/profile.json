@@ -1,0 +1,197 @@
+{
+  "dataset": "rocov2",
+  "description": "ROCOv2: radiology figure images paired with their captions (PMC open access)",
+  "pairing": "each image paired with its own caption (row i of obs.csv = one image-text pair)",
+  "n_samples": 24000,
+  "splits": {
+    "train": 20000,
+    "val": 2000,
+    "test": 2000
+  },
+  "modalities": {
+    "image": {
+      "kind": "image",
+      "n_images_checked": 300,
+      "width": {
+        "p5": 256.0,
+        "p25": 256.0,
+        "p50": 295.5,
+        "p75": 346.0,
+        "p95": 429.15
+      },
+      "height": {
+        "p5": 256.0,
+        "p25": 256.0,
+        "p50": 256.0,
+        "p75": 269.0,
+        "p95": 372.8
+      },
+      "aspect_ratio_w_over_h": {
+        "p5": 0.6868,
+        "p25": 0.9517,
+        "p50": 1.1562,
+        "p75": 1.3535,
+        "p95": 1.6764
+      },
+      "fraction_grayscale": 0.7033,
+      "mean_intensity_0_255": {
+        "p5": 27.7531,
+        "p25": 54.6114,
+        "p50": 81.1623,
+        "p75": 108.7719,
+        "p95": 163.3592
+      }
+    },
+    "text": {
+      "kind": "text",
+      "words_per_text": {
+        "p5": 5.0,
+        "p25": 10.0,
+        "p50": 16.0,
+        "p75": 25.0,
+        "p95": 46.0
+      },
+      "fraction_empty": 0.0,
+      "vocabulary_size_train": 17499,
+      "words_seen_ge_5_times_train": 4842,
+      "most_common_words_train": [
+        [
+          "left",
+          4589
+        ],
+        [
+          "right",
+          4583
+        ],
+        [
+          "ct",
+          4507
+        ],
+        [
+          "arrow",
+          4501
+        ],
+        [
+          "image",
+          2873
+        ],
+        [
+          "scan",
+          2719
+        ],
+        [
+          "chest",
+          2473
+        ],
+        [
+          "tomography",
+          2316
+        ],
+        [
+          "computed",
+          2210
+        ],
+        [
+          "mass",
+          2015
+        ],
+        [
+          "view",
+          1905
+        ],
+        [
+          "axial",
+          1793
+        ],
+        [
+          "radiograph",
+          1715
+        ],
+        [
+          "mri",
+          1638
+        ],
+        [
+          "artery",
+          1552
+        ],
+        [
+          "arrows",
+          1528
+        ],
+        [
+          "patient",
+          1514
+        ],
+        [
+          "x-ray",
+          1494
+        ],
+        [
+          "contrast",
+          1353
+        ],
+        [
+          "lesion",
+          1339
+        ]
+      ],
+      "duplicate_text_fraction": 0.0037,
+      "texts_naming_own_label": {
+        "label": {
+          "per_class": {
+            "Angiography": 0.2819,
+            "CT": 0.7216,
+            "MRI": 0.492,
+            "PET": 0.3982,
+            "Ultrasound": 0.339,
+            "X-ray": 0.2806
+          },
+          "mean": 0.4189
+        }
+      },
+      "label_predictable_from_words_alone": {
+        "label": {
+          "val_balanced_accuracy": 0.9143,
+          "chance": 0.1667
+        }
+      }
+    }
+  },
+  "labels": {
+    "label": {
+      "n_classes": 6,
+      "counts_by_split": {
+        "train": {
+          "CT": 6998,
+          "X-ray": 5581,
+          "MRI": 3299,
+          "Ultrasound": 2746,
+          "Angiography": 1263,
+          "PET": 113
+        },
+        "val": {
+          "CT": 791,
+          "X-ray": 543,
+          "Ultrasound": 283,
+          "MRI": 276,
+          "Angiography": 98,
+          "PET": 9
+        },
+        "test": {
+          "CT": 717,
+          "X-ray": 565,
+          "Ultrasound": 322,
+          "MRI": 301,
+          "Angiography": 82,
+          "PET": 13
+        }
+      },
+      "smallest_class_train": 113,
+      "largest_class_train": 6998,
+      "imbalance_ratio_train": 61.9292,
+      "majority_class_fraction_test": 0.3585
+    }
+  },
+  "primary_label": "label"
+}

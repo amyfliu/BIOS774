@@ -71,13 +71,14 @@ def load_json(path):
 
 
 def rounded(x, nd=4):
-    """Round floats recursively (for compact metrics files)."""
+    """Round floats recursively to nd SIGNIFICANT digits (compact files that still
+    keep small values such as a learning rate of 1e-5 or a p-value)."""
     if isinstance(x, dict):
         return {k: rounded(v, nd) for k, v in x.items()}
     if isinstance(x, (list, tuple)):
         return [rounded(v, nd) for v in x]
     if isinstance(x, (float, np.floating)):
-        return None if not np.isfinite(x) else round(float(x), nd)
+        return None if not np.isfinite(x) else float(f"{float(x):.{nd}g}")
     if isinstance(x, np.integer):
         return int(x)
     return x

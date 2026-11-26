@@ -59,8 +59,14 @@ so — do not switch models because of it.
 - Labels made from one modality (DATA.md) cap what the other can add —
   read "joint ≈ that modality alone" as expected, not as failure.
 - Text shortcut: if the label is predictable from words alone
-  (`profile.json`), the text embedding's probe is not evidence of anything;
-  use the image (non-text) embedding's probe.
+  (`profile.json`), the text embedding's probe is not evidence of anything —
+  and neither is the JOINT probe, because the joint embedding averages in the
+  text. Report the non-text side: the `probe_bal_acc[<label>](image)` column
+  of `comparison_<split>.md` and the "(image)" rows of the paired table. Do not
+  put text-only baselines in a column about classifying from the image.
+- `compare_runs.py` shows the joint probe AND each modality's own probe for
+  multimodal models (column suffix "(rna)", "(image)", ...). Choose the column
+  that answers the objective's question and name it in the report.
 
 **Clustering**: ARI (0 = random, 1 = identical to labels) and NMI; kmeans
 uses k = number of classes, so very imbalanced labels depress ARI even for a

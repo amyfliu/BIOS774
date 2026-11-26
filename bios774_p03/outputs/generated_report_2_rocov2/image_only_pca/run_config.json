@@ -1,0 +1,37 @@
+{
+  "data": "data/rocov2",
+  "out": "outputs/generated_report_2_rocov2/image_only_pca",
+  "inputs": "image:pixels32_pca50",
+  "features_dir": null,
+  "method": "pca_concat",
+  "dim": 32,
+  "label": null,
+  "select_by": "val_loss",
+  "seed": 0,
+  "device": null,
+  "smoke": false,
+  "inputs_resolved": {
+    "image": {
+      "spec": "pixels32_pca50",
+      "dim": 50,
+      "steps": [
+        "grayscale 32x32 pixels, flattened",
+        "PCA to 50 (fit on train)"
+      ]
+    }
+  },
+  "embedding_keys": [
+    "z_joint",
+    "z_image"
+  ],
+  "embedding_dim": {
+    "z_joint": 32,
+    "z_image": 32
+  },
+  "uses_labels": false,
+  "summary": {
+    "explained_variance_ratio_sum": 0.64,
+    "dim": 32
+  },
+  "seconds": 0.7
+}

@@ -21,6 +21,11 @@ Methods (all fit on the train split; val drives early stopping):
   simclr      ONE modality, two random views (feature masking + noise), InfoNCE
               between views; self-supervised single-modality encoder (L24)
 
+Epoch selection: epoch 0 (the model before any update) is scored too and kept
+if no later epoch beats it on the selection criterion (--select-by val_loss |
+val_recall). So an adapter can never end below the pretrained model it starts
+from; summary.kept_initial_model says when that happened.
+
 Encoders (per modality): linear | mlp (--hidden, --layers, --dropout) |
 adapter (residual MLP added to the input, last layer initialised at zero so
 training STARTS at the input features; needs input dim == --dim; the light
@@ -234,12 +239,46 @@ def run_learned(a, mods, ds, tr, va, device, out):
         return out_
 
     rng = np.random.default_rng(a.seed)
-    log, best, best_state, bad = [], float("inf"), None, 0
     t0 = time.time()
     epochs = 2 if a.smoke else a.epochs
     tr_use = tr[: min(len(tr), 256)] if a.smoke else tr
     bs = min(a.batch_size, len(tr_use))
+    sub = va[: min(len(va), 1000)]  # fixed val subset for recall@1
+    by_recall = a.select_by == "val_recall"
+    if by_recall and len(names) != 2:
+        raise SystemExit("--select-by val_recall needs two modalities")
+
+    def val_scores(with_recall):
+        enc.eval()
+        with torch.no_grad():
+            vl = [loss_on(va[s:s + bs])[0].item() for s in range(0, max(len(va) - bs + 1, 1), bs)
+                  if len(va[s:s + bs]) >= 2]
+        enc.train()
+        out_ = {"val_loss": float(np.mean(vl)) if vl else float("nan")}
+        if with_recall:
+            Z = embed()
+            out_["val_embedding_sd_mean"] = float(np.mean([Z[m][va].std(0).mean() for m in names]))
+            if len(names) == 2:
+                out_["val_recall_at_1"] = recall_at_1(Z[names[0]][sub], Z[names[1]][sub])
+                out_["val_recall_at_1_chance"] = 1 / len(sub)
+        return out_
+
+    def score_of(rec):  # higher is better
+        return rec["val_recall_at_1"] if by_recall else -rec["val_loss"]
+
+    # epoch 0 = the model BEFORE any update (for an adapter: exactly the pretrained features).
+    # It competes like any other epoch, so training can never end below its starting point.
+    rec0 = {"epoch": 0, "train_loss": float("nan"), "temperature": float(1 / logit_scale.exp().item()),
+            "seconds": 0.0}
+    rec0.update(val_scores(True))
+    log = [rec0]
+    best = score_of(rec0)
+    best_state = {k: v.detach().cpu().clone() for k, v in enc.state_dict().items()}
+    best_epoch, bad = 0, 0
+    extra = f" val R@1 {rec0['val_recall_at_1']:.3f}" if "val_recall_at_1" in rec0 else ""
+    print(f"  epoch    0  (before training)  val {rec0['val_loss']:.4f}{extra}")
     stop_reason = "epochs"
+    crit = "val recall@1" if by_recall else "val loss"
     for ep in range(1, epochs + 1):
         perm = rng.permutation(tr_use)
         tot, n, agg = 0.0, 0, {}
@@ -253,59 +292,43 @@ def run_learned(a, mods, ds, tr, va, device, out):
             tot += loss.item() * len(idx); n += len(idx)
             for k, v in parts.items():
                 agg[k] = agg.get(k, 0.0) + v * len(idx)
-        enc.eval()
-        with torch.no_grad():
-            vl = []
-            for s in range(0, max(len(va) - bs + 1, 1), bs):
-                idx = va[s:s + bs]
-                if len(idx) >= 2:
-                    vl.append(loss_on(idx)[0].item())
-        enc.train()
-        val_loss = float(np.mean(vl)) if vl else float("nan")
-        rec = {"epoch": ep, "train_loss": tot / max(n, 1), "val_loss": val_loss,
-               "temperature": float(1 / logit_scale.exp().item()), "seconds": round(time.time() - t0, 1)}
+        full = by_recall or ep == 1 or ep % a.eval_every == 0 or ep == epochs
+        rec = {"epoch": ep, "train_loss": tot / max(n, 1), "temperature": float(1 / logit_scale.exp().item()),
+               "seconds": round(time.time() - t0, 1)}
+        rec.update(val_scores(full))
         rec.update({f"train_{k}": v / max(n, 1) for k, v in agg.items()})
-        if ep == 1 or ep % a.eval_every == 0 or ep == epochs:
-            Z = embed()
-            zs = [Z[m][va] for m in names]
-            rec["val_embedding_sd_mean"] = float(np.mean([z.std(0).mean() for z in zs]))
-            if len(names) == 2:
-                sub = va[: min(len(va), 1000)]
-                rec["val_recall_at_1"] = recall_at_1(Z[names[0]][sub], Z[names[1]][sub])
-                rec["val_recall_at_1_chance"] = 1 / len(sub)
         log.append(rec)
         if ep == 1 or ep % max(1, a.eval_every) == 0:
             extra = f" val R@1 {rec['val_recall_at_1']:.3f}" if "val_recall_at_1" in rec else ""
-            print(f"  epoch {ep:4d}  train {rec['train_loss']:.4f}  val {val_loss:.4f}{extra}  ({rec['seconds']:.0f}s)")
-        if np.isfinite(val_loss) and val_loss < best - 1e-4:
-            best, bad = val_loss, 0
+            print(f"  epoch {ep:4d}  train {rec['train_loss']:.4f}  val {rec['val_loss']:.4f}{extra}  ({rec['seconds']:.0f}s)")
+        sc = score_of(rec)
+        if np.isfinite(sc) and sc > best + 1e-4:
+            best, bad, best_epoch = sc, 0, ep
             best_state = {k: v.detach().cpu().clone() for k, v in enc.state_dict().items()}
-            best_epoch = ep
         else:
             bad += 1
         if not np.isfinite(rec["train_loss"]):
             stop_reason = "non-finite loss"; break
         if bad >= a.patience:
-            stop_reason = f"early stop (val loss not improving for {a.patience} epochs)"; break
+            stop_reason = f"early stop ({crit} not improving for {a.patience} epochs)"; break
         if (time.time() - t0) / 60 > a.max_minutes:
             stop_reason = "time budget"; break
-    if best_state is not None:
-        enc.load_state_dict(best_state)
-    else:
-        best_epoch = len(log)
+    enc.load_state_dict(best_state)
     Z = embed()
-    if len(names) == 2:  # matching quality of the KEPT (best-val) model
-        sub = va[: min(len(va), 1000)]
-        best_val_r1 = recall_at_1(Z[names[0]][sub], Z[names[1]][sub])
-    else:
-        best_val_r1 = None
+    best_val_r1 = recall_at_1(Z[names[0]][sub], Z[names[1]][sub]) if len(names) == 2 else None
     emb = {f"z_{m}": Z[m] for m in names}
     emb["z_joint"] = Z[names[0]] if len(names) == 1 else l2n(np.mean([l2n(Z[m]) for m in names], 0)).astype(np.float32)
     torch.save({"encoders": enc.state_dict(), "logit_scale": logit_scale.detach().cpu()}, out / "model.pt")
-    summary = {"epochs_run": len(log), "best_epoch": best_epoch, "best_val_loss": best,
-               "stop_reason": stop_reason, "val_recall_at_1_kept_model": best_val_r1,
+    kept = log[best_epoch]
+    summary = {"epochs_run": len(log) - 1, "selected_by": crit, "best_epoch": best_epoch,
+               "kept_initial_model": best_epoch == 0,
+               "best_val_loss": kept["val_loss"], "stop_reason": stop_reason,
+               "val_recall_at_1_initial": rec0.get("val_recall_at_1"),
+               "val_recall_at_1_kept_model": best_val_r1,
                "minutes": round((time.time() - t0) / 60, 2),
                "n_parameters": int(sum(p.numel() for p in enc.parameters()))}
+    if best_epoch == 0:
+        print("  NOTE: no epoch beat the untouched starting model on " + crit + "; the starting model is kept")
     return emb, log, summary
 
 
@@ -358,6 +381,9 @@ def main():
     ap.add_argument("--supcon-temperature", type=float, default=0.1)
     ap.add_argument("--mask-p", type=float, default=0.3, help="simclr: fraction of features masked per view")
     ap.add_argument("--noise", type=float, default=0.1, help="simclr: gaussian noise sd per view")
+    ap.add_argument("--select-by", default="val_loss", choices=["val_loss", "val_recall"],
+                    help="which epoch to keep: lowest val loss (default) or highest val recall@1 "
+                         "(cross-modal matching; recommended when retrieval is the objective)")
     ap.add_argument("--patience", type=int, default=20)
     ap.add_argument("--eval-every", type=int, default=10)
     ap.add_argument("--max-minutes", type=float, default=5.0)

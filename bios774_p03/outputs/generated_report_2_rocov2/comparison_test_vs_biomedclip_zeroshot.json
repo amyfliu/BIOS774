@@ -1,0 +1,122 @@
+[
+  {
+    "model": "clip_mlp_d512",
+    "metric": "probe balanced accuracy [label] (image)",
+    "model_value": 0.9726,
+    "reference_value": 0.972,
+    "difference": 0.0006,
+    "ci95": [
+      -0.0059,
+      0.0081
+    ],
+    "ci_excludes_0": false
+  },
+  {
+    "model": "clip_mlp_d512",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.9758,
+    "reference_value": 0.976,
+    "difference": -0.0002,
+    "ci95": [
+      -0.006,
+      0.0048
+    ],
+    "ci_excludes_0": false
+  },
+  {
+    "model": "clip_mlp_d512",
+    "metric": "probe balanced accuracy [label] (text)",
+    "model_value": 0.8996,
+    "reference_value": 0.9191,
+    "difference": -0.0195,
+    "ci95": [
+      -0.048,
+      -0.0027
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "clip_mlp_d512",
+    "metric": "recall@5 a_to_b",
+    "model_value": 0.6755,
+    "reference_value": 0.808,
+    "difference": -0.1325,
+    "ci95": [
+      -0.1525,
+      -0.114
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "clip_mlp_d512",
+    "metric": "recall@5 b_to_a",
+    "model_value": 0.682,
+    "reference_value": 0.8085,
+    "difference": -0.1265,
+    "ci95": [
+      -0.1455,
+      -0.1075
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "early_fusion_pca",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.6944,
+    "reference_value": 0.976,
+    "difference": -0.2816,
+    "ci95": [
+      -0.3044,
+      -0.2594
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "image_only_pca",
+    "metric": "probe balanced accuracy [label] (image)",
+    "model_value": 0.6054,
+    "reference_value": 0.972,
+    "difference": -0.3666,
+    "ci95": [
+      -0.3911,
+      -0.3428
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "image_only_pca",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.6054,
+    "reference_value": 0.976,
+    "difference": -0.3706,
+    "ci95": [
+      -0.3947,
+      -0.3488
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "text_only_pca",
+    "metric": "probe balanced accuracy [label] (joint)",
+    "model_value": 0.7301,
+    "reference_value": 0.976,
+    "difference": -0.2459,
+    "ci95": [
+      -0.2928,
+      -0.1963
+    ],
+    "ci_excludes_0": true
+  },
+  {
+    "model": "text_only_pca",
+    "metric": "probe balanced accuracy [label] (text)",
+    "model_value": 0.7301,
+    "reference_value": 0.9191,
+    "difference": -0.189,
+    "ci95": [
+      -0.2477,
+      -0.1236
+    ],
+    "ci_excludes_0": true
+  }
+]

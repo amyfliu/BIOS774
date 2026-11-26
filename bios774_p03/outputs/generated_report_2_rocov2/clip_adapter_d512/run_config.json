@@ -1,0 +1,70 @@
+{
+  "data": "data/rocov2",
+  "out": "outputs/generated_report_2_rocov2/clip_adapter_d512",
+  "inputs": "image:biomedclip,text:biomedclip",
+  "features_dir": null,
+  "method": "clip",
+  "dim": 512,
+  "encoder": "adapter",
+  "hidden": 256,
+  "layers": 2,
+  "dropout": 0.1,
+  "epochs": 200,
+  "batch_size": 512,
+  "lr": 0.0001,
+  "weight_decay": 0.0001,
+  "temperature": 0.07,
+  "learn_temperature": true,
+  "label": null,
+  "supcon_weight": 0.5,
+  "supcon_temperature": 0.1,
+  "mask_p": 0.3,
+  "noise": 0.1,
+  "select_by": "val_recall",
+  "patience": 20,
+  "eval_every": 10,
+  "max_minutes": 8.0,
+  "seed": 0,
+  "device": null,
+  "smoke": false,
+  "inputs_resolved": {
+    "image": {
+      "spec": "biomedclip",
+      "dim": 512,
+      "steps": [
+        "frozen BiomedCLIP image encoder (512-d, shared space with its text encoder)"
+      ]
+    },
+    "text": {
+      "spec": "biomedclip",
+      "dim": 512,
+      "steps": [
+        "frozen BiomedCLIP text encoder (512-d, shared space with its image encoder)"
+      ]
+    }
+  },
+  "embedding_keys": [
+    "z_image",
+    "z_text",
+    "z_joint"
+  ],
+  "embedding_dim": {
+    "z_image": 512,
+    "z_text": 512,
+    "z_joint": 512
+  },
+  "uses_labels": false,
+  "summary": {
+    "epochs_run": 20,
+    "selected_by": "val recall@1",
+    "best_epoch": 0,
+    "kept_initial_model": true,
+    "best_val_loss": 2.7673,
+    "stop_reason": "early stop (val recall@1 not improving for 20 epochs)",
+    "val_recall_at_1_initial": 0.623,
+    "val_recall_at_1_kept_model": 0.623,
+    "minutes": 0.23,
+    "n_parameters": 525824
+  },
+  "seconds": 18.3
+}

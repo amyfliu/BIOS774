@@ -1,0 +1,66 @@
+{
+  "run": "outputs/generated_report_2_rocov2/early_fusion_pca",
+  "method": "pca_concat",
+  "inputs": "image:pixels32_pca50,text:tfidf_svd128",
+  "uses_labels": false,
+  "split_evaluated": "val",
+  "n_evaluated": 2000,
+  "structure": {
+    "label": {
+      "z_joint": {
+        "n_classes": 6,
+        "majority_baseline_accuracy": 0.3955,
+        "chance_balanced_accuracy": 0.1667,
+        "probe_balanced_accuracy": 0.7032,
+        "probe_balanced_accuracy_ci95": [
+          0.6823,
+          0.7242
+        ],
+        "probe_macro_f1": 0.5747,
+        "probe_accuracy": 0.629,
+        "probe_per_class_recall": {
+          "Angiography": {
+            "n_test": 98,
+            "recall": 0.7143
+          },
+          "CT": {
+            "n_test": 791,
+            "recall": 0.6397
+          },
+          "MRI": {
+            "n_test": 276,
+            "recall": 0.6051
+          },
+          "PET": {
+            "n_test": 9,
+            "recall": 1.0
+          },
+          "Ultrasound": {
+            "n_test": 283,
+            "recall": 0.6855
+          },
+          "X-ray": {
+            "n_test": 543,
+            "recall": 0.5746
+          }
+        },
+        "knn15_balanced_accuracy": 0.721,
+        "kmeans_ari": 0.1379,
+        "kmeans_nmi": 0.2591,
+        "silhouette_cosine": -0.0273
+      }
+    }
+  },
+  "retrieval": {
+    "skipped": "needs two modality embeddings of equal dimension (have [])"
+  },
+  "collapse": {
+    "z_joint": {
+      "dim": 32,
+      "effective_rank": 31.0063,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0451,
+      "uniformity": -3.6642
+    }
+  }
+}

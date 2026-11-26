@@ -11,12 +11,15 @@ Reads <out>/*/metrics_val.json (--split val: for choosing models) or
   <out>/comparison_<split>.png   bar chart of the headline metrics
 
 Columns: method + inputs, whether labels were used in training, linear-probe
-balanced accuracy and k-means ARI of the JOINT embedding for EVERY label column,
+balanced accuracy of the JOINT embedding and of EACH modality's own embedding
+(column suffix "(image)", "(rna)", ...; only for multimodal models), k-means
+ARI of the joint embedding, for EVERY label column,
 cross-modal retrieval recall@5 both ways + FOSCTTM, cross-modal prediction
 scores, effective rank. Missing values are shown as "–".
 
 --reference <model folder name>  adds a second table: for every other model,
-the difference (model − reference) in each headline metric with a 95% PAIRED
+the difference (model − reference) in each headline metric — the probe for
+every embedding both models share (joint, image, text, ...) — with a 95% PAIRED
 bootstrap interval — both models scored on the SAME samples, resampled
 together (from predictions_<split>.npz). This is the right test for "is A
 better than B?": overlapping per-model intervals are NOT evidence of no
@@ -45,6 +48,9 @@ def row(run: Path, fname: str):
     for lab, d in m.get("structure", {}).items():
         j = d.get("z_joint", {})
         r[f"probe_bal_acc[{lab}]"] = j.get("probe_balanced_accuracy")
+        mod_keys = sorted(k for k in d if k != "z_joint")
+        for key in (mod_keys if len(mod_keys) >= 2 else []):  # each modality's own side of a multimodal model
+                r[f"probe_bal_acc[{lab}]({key[2:]})"] = d[key].get("probe_balanced_accuracy")
         r[f"kmeans_ari[{lab}]"] = j.get("kmeans_ari")
         r[f"chance[{lab}]"] = j.get("chance_balanced_accuracy")
     ret = m.get("retrieval", {})
@@ -106,13 +112,13 @@ def paired_table(out: Path, runs, ref: str, split: str):
             continue
         n = len(R["idx"])
         for key in sorted(M):
-            if key.startswith("probe__") and key.endswith("__z_joint") and key in R:
-                lab = key.split("__")[1]
+            if key.startswith("probe__") and key in R:
+                lab, emb_key = key.split("__")[1], key.split("__")[2]
                 y = R[f"y__{lab}"]
                 k = int(max(y.max(), M[key].max(), R[key].max())) + 1
                 pa, pb = M[key], R[key]
                 d = paired(lambda i: bal_acc(y[i], pa[i], k), lambda i: bal_acc(y[i], pb[i], k), n, rng)
-                rows.append(dict(model=run.name, metric=f"probe balanced accuracy [{lab}] (joint)", diff=d))
+                rows.append(dict(model=run.name, metric=f"probe balanced accuracy [{lab}] ({emb_key[2:]})", diff=d))
             elif key.startswith("cross__") and key in R:
                 a_, b_ = M[key], R[key]
                 d = paired(lambda i: float(np.nanmean(a_[i])), lambda i: float(np.nanmean(b_[i])), n, rng)

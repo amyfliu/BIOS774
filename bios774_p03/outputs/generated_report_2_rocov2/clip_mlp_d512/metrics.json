@@ -1,0 +1,198 @@
+{
+  "run": "outputs/generated_report_2_rocov2/clip_mlp_d512",
+  "method": "clip",
+  "inputs": "image:biomedclip,text:biomedclip",
+  "uses_labels": false,
+  "split_evaluated": "test",
+  "n_evaluated": 2000,
+  "structure": {
+    "label": {
+      "z_image": {
+        "n_classes": 6,
+        "majority_baseline_accuracy": 0.3585,
+        "chance_balanced_accuracy": 0.1667,
+        "probe_balanced_accuracy": 0.9726,
+        "probe_balanced_accuracy_ci95": [
+          0.9672,
+          0.9783
+        ],
+        "probe_macro_f1": 0.9295,
+        "probe_accuracy": 0.9535,
+        "probe_per_class_recall": {
+          "Angiography": {
+            "n_test": 82,
+            "recall": 1.0
+          },
+          "CT": {
+            "n_test": 717,
+            "recall": 0.9484
+          },
+          "MRI": {
+            "n_test": 301,
+            "recall": 0.9701
+          },
+          "PET": {
+            "n_test": 13,
+            "recall": 1.0
+          },
+          "Ultrasound": {
+            "n_test": 322,
+            "recall": 1.0
+          },
+          "X-ray": {
+            "n_test": 565,
+            "recall": 0.9168
+          }
+        },
+        "knn15_balanced_accuracy": 0.9746,
+        "kmeans_ari": 0.2258,
+        "kmeans_nmi": 0.3714,
+        "silhouette_cosine": 0.0395
+      },
+      "z_text": {
+        "n_classes": 6,
+        "majority_baseline_accuracy": 0.3585,
+        "chance_balanced_accuracy": 0.1667,
+        "probe_balanced_accuracy": 0.8996,
+        "probe_balanced_accuracy_ci95": [
+          0.8584,
+          0.9447
+        ],
+        "probe_macro_f1": 0.8816,
+        "probe_accuracy": 0.9235,
+        "probe_per_class_recall": {
+          "Angiography": {
+            "n_test": 82,
+            "recall": 0.9878
+          },
+          "CT": {
+            "n_test": 717,
+            "recall": 0.9303
+          },
+          "MRI": {
+            "n_test": 301,
+            "recall": 0.9502
+          },
+          "PET": {
+            "n_test": 13,
+            "recall": 0.6923
+          },
+          "Ultrasound": {
+            "n_test": 322,
+            "recall": 0.9627
+          },
+          "X-ray": {
+            "n_test": 565,
+            "recall": 0.8743
+          }
+        },
+        "knn15_balanced_accuracy": 0.9192,
+        "kmeans_ari": 0.4421,
+        "kmeans_nmi": 0.4112,
+        "silhouette_cosine": 0.0383
+      },
+      "z_joint": {
+        "n_classes": 6,
+        "majority_baseline_accuracy": 0.3585,
+        "chance_balanced_accuracy": 0.1667,
+        "probe_balanced_accuracy": 0.9758,
+        "probe_balanced_accuracy_ci95": [
+          0.97,
+          0.9811
+        ],
+        "probe_macro_f1": 0.9438,
+        "probe_accuracy": 0.9605,
+        "probe_per_class_recall": {
+          "Angiography": {
+            "n_test": 82,
+            "recall": 0.9878
+          },
+          "CT": {
+            "n_test": 717,
+            "recall": 0.9596
+          },
+          "MRI": {
+            "n_test": 301,
+            "recall": 0.99
+          },
+          "PET": {
+            "n_test": 13,
+            "recall": 1.0
+          },
+          "Ultrasound": {
+            "n_test": 322,
+            "recall": 0.9969
+          },
+          "X-ray": {
+            "n_test": 565,
+            "recall": 0.9204
+          }
+        },
+        "knn15_balanced_accuracy": 0.964,
+        "kmeans_ari": 0.6105,
+        "kmeans_nmi": 0.7451,
+        "silhouette_cosine": 0.0617
+      }
+    }
+  },
+  "retrieval": {
+    "n_candidates": 2000,
+    "a_to_b": {
+      "recall_at_1": 0.3595,
+      "recall_at_5": 0.6755,
+      "recall_at_10": 0.789,
+      "recall_at_5_ci95": [
+        0.658,
+        0.6975
+      ],
+      "median_rank": 3.0,
+      "foscttm": 0.0077
+    },
+    "b_to_a": {
+      "recall_at_1": 0.3605,
+      "recall_at_5": 0.682,
+      "recall_at_10": 0.8015,
+      "recall_at_5_ci95": [
+        0.66,
+        0.703
+      ],
+      "median_rank": 3.0,
+      "foscttm": 0.0078
+    },
+    "chance": {
+      "recall_at_1": 0.0005,
+      "recall_at_5": 0.0025,
+      "recall_at_10": 0.005,
+      "median_rank": 1000.5,
+      "foscttm": 0.5
+    },
+    "a": "image",
+    "b": "text"
+  },
+  "collapse": {
+    "z_image": {
+      "dim": 512,
+      "effective_rank": 33.8376,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0733,
+      "uniformity": -3.6093
+    },
+    "z_text": {
+      "dim": 512,
+      "effective_rank": 33.5285,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0767,
+      "uniformity": -3.6399
+    },
+    "z_joint": {
+      "dim": 512,
+      "effective_rank": 33.466,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0711,
+      "uniformity": -3.6192
+    },
+    "alignment_paired_sq_dist": 0.7672,
+    "alignment_random_pairs_sq_dist": 2.0088,
+    "modality_gap_centroid_dist": 0.1899
+  }
+}

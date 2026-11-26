@@ -23,3 +23,6 @@ outputs/_check/
 outputs/_previous/
 outputs/**/features/
 outputs/**/model.pt
+# Per-model full-precision embeddings can exceed GitHub's 100 MB limit (ROCOv2: 138 MB);
+# the recommended one is committed as recommended_representation.npz (float16).
+outputs/**/embeddings.npz

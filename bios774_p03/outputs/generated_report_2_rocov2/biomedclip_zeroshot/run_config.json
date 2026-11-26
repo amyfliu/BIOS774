@@ -1,0 +1,42 @@
+{
+  "data": "data/rocov2",
+  "out": "outputs/generated_report_2_rocov2/biomedclip_zeroshot",
+  "inputs": "image:biomedclip,text:biomedclip",
+  "features_dir": null,
+  "method": "identity",
+  "dim": 32,
+  "label": null,
+  "select_by": "val_loss",
+  "seed": 0,
+  "device": null,
+  "smoke": false,
+  "inputs_resolved": {
+    "image": {
+      "spec": "biomedclip",
+      "dim": 512,
+      "steps": [
+        "frozen BiomedCLIP image encoder (512-d, shared space with its text encoder)"
+      ]
+    },
+    "text": {
+      "spec": "biomedclip",
+      "dim": 512,
+      "steps": [
+        "frozen BiomedCLIP text encoder (512-d, shared space with its image encoder)"
+      ]
+    }
+  },
+  "embedding_keys": [
+    "z_image",
+    "z_text",
+    "z_joint"
+  ],
+  "embedding_dim": {
+    "z_image": 512,
+    "z_text": 512,
+    "z_joint": 512
+  },
+  "uses_labels": false,
+  "summary": {},
+  "seconds": 3.6
+}

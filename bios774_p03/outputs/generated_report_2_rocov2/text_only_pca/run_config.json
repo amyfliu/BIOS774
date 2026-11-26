@@ -1,0 +1,36 @@
+{
+  "data": "data/rocov2",
+  "out": "outputs/generated_report_2_rocov2/text_only_pca",
+  "inputs": "text:tfidf_svd128",
+  "features_dir": null,
+  "method": "pca_concat",
+  "dim": 32,
+  "label": null,
+  "select_by": "val_loss",
+  "seed": 0,
+  "device": null,
+  "smoke": false,
+  "inputs_resolved": {
+    "text": {
+      "spec": "tfidf_svd128",
+      "dim": 128,
+      "steps": [
+        "word TF-IDF (1-2 grams, vocab 25429, train) + SVD to 128"
+      ]
+    }
+  },
+  "embedding_keys": [
+    "z_joint",
+    "z_text"
+  ],
+  "embedding_dim": {
+    "z_joint": 32,
+    "z_text": 32
+  },
+  "uses_labels": false,
+  "summary": {
+    "explained_variance_ratio_sum": 0.2555,
+    "dim": 32
+  },
+  "seconds": 0.7
+}

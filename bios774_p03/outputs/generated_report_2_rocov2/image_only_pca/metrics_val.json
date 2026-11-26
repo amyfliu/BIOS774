@@ -1,0 +1,115 @@
+{
+  "run": "outputs/generated_report_2_rocov2/image_only_pca",
+  "method": "pca_concat",
+  "inputs": "image:pixels32_pca50",
+  "uses_labels": false,
+  "split_evaluated": "val",
+  "n_evaluated": 2000,
+  "structure": {
+    "label": {
+      "z_joint": {
+        "n_classes": 6,
+        "majority_baseline_accuracy": 0.3955,
+        "chance_balanced_accuracy": 0.1667,
+        "probe_balanced_accuracy": 0.5847,
+        "probe_balanced_accuracy_ci95": [
+          0.5584,
+          0.6078
+        ],
+        "probe_macro_f1": 0.4465,
+        "probe_accuracy": 0.5005,
+        "probe_per_class_recall": {
+          "Angiography": {
+            "n_test": 98,
+            "recall": 0.5306
+          },
+          "CT": {
+            "n_test": 791,
+            "recall": 0.5221
+          },
+          "MRI": {
+            "n_test": 276,
+            "recall": 0.3768
+          },
+          "PET": {
+            "n_test": 9,
+            "recall": 1.0
+          },
+          "Ultrasound": {
+            "n_test": 283,
+            "recall": 0.6254
+          },
+          "X-ray": {
+            "n_test": 543,
+            "recall": 0.453
+          }
+        },
+        "knn15_balanced_accuracy": 0.6677,
+        "kmeans_ari": 0.0797,
+        "kmeans_nmi": 0.1567,
+        "silhouette_cosine": -0.0429
+      },
+      "z_image": {
+        "n_classes": 6,
+        "majority_baseline_accuracy": 0.3955,
+        "chance_balanced_accuracy": 0.1667,
+        "probe_balanced_accuracy": 0.5847,
+        "probe_balanced_accuracy_ci95": [
+          0.562,
+          0.6042
+        ],
+        "probe_macro_f1": 0.4465,
+        "probe_accuracy": 0.5005,
+        "probe_per_class_recall": {
+          "Angiography": {
+            "n_test": 98,
+            "recall": 0.5306
+          },
+          "CT": {
+            "n_test": 791,
+            "recall": 0.5221
+          },
+          "MRI": {
+            "n_test": 276,
+            "recall": 0.3768
+          },
+          "PET": {
+            "n_test": 9,
+            "recall": 1.0
+          },
+          "Ultrasound": {
+            "n_test": 283,
+            "recall": 0.6254
+          },
+          "X-ray": {
+            "n_test": 543,
+            "recall": 0.453
+          }
+        },
+        "knn15_balanced_accuracy": 0.6677,
+        "kmeans_ari": 0.0797,
+        "kmeans_nmi": 0.1567,
+        "silhouette_cosine": -0.0429
+      }
+    }
+  },
+  "retrieval": {
+    "skipped": "needs two modality embeddings of equal dimension (have [('z_image', 32)])"
+  },
+  "collapse": {
+    "z_joint": {
+      "dim": 32,
+      "effective_rank": 31.1083,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0443,
+      "uniformity": -3.6735
+    },
+    "z_image": {
+      "dim": 32,
+      "effective_rank": 31.1083,
+      "dead_dims": 0,
+      "top_component_variance_share": 0.0443,
+      "uniformity": -3.6735
+    }
+  }
+}

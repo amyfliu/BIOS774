@@ -1,0 +1,64 @@
+[
+  {
+    "model": "biomedclip_zeroshot",
+    "method": "identity",
+    "inputs": "image:biomedclip,text:biomedclip",
+    "uses_labels": "no",
+    "probe_bal_acc[label]": 0.976,
+    "probe_bal_acc[label](image)": 0.972,
+    "probe_bal_acc[label](text)": 0.919,
+    "kmeans_ari[label]": 0.627,
+    "chance[label]": 0.167,
+    "R@5 image->text": 0.808,
+    "R@5 text->image": 0.808,
+    "FOSCTTM": 0.004,
+    "R@5 chance": 0.003,
+    "eff_rank(joint)": 52.605
+  },
+  {
+    "model": "clip_mlp_d512",
+    "method": "clip",
+    "inputs": "image:biomedclip,text:biomedclip",
+    "uses_labels": "no",
+    "probe_bal_acc[label]": 0.976,
+    "probe_bal_acc[label](image)": 0.973,
+    "probe_bal_acc[label](text)": 0.9,
+    "kmeans_ari[label]": 0.611,
+    "chance[label]": 0.167,
+    "R@5 image->text": 0.675,
+    "R@5 text->image": 0.682,
+    "FOSCTTM": 0.008,
+    "R@5 chance": 0.003,
+    "eff_rank(joint)": 33.466
+  },
+  {
+    "model": "early_fusion_pca",
+    "method": "pca_concat",
+    "inputs": "image:pixels32_pca50,text:tfidf_svd128",
+    "uses_labels": "no",
+    "probe_bal_acc[label]": 0.694,
+    "kmeans_ari[label]": 0.14,
+    "chance[label]": 0.167,
+    "eff_rank(joint)": 31.034
+  },
+  {
+    "model": "image_only_pca",
+    "method": "pca_concat",
+    "inputs": "image:pixels32_pca50",
+    "uses_labels": "no",
+    "probe_bal_acc[label]": 0.605,
+    "kmeans_ari[label]": 0.106,
+    "chance[label]": 0.167,
+    "eff_rank(joint)": 31.085
+  },
+  {
+    "model": "text_only_pca",
+    "method": "pca_concat",
+    "inputs": "text:tfidf_svd128",
+    "uses_labels": "no",
+    "probe_bal_acc[label]": 0.73,
+    "kmeans_ari[label]": 0.025,
+    "chance[label]": 0.167,
+    "eff_rank(joint)": 31.098
+  }
+]
